@@ -1,4 +1,5 @@
 import { Send, Phone } from "lucide-react";
+import logo from "@/assets/logo.webp";
 
 export function Footer() {
   return (
@@ -6,9 +7,12 @@ export function Footer() {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <span className="font-display text-lg font-bold text-foreground">
-              Deshar<span className="text-primary">School</span>
-            </span>
+            <div className="flex items-center gap-2">
+              <img src={logo} alt="Deshar School" className="h-8 w-auto" />
+              <span className="font-display text-lg font-bold text-foreground">
+                Deshar<span className="text-primary">School</span>
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-6 text-sm text-muted-foreground">

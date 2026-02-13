@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import logo from "@/assets/logo.webp";
 
 const navLinks = [
   { href: "#about", label: "О школе" },
@@ -26,8 +27,11 @@ export function Navbar() {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
-        <a href="#" className="font-display text-xl font-bold text-foreground">
-          Deshar<span className="text-primary">School</span>
+        <a href="#" className="flex items-center gap-2">
+          <img src={logo} alt="Deshar School" className="h-10 w-auto" />
+          <span className="font-display text-xl font-bold text-foreground">
+            Deshar<span className="text-primary">School</span>
+          </span>
         </a>
 
         {/* Desktop */}
