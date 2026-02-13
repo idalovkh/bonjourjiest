@@ -52,7 +52,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-24">
+    <section id="contact" className="py-28">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-lg mx-auto">
           <motion.div
@@ -61,10 +61,10 @@ export function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Оставь свой телеграм
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3">
+              Запишись на бесплатный урок
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Менеджер свяжется и запишет на пробный урок
             </p>
           </motion.div>
@@ -79,7 +79,7 @@ export function ContactSection() {
             {submitted ? (
               <div className="text-center py-8">
                 <CheckCircle size={48} className="mx-auto text-secondary mb-4" />
-                <h3 className="font-display text-xl font-bold text-foreground mb-2">Спасибо!</h3>
+                <h3 className="text-xl font-bold text-foreground mb-2">Спасибо!</h3>
                 <p className="text-muted-foreground">Мы свяжемся с вами в ближайшее время.</p>
               </div>
             ) : (
@@ -91,7 +91,7 @@ export function ContactSection() {
                     placeholder="Ваше имя"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="mt-1.5"
+                    className="mt-1.5 rounded-xl"
                     maxLength={100}
                   />
                 </div>
@@ -102,32 +102,27 @@ export function ContactSection() {
                     placeholder="@username или +7 (999) 999-99-99"
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
-                    className="mt-1.5"
+                    className="mt-1.5 rounded-xl"
                     maxLength={200}
                   />
                 </div>
-                <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                <Button type="submit" className="w-full rounded-full" size="lg" disabled={loading}>
                   {loading ? "Отправка..." : (
                     <>
-                      ОТПРАВИТЬ
+                      Хочу на консультацию
                       <Send size={16} className="ml-2" />
                     </>
                   )}
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
-                  Нажимая «Отправить», вы соглашаетесь с нашей{" "}
+                  Нажимая кнопку, вы соглашаетесь с{" "}
                   <a href="/privacy" className="underline hover:text-foreground">
-                    Политикой конфиденциальности и условиями использования
+                    политикой конфиденциальности
                   </a>
                 </p>
               </form>
             )}
           </motion.div>
-
-          <div className="text-center mt-8 text-sm text-muted-foreground">
-            <p>Телефон для связи: +7 (999) 999-99-99</p>
-            <p className="mt-1">Пишите, проконсультируем вас онлайн!</p>
-          </div>
         </div>
       </div>
     </section>

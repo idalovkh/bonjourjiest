@@ -27,7 +27,7 @@ const reviews = [
 
 export function ReviewsSection() {
   return (
-    <section id="reviews" className="py-24 bg-muted/50">
+    <section id="reviews" className="py-28 bg-card">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-16"
@@ -35,29 +35,29 @@ export function ReviewsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3">
             Отзывы наших учеников
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {reviews.map((r, i) => (
             <motion.div
               key={i}
-              className="bg-card rounded-2xl p-6 border border-border"
+              className="bg-background rounded-2xl p-7 border border-border"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
             >
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, j) => (
-                  <Star key={j} size={16} className="fill-primary text-primary" />
+                  <Star key={j} size={14} className="fill-primary text-primary" />
                 ))}
               </div>
-              <p className="text-sm text-foreground mb-4 leading-relaxed">"{r.text}"</p>
+              <p className="text-sm text-foreground mb-5 leading-relaxed">"{r.text}"</p>
               <div className="flex items-center gap-3">
-                <Avatar className="w-9 h-9">
+                <Avatar className="w-8 h-8">
                   <AvatarFallback className="bg-accent text-accent-foreground text-xs font-bold">
                     {r.initials}
                   </AvatarFallback>

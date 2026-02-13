@@ -30,7 +30,7 @@ const teachers = [
 
 export function TeachersSection() {
   return (
-    <section id="teachers" className="py-24 bg-muted/50">
+    <section id="teachers" className="py-28">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-16"
@@ -38,32 +38,32 @@ export function TeachersSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3">
             Наши преподаватели
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-lg text-muted-foreground">
             Команда сертифицированных лингвистов с международным опытом
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {teachers.map((t, i) => (
             <motion.div
               key={t.name}
-              className="bg-card rounded-2xl p-6 border border-border text-center"
+              className="bg-card rounded-2xl p-7 border border-border text-center hover:shadow-md transition-shadow"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
             >
-              <Avatar className="w-20 h-20 mx-auto mb-4 text-lg">
-                <AvatarFallback className="bg-primary text-primary-foreground font-display font-bold text-xl">
+              <Avatar className="w-20 h-20 mx-auto mb-5 text-lg">
+                <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xl">
                   {t.initials}
                 </AvatarFallback>
               </Avatar>
-              <h3 className="font-display font-semibold text-foreground">{t.name}</h3>
-              <p className="text-sm text-primary font-medium mb-2">{t.role}</p>
-              <p className="text-sm text-muted-foreground">{t.exp}</p>
+              <h3 className="font-bold text-foreground text-lg">{t.name}</h3>
+              <p className="text-sm text-primary font-semibold mb-2">{t.role}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t.exp}</p>
             </motion.div>
           ))}
         </div>
