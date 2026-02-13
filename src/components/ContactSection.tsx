@@ -62,10 +62,10 @@ export function ContactSection() {
             viewport={{ once: true }}
           >
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Запишитесь на бесплатный урок
+              Оставь свой телеграм
             </h2>
             <p className="text-muted-foreground">
-              Оставьте контакт — мы подберём удобное время и преподавателя
+              Менеджер свяжется и запишет на пробный урок
             </p>
           </motion.div>
 
@@ -85,10 +85,10 @@ export function ContactSection() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <Label htmlFor="name">Ваше имя</Label>
+                  <Label htmlFor="name">Имя</Label>
                   <Input
                     id="name"
-                    placeholder="Как к вам обращаться?"
+                    placeholder="Ваше имя"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="mt-1.5"
@@ -96,10 +96,10 @@ export function ContactSection() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="contact">Telegram или телефон</Label>
+                  <Label htmlFor="contact">Телеграм или телефон</Label>
                   <Input
                     id="contact"
-                    placeholder="@username или +7..."
+                    placeholder="@username или +7 (999) 999-99-99"
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
                     className="mt-1.5"
@@ -109,17 +109,25 @@ export function ContactSection() {
                 <Button type="submit" className="w-full" size="lg" disabled={loading}>
                   {loading ? "Отправка..." : (
                     <>
-                      Записаться на пробный урок
+                      ОТПРАВИТЬ
                       <Send size={16} className="ml-2" />
                     </>
                   )}
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
-                  Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+                  Нажимая «Отправить», вы соглашаетесь с нашей{" "}
+                  <a href="/privacy" className="underline hover:text-foreground">
+                    Политикой конфиденциальности и условиями использования
+                  </a>
                 </p>
               </form>
             )}
           </motion.div>
+
+          <div className="text-center mt-8 text-sm text-muted-foreground">
+            <p>Телефон для связи: +7 (999) 999-99-99</p>
+            <p className="mt-1">Пишите, проконсультируем вас онлайн!</p>
+          </div>
         </div>
       </div>
     </section>

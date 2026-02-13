@@ -9,27 +9,21 @@ export function Footer() {
             <span className="font-display text-lg font-bold text-foreground">
               Deshar<span className="text-primary">School</span>
             </span>
-            <p className="text-sm text-muted-foreground mt-1">
-              Онлайн-школа английского языка
-            </p>
           </div>
 
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="https://t.me/desharschool" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+            <a href="https://t.me/+79067742949" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Send size={14} />
-              Telegram
+              Наш Telegram
             </a>
-            <a href="tel:+79001234567" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-              <Phone size={14} />
-              +7 (900) 123-45-67
-            </a>
+            <span>Задавай вопросы, не стесняйся!</span>
           </div>
         </div>
 
         <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Deshar School. Все права защищены.</p>
-          <a href="#" className="hover:text-foreground transition-colors">
-            Политика конфиденциальности
+          <a href="/privacy" className="hover:text-foreground transition-colors">
+            Политика конфиденциальности и условия использования
           </a>
         </div>
       </div>
