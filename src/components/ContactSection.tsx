@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, ArrowRight } from "lucide-react";
 import { z } from "zod";
 
 const leadSchema = z.object({
@@ -52,7 +52,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-28">
+    <section id="contact" className="py-28 bg-muted/40">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-lg mx-auto">
           <motion.div
@@ -61,16 +61,16 @@ export function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3">
-              Запишись на бесплатный урок
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+              Запишись на <span className="gradient-text">бесплатный урок</span>
             </h2>
             <p className="text-muted-foreground text-lg">
-              Менеджер свяжется и запишет на пробный урок
+              Менеджер свяжется и запишет на пробное занятие
             </p>
           </motion.div>
 
           <motion.div
-            className="bg-card rounded-2xl p-8 border border-border shadow-sm"
+            className="bg-card rounded-2xl p-8 border border-border shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -78,39 +78,41 @@ export function ContactSection() {
           >
             {submitted ? (
               <div className="text-center py-8">
-                <CheckCircle size={48} className="mx-auto text-secondary mb-4" />
+                <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle size={32} className="text-secondary" />
+                </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">Спасибо!</h3>
                 <p className="text-muted-foreground">Мы свяжемся с вами в ближайшее время.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <Label htmlFor="name">Имя</Label>
+                  <Label htmlFor="name" className="text-sm font-semibold">Имя</Label>
                   <Input
                     id="name"
                     placeholder="Ваше имя"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="mt-1.5 rounded-xl"
+                    className="mt-1.5 rounded-xl h-12"
                     maxLength={100}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="contact">Телеграм или телефон</Label>
+                  <Label htmlFor="contact" className="text-sm font-semibold">Телеграм или телефон</Label>
                   <Input
                     id="contact"
                     placeholder="@username или +7 (999) 999-99-99"
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
-                    className="mt-1.5 rounded-xl"
+                    className="mt-1.5 rounded-xl h-12"
                     maxLength={200}
                   />
                 </div>
-                <Button type="submit" className="w-full rounded-full" size="lg" disabled={loading}>
+                <Button type="submit" className="w-full rounded-full h-14 text-base font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 transition-all" size="lg" disabled={loading}>
                   {loading ? "Отправка..." : (
                     <>
                       Хочу на консультацию
-                      <Send size={16} className="ml-2" />
+                      <ArrowRight size={18} className="ml-2" />
                     </>
                   )}
                 </Button>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { Star, Quote } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const reviews = [
@@ -27,7 +27,7 @@ const reviews = [
 
 export function ReviewsSection() {
   return (
-    <section id="reviews" className="py-28 bg-card">
+    <section id="reviews" className="py-28">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-16"
@@ -35,8 +35,8 @@ export function ReviewsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3">
-            Отзывы наших учеников
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+            Что говорят <span className="gradient-text">наши ученики</span>
           </h2>
         </motion.div>
 
@@ -44,13 +44,14 @@ export function ReviewsSection() {
           {reviews.map((r, i) => (
             <motion.div
               key={i}
-              className="bg-background rounded-2xl p-7 border border-border"
+              className="bg-card rounded-2xl p-7 border border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
             >
-              <div className="flex gap-1 mb-4">
+              <Quote size={28} className="text-primary/15 absolute top-5 right-5" />
+              <div className="flex gap-0.5 mb-4">
                 {[...Array(5)].map((_, j) => (
                   <Star key={j} size={14} className="fill-primary text-primary" />
                 ))}
@@ -62,7 +63,7 @@ export function ReviewsSection() {
                     {r.initials}
                   </AvatarFallback>
                 </Avatar>
-                <p className="text-sm font-medium text-foreground">{r.name}</p>
+                <p className="text-sm font-semibold text-foreground">{r.name}</p>
               </div>
             </motion.div>
           ))}

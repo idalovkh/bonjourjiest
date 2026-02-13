@@ -5,46 +5,55 @@ const features = [
   {
     icon: Calendar,
     title: "С 2016 года",
-    desc: "Работаем с 2016 года — проверенный опыт и стабильное качество обучения",
+    desc: "Проверенный опыт и стабильное качество обучения",
+    color: "from-primary/10 to-primary/5",
+    iconColor: "text-primary",
   },
   {
     icon: Monitor,
-    title: "Собственная онлайн-платформа",
+    title: "Своя онлайн-платформа",
     desc: "Современная платформа и 4 метода заучивания слов",
+    color: "from-secondary/10 to-secondary/5",
+    iconColor: "text-secondary",
   },
   {
     icon: GraduationCap,
-    title: "Профессиональные лингвисты",
+    title: "Учим говорить",
     desc: "Уроки где учатся говорить, а не делать упражнения",
+    color: "from-primary/10 to-primary/5",
+    iconColor: "text-primary",
   },
   {
     icon: Award,
-    title: "Аттестованы Кембриджем",
-    desc: "Аттестованные Cambridge учителя с международными сертификатами",
+    title: "Cambridge аттестация",
+    desc: "Учителя с международными сертификатами",
+    color: "from-secondary/10 to-secondary/5",
+    iconColor: "text-secondary",
   },
   {
     icon: Gift,
-    title: "Первый урок — бесплатный",
+    title: "Первый урок бесплатно",
     desc: "Попробуйте формат обучения без обязательств",
+    color: "from-primary/10 to-primary/5",
+    iconColor: "text-primary",
   },
 ];
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-28">
+    <section id="about" className="py-28 bg-muted/40">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3">
-            Добейтесь реальных результатов
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+            Добейтесь <span className="gradient-text">реальных результатов</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            В одном курсе — целый комплекс продуктов, которые гарантируют прогресс
+            Целый комплекс продуктов, которые гарантируют прогресс
           </p>
         </motion.div>
 
@@ -52,14 +61,14 @@ export function AboutSection() {
           {features.map((f, i) => (
             <motion.div
               key={f.title}
-              className="bg-card rounded-2xl p-7 border border-border hover:shadow-md transition-shadow"
+              className="bg-card rounded-2xl p-7 border border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
             >
-              <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mb-5">
-                <f.icon size={22} className="text-accent-foreground" />
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                <f.icon size={22} className={f.iconColor} />
               </div>
               <h3 className="font-bold text-foreground mb-1.5 text-lg">{f.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>

@@ -38,8 +38,8 @@ export function TeachersSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3">
-            Наши преподаватели
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+            Наши <span className="gradient-text">преподаватели</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             Команда сертифицированных лингвистов с международным опытом
@@ -50,14 +50,14 @@ export function TeachersSection() {
           {teachers.map((t, i) => (
             <motion.div
               key={t.name}
-              className="bg-card rounded-2xl p-7 border border-border text-center hover:shadow-md transition-shadow"
+              className="bg-card rounded-2xl p-7 border border-border text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
             >
-              <Avatar className="w-20 h-20 mx-auto mb-5 text-lg">
-                <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xl">
+              <Avatar className="w-20 h-20 mx-auto mb-5 text-lg ring-4 ring-accent group-hover:ring-primary/20 transition-all">
+                <AvatarFallback className="gradient-primary text-primary-foreground font-bold text-xl">
                   {t.initials}
                 </AvatarFallback>
               </Avatar>
