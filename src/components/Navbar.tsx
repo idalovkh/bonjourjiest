@@ -24,7 +24,7 @@ export function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-card/95 backdrop-blur-md shadow-sm"
+          ? "glass shadow-sm border-b border-border/50"
           : "bg-transparent"
       }`}
     >
@@ -47,7 +47,7 @@ export function Navbar() {
               {l.label}
             </a>
           ))}
-          <Button asChild size="sm" className="rounded-full px-6">
+          <Button asChild size="sm" className="rounded-full px-6 gradient-primary shadow-md shadow-primary/20">
             <a href="#contact">Записаться</a>
           </Button>
         </div>
@@ -64,7 +64,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-card/95 backdrop-blur-md border-t border-border px-4 pb-4">
+        <div className="md:hidden glass border-t border-border/50 px-4 pb-4">
           {navLinks.map((l) => (
             <a
               key={l.href}
@@ -75,7 +75,7 @@ export function Navbar() {
               {l.label}
             </a>
           ))}
-          <Button asChild className="w-full mt-2 rounded-full" size="sm">
+          <Button asChild className="w-full mt-2 rounded-full gradient-primary" size="sm">
             <a href="#contact" onClick={() => setMobileOpen(false)}>
               Записаться
             </a>
