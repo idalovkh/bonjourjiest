@@ -1,26 +1,31 @@
 import { motion } from "framer-motion";
-import { Award, Calendar, Monitor, GraduationCap } from "lucide-react";
+import { Award, Calendar, Monitor, GraduationCap, Gift } from "lucide-react";
 
 const features = [
   {
-    icon: Award,
-    title: "Кембриджская аттестация",
-    desc: "Программа обучения соответствует международным стандартам Cambridge Assessment",
-  },
-  {
     icon: Calendar,
     title: "С 2016 года",
-    desc: "8 лет опыта и более 2 000 выпускников, достигших своих целей",
+    desc: "Работаем с 2016 года — проверенный опыт и стабильное качество обучения",
   },
   {
     icon: Monitor,
-    title: "Собственная платформа",
-    desc: "Удобная онлайн-платформа с интерактивными материалами и прогрессом",
+    title: "Собственная онлайн-платформа",
+    desc: "Современная платформа и 4 метода заучивания слов",
   },
   {
     icon: GraduationCap,
     title: "Профессиональные лингвисты",
-    desc: "Все преподаватели — сертифицированные специалисты с опытом от 5 лет",
+    desc: "Уроки где учатся говорить, а не делать упражнения",
+  },
+  {
+    icon: Award,
+    title: "Аттестованы Кембриджем",
+    desc: "Аттестованные Cambridge учителя с международными сертификатами",
+  },
+  {
+    icon: Gift,
+    title: "Первый урок — бесплатный",
+    desc: "Попробуйте формат обучения без обязательств",
   },
 ];
 
@@ -36,15 +41,11 @@ export function AboutSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Почему выбирают нас
+            О школе
           </h2>
-          <p className="text-muted-foreground">
-            Мы создаём комфортную среду для изучения английского, где каждый
-            ученик получает внимание и поддержку
-          </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {features.map((f, i) => (
             <motion.div
               key={f.title}

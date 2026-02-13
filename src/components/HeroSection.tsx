@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
   return (
@@ -17,9 +17,20 @@ export function HeroSection() {
             transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-              <Sparkles size={14} />
-              Онлайн-школа английского языка
+              Deshar School – это:
             </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+          >
+            <ul className="text-base sm:text-lg text-muted-foreground mb-6 space-y-2">
+              <li>• Аттестованные <strong className="text-foreground">Cambridge</strong> учителя</li>
+              <li>• Современная платформа и 4 метода заучивания слов</li>
+              <li>• Уроки где учатся говорить, а не делать упражнения</li>
+            </ul>
           </motion.div>
 
           <motion.h1
@@ -28,8 +39,8 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Научим говорить{" "}
-            <span className="text-primary">по-английски</span> с нуля за 4 месяца
+            Научим тебя говорить{" "}
+            <span className="text-primary">с нуля</span> за 4 месяца
           </motion.h1>
 
           <motion.p
@@ -38,8 +49,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Кембриджская методика, профессиональные лингвисты и индивидуальный
-            подход. Занятия онлайн — из любой точки мира.
+            Оставь телеграм и имя для пробного урока
           </motion.p>
 
           <motion.div
@@ -66,18 +76,18 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <div>
-              <span className="block font-display text-2xl font-bold text-foreground">2000+</span>
-              выпускников
+              <span className="block font-display text-2xl font-bold text-foreground">С 2016</span>
+              года работаем
             </div>
             <div className="w-px h-10 bg-border" />
             <div>
-              <span className="block font-display text-2xl font-bold text-foreground">8 лет</span>
-              на рынке
+              <span className="block font-display text-2xl font-bold text-foreground">Cambridge</span>
+              аттестация
             </div>
             <div className="w-px h-10 bg-border" />
             <div>
-              <span className="block font-display text-2xl font-bold text-foreground">4.9★</span>
-              рейтинг
+              <span className="block font-display text-2xl font-bold text-foreground">Бесплатно</span>
+              первый урок
             </div>
           </motion.div>
         </div>

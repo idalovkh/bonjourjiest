@@ -4,41 +4,38 @@ import { Check } from "lucide-react";
 
 const plans = [
   {
-    name: "Групповые занятия",
+    name: "Уроки в группе",
     price: "6 490",
-    period: "/ мес",
-    desc: "Мини-группы до 6 человек",
+    period: "месяц занятий",
     features: [
-      "8 занятий в месяц",
-      "Мини-группа до 6 человек",
+      "Занятия в мини-группе",
+      "Доступ к онлайн-платформе",
       "Домашние задания с проверкой",
-      "Доступ к платформе",
+      "Сертифицированные преподаватели",
     ],
     popular: false,
   },
   {
-    name: "Индивидуальные",
+    name: "Индивидуальные уроки",
     price: "13 600",
-    period: "/ мес",
-    desc: "Персональная программа под ваши цели",
+    period: "месяц занятий",
     features: [
-      "8 занятий в месяц",
-      "Индивидуальный план обучения",
+      "Персональная программа",
       "Гибкое расписание",
-      "Поддержка преподавателя 24/7",
-      "Доступ к платформе",
+      "Доступ к онлайн-платформе",
+      "Индивидуальный подход",
+      "Сертифицированные преподаватели",
     ],
     popular: true,
   },
   {
-    name: "Пробный урок",
+    name: "Первый урок",
     price: "0",
-    period: "",
-    desc: "Познакомьтесь со школой бесплатно",
+    period: "Бесплатный",
     features: [
-      "30 минут с преподавателем",
+      "Знакомство с преподавателем",
       "Определение уровня",
-      "Персональные рекомендации",
+      "Подбор программы",
       "Без обязательств",
     ],
     popular: false,
@@ -56,11 +53,8 @@ export function PricingSection() {
           viewport={{ once: true }}
         >
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Тарифы
+            Цены
           </h2>
-          <p className="text-muted-foreground">
-            Выберите формат обучения, который подходит именно вам
-          </p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -84,12 +78,11 @@ export function PricingSection() {
               )}
               <h3 className="font-display font-bold text-xl mb-1">{p.name}</h3>
               <p className={`text-sm mb-4 ${p.popular ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
-                {p.desc}
+                {p.period}
               </p>
               <div className="mb-6">
-                <span className="font-display text-4xl font-extrabold">{p.price}₽</span>
-                <span className={`text-sm ${p.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                  {p.period}
+                <span className="font-display text-4xl font-extrabold">
+                  {p.price === "0" ? "Бесплатно" : `${p.price} руб.`}
                 </span>
               </div>
               <ul className="space-y-3 mb-8">

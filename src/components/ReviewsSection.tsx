@@ -1,31 +1,27 @@
 import { motion } from "framer-motion";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const reviews = [
   {
-    name: "Мария К.",
-    initials: "МК",
-    course: "Разговорный английский",
-    text: "За 4 месяца я начала свободно общаться с коллегами из-за рубежа. Преподаватель подбирал темы именно под мои задачи.",
+    name: "Ученик",
+    initials: "У1",
+    text: "Отличная школа! Преподаватели действительно учат говорить, а не просто делать упражнения. За 4 месяца заговорил на английском!",
   },
   {
-    name: "Алексей Д.",
-    initials: "АД",
-    course: "Подготовка к IELTS",
-    text: "Набрал 7.5 на IELTS с первой попытки! Структурированная подготовка и постоянная практика дали результат.",
+    name: "Ученик",
+    initials: "У2",
+    text: "Современная платформа и удобные методы заучивания слов. Рекомендую всем, кто хочет выучить английский!",
   },
   {
-    name: "Ольга С.",
-    initials: "ОС",
-    course: "Бизнес-английский",
-    text: "Отличная школа! Удобная платформа, классные преподаватели. Занимаюсь уже полгода и вижу огромный прогресс.",
+    name: "Ученик",
+    initials: "У3",
+    text: "Аттестованные Cambridge учителя — это чувствуется в качестве обучения. Очень довольна результатами!",
   },
   {
-    name: "Игорь В.",
-    initials: "ИВ",
-    course: "С нуля до B1",
-    text: "Начинал с полного нуля, а сейчас смотрю сериалы без субтитров. Групповые занятия — отличная мотивация!",
+    name: "Ученик",
+    initials: "У4",
+    text: "Начинал с нуля, а сейчас свободно общаюсь с иностранными коллегами. Школа работает с 2016 года — опыт виден!",
   },
 ];
 
@@ -40,17 +36,14 @@ export function ReviewsSection() {
           viewport={{ once: true }}
         >
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Отзывы учеников
+            Отзывы наших учеников
           </h2>
-          <p className="text-muted-foreground">
-            Более 2 000 выпускников уже достигли своих целей
-          </p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {reviews.map((r, i) => (
             <motion.div
-              key={r.name}
+              key={i}
               className="bg-card rounded-2xl p-6 border border-border"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -69,10 +62,7 @@ export function ReviewsSection() {
                     {r.initials}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <p className="text-sm font-medium text-foreground">{r.name}</p>
-                  <p className="text-xs text-muted-foreground">{r.course}</p>
-                </div>
+                <p className="text-sm font-medium text-foreground">{r.name}</p>
               </div>
             </motion.div>
           ))}
