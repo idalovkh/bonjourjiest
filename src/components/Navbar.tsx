@@ -23,14 +23,16 @@ export function Navbar() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-card/90 backdrop-blur-md shadow-sm" : "bg-transparent"
+        scrolled
+          ? "bg-card/95 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       }`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
-        <a href="#" className="flex items-center gap-2">
-          <img src={logo} alt="Deshar School" className="h-10 w-auto" />
-          <span className="font-display text-xl font-bold text-foreground">
-            Deshar<span className="text-primary">School</span>
+        <a href="#" className="flex items-center gap-2.5">
+          <img src={logo} alt="Deshar School" className="h-9 w-auto" />
+          <span className="text-lg font-bold text-foreground tracking-tight">
+            Deshar School
           </span>
         </a>
 
@@ -45,7 +47,7 @@ export function Navbar() {
               {l.label}
             </a>
           ))}
-          <Button asChild size="sm">
+          <Button asChild size="sm" className="rounded-full px-6">
             <a href="#contact">Записаться</a>
           </Button>
         </div>
@@ -73,7 +75,7 @@ export function Navbar() {
               {l.label}
             </a>
           ))}
-          <Button asChild className="w-full mt-2" size="sm">
+          <Button asChild className="w-full mt-2 rounded-full" size="sm">
             <a href="#contact" onClick={() => setMobileOpen(false)}>
               Записаться
             </a>
