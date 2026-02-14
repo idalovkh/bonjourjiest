@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Award, Calendar, Monitor, GraduationCap, Gift } from "lucide-react";
+import { Flame, Rocket, MessageCircle, ShieldCheck, Zap } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -9,34 +9,34 @@ import Autoplay from "embla-carousel-autoplay";
 
 const features = [
   {
-    icon: Calendar,
+    icon: Flame,
     title: "С 2016 года",
     desc: "Проверенный опыт и стабильное качество обучения",
-    gradient: "from-primary/10 to-secondary/10",
+    gradient: "from-orange-500/10 to-red-500/10",
   },
   {
-    icon: Monitor,
+    icon: Rocket,
     title: "Своя платформа",
     desc: "Современная платформа и 4 метода заучивания слов",
-    gradient: "from-secondary/10 to-primary/10",
+    gradient: "from-sky-500/10 to-indigo-500/10",
   },
   {
-    icon: GraduationCap,
+    icon: MessageCircle,
     title: "Учим говорить",
     desc: "Уроки где учатся говорить, а не делать упражнения",
-    gradient: "from-primary/10 to-accent/30",
+    gradient: "from-emerald-500/10 to-teal-500/10",
   },
   {
-    icon: Award,
+    icon: ShieldCheck,
     title: "Cambridge аттестация",
     desc: "Учителя с международными сертификатами",
-    gradient: "from-accent/30 to-secondary/10",
+    gradient: "from-amber-500/10 to-yellow-500/10",
   },
   {
-    icon: Gift,
+    icon: Zap,
     title: "Первый урок бесплатно",
     desc: "Попробуйте формат обучения без обязательств",
-    gradient: "from-secondary/10 to-primary/10",
+    gradient: "from-violet-500/10 to-fuchsia-500/10",
   },
 ];
 
