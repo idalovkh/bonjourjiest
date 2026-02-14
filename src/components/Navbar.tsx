@@ -21,17 +21,17 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
       <nav
-        className={`mx-auto flex items-center justify-between h-16 px-6 lg:px-10 transition-all duration-300 ${
+        className={`mx-auto max-w-[1200px] flex items-center justify-between h-14 px-6 rounded-full transition-all duration-300 ${
           scrolled
-            ? "bg-background/90 backdrop-blur-xl shadow-sm border-b border-border/50"
-            : "bg-background/60 backdrop-blur-md"
+            ? "bg-card/95 backdrop-blur-xl shadow-md border border-border/40"
+            : "bg-card/80 backdrop-blur-lg shadow-sm border border-border/30"
         }`}
       >
         <a href="#" className="flex items-center gap-2.5">
-          <img src={logo} alt="Deshar School" className="h-8 w-auto" />
-          <span className="text-base font-bold text-foreground tracking-tight hidden sm:inline">
+          <img src={logo} alt="Deshar School" className="h-7 w-auto" />
+          <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">
             Deshar School
           </span>
         </a>
@@ -52,7 +52,7 @@ export function Navbar() {
           <Button
             asChild
             size="sm"
-            className="rounded-full px-5 h-8 gradient-primary text-xs font-semibold shadow-sm"
+            className="rounded-full px-5 h-9 gradient-primary text-xs font-semibold shadow-sm"
           >
             <a href="#contact">Записаться</a>
           </Button>
@@ -68,7 +68,7 @@ export function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg px-5 pb-4 pt-2">
+        <div className="md:hidden mx-auto max-w-[1200px] mt-2 bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-lg px-5 pb-4 pt-2">
           {navLinks.map((l) => (
             <a
               key={l.href}
