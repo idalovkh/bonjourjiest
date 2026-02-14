@@ -180,6 +180,7 @@ export function TeachersSection() {
                       <img
                         src={t.photo}
                         alt={t.name}
+                        loading="lazy"
                         className="w-full h-full object-cover object-top"
                       />
                     </div>
