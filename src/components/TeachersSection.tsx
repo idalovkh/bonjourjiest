@@ -37,15 +37,15 @@ const teachers = [
 
 export function TeachersSection() {
   return (
-    <section id="teachers" className="py-28">
+    <section id="teachers" className="section-padding bg-muted/40">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-14"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
             Наши <span className="gradient-text">преподаватели</span>
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -60,19 +60,19 @@ export function TeachersSection() {
         >
           <Carousel
             opts={{ align: "start", loop: true }}
-            className="w-full max-w-5xl mx-auto"
+            className="w-full max-w-4xl mx-auto"
           >
             <CarouselContent className="-ml-4">
               {teachers.map((t) => (
                 <CarouselItem key={t.name} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                  <div className="bg-card rounded-2xl p-7 border border-border text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group h-full">
-                    <Avatar className="w-20 h-20 mx-auto mb-5 text-lg ring-4 ring-accent group-hover:ring-primary/20 transition-all">
-                      <AvatarFallback className="gradient-primary text-primary-foreground font-bold text-xl">
+                  <div className="card-elevated p-7 text-center hover:-translate-y-1 transition-all duration-300 group h-full">
+                    <Avatar className="w-16 h-16 mx-auto mb-4 ring-2 ring-border group-hover:ring-primary/30 transition-all">
+                      <AvatarFallback className="gradient-primary text-primary-foreground font-bold text-lg">
                         {t.initials}
                       </AvatarFallback>
                     </Avatar>
-                    <h3 className="font-bold text-foreground text-lg">{t.name}</h3>
-                    <p className="text-sm text-primary font-semibold mb-2">{t.role}</p>
+                    <h3 className="font-display font-bold text-foreground">{t.name}</h3>
+                    <p className="text-sm text-primary font-medium mb-2">{t.role}</p>
                     <p className="text-sm text-muted-foreground leading-relaxed">{t.exp}</p>
                   </div>
                 </CarouselItem>
