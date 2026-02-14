@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useScrollY, useBodyScrollLock } from "@/hooks/use-scroll";
 import logo from "@/assets/logo.webp";
 
 const navLinks = [
@@ -12,20 +13,11 @@ const navLinks = [
 ];
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const scrollY = useScrollY();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const scrolled = scrollY > 20;
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [mobileOpen]);
+  useBodyScrollLock(mobileOpen);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
@@ -74,7 +66,6 @@ export function Navbar() {
         </button>
       </nav>
 
-      {/* Animated mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
