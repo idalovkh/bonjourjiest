@@ -20,6 +20,15 @@ export default defineConfig(({ mode }) => ({
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "framer-motion", "embla-carousel-react"],
+    include: [
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "framer-motion",
+      "embla-carousel-react",
+      "@radix-ui/react-tooltip",
+      "@radix-ui/react-accordion",
+    ],
   },
 }));
