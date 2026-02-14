@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.webp";
 
 const navLinks = [
@@ -16,9 +17,15 @@ export function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
@@ -41,7 +48,7 @@ export function Navbar() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="relative text-sm text-muted-foreground hover:text-foreground transition-colors after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
             >
               {l.label}
             </a>
@@ -52,38 +59,56 @@ export function Navbar() {
           <Button
             asChild
             size="sm"
-            className="rounded-full px-5 h-9 gradient-primary text-xs font-semibold shadow-sm"
+            className="rounded-full px-5 h-9 gradient-primary text-xs font-semibold shadow-sm hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-200"
           >
             <a href="#contact">Записаться</a>
           </Button>
         </div>
 
         <button
-          className="md:hidden text-foreground"
+          className="md:hidden text-foreground p-2 -mr-2"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </nav>
 
-      {mobileOpen && (
-        <div className="md:hidden mx-auto max-w-[1200px] mt-2 bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-lg px-5 pb-4 pt-2">
-          {navLinks.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setMobileOpen(false)}
-              className="block py-3 text-sm text-muted-foreground hover:text-foreground border-b border-border/30 last:border-0"
+      {/* Animated mobile menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="md:hidden mx-auto max-w-[1200px] mt-2 bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-lg px-5 pb-4 pt-2 overflow-hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+          >
+            {navLinks.map((l, i) => (
+              <motion.a
+                key={l.href}
+                href={l.href}
+                onClick={() => setMobileOpen(false)}
+                className="block py-3.5 text-sm text-muted-foreground hover:text-foreground border-b border-border/30 last:border-0"
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+              >
+                {l.label}
+              </motion.a>
+            ))}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              {l.label}
-            </a>
-          ))}
-          <Button asChild className="w-full mt-3 rounded-full gradient-primary text-sm" size="sm">
-            <a href="#contact" onClick={() => setMobileOpen(false)}>Записаться</a>
-          </Button>
-        </div>
-      )}
+              <Button asChild className="w-full mt-3 rounded-full gradient-primary text-sm" size="sm">
+                <a href="#contact" onClick={() => setMobileOpen(false)}>Записаться</a>
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

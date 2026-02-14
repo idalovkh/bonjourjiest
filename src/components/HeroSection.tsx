@@ -69,7 +69,7 @@ export function HeroSection() {
               <Button
                 asChild
                 size="lg"
-                className="gradient-primary rounded-full text-lg px-12 h-14 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
+                className="gradient-primary btn-glow rounded-full text-lg px-12 h-14 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
               >
                 <a href="#contact">
                   Бесплатный пробный урок
