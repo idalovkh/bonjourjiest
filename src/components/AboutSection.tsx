@@ -4,41 +4,45 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const features = [
   {
     icon: Calendar,
     title: "С 2016 года",
     desc: "Проверенный опыт и стабильное качество обучения",
+    gradient: "from-primary/10 to-secondary/10",
   },
   {
     icon: Monitor,
     title: "Своя платформа",
     desc: "Современная платформа и 4 метода заучивания слов",
+    gradient: "from-secondary/10 to-primary/10",
   },
   {
     icon: GraduationCap,
     title: "Учим говорить",
     desc: "Уроки где учатся говорить, а не делать упражнения",
+    gradient: "from-primary/10 to-accent/30",
   },
   {
     icon: Award,
     title: "Cambridge аттестация",
     desc: "Учителя с международными сертификатами",
+    gradient: "from-accent/30 to-secondary/10",
   },
   {
     icon: Gift,
     title: "Первый урок бесплатно",
     desc: "Попробуйте формат обучения без обязательств",
+    gradient: "from-secondary/10 to-primary/10",
   },
 ];
 
 export function AboutSection() {
   return (
-    <section id="about" className="section-padding">
+    <section id="about" className="section-padding overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
@@ -53,36 +57,34 @@ export function AboutSection() {
             Целый комплекс продуктов, которые гарантируют прогресс
           </p>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <Carousel
-            opts={{ align: "start", loop: true }}
-            className="w-full max-w-5xl mx-auto"
-          >
-            <CarouselContent className="-ml-4">
-              {features.map((f, i) => (
-                <CarouselItem key={f.title} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                  <div className="card-elevated p-7 hover:-translate-y-1 transition-all duration-300 group h-full">
-                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                      <f.icon size={20} className="text-primary" />
-                    </div>
-                    <h3 className="font-display font-bold text-foreground mb-1">{f.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="flex justify-center gap-2 mt-8">
-              <CarouselPrevious className="static translate-y-0 rounded-full border-border" />
-              <CarouselNext className="static translate-y-0 rounded-full border-border" />
-            </div>
-          </Carousel>
-        </motion.div>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <Carousel
+          opts={{ align: "center", loop: true, dragFree: true }}
+          plugins={[Autoplay({ delay: 2500, stopOnInteraction: false, stopOnMouseEnter: true })]}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-3">
+            {features.map((f) => (
+              <CarouselItem key={f.title} className="pl-3 basis-[280px] sm:basis-[300px]">
+                <div className={`bg-gradient-to-br ${f.gradient} rounded-2xl p-6 h-full border border-border/40 hover:border-primary/20 hover:shadow-lg transition-all duration-300 group`}>
+                  <div className="w-11 h-11 rounded-xl bg-card flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                    <f.icon size={22} className="text-primary" />
+                  </div>
+                  <h3 className="font-display font-bold text-foreground mb-1.5 text-base">{f.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </motion.div>
     </section>
   );
 }
