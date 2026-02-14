@@ -55,19 +55,19 @@ export function PricingSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
-            Тарифы
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Выберите формат, который подходит именно вам
-          </p>
+           <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
+             Тарифы
+           </h2>
+           <p className="text-xl text-muted-foreground">
+             Выберите формат, который подходит именно вам
+           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto items-stretch">
+        <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto items-stretch">
           {plans.map((p, i) => (
             <motion.div
               key={p.name}
-              className={`relative rounded-2xl p-7 flex flex-col ${
+              className={`relative rounded-2xl p-9 flex flex-col ${
                 p.popular
                   ? "gradient-primary text-primary-foreground ring-2 ring-primary/20 shadow-xl shadow-primary/15"
                   : "card-elevated"
@@ -84,29 +84,29 @@ export function PricingSection() {
                 </span>
               )}
 
-              <div className="mb-6">
-                <h3 className="font-display font-bold text-lg">{p.name}</h3>
-                <p className={`text-sm ${p.popular ? "text-primary-foreground/65" : "text-muted-foreground"}`}>
+              <div className="mb-7">
+                <h3 className="font-display font-bold text-xl">{p.name}</h3>
+                <p className={`text-base ${p.popular ? "text-primary-foreground/65" : "text-muted-foreground"}`}>
                   {p.subtitle}
                 </p>
               </div>
 
-              <div className="mb-6">
-                <span className="text-3xl font-extrabold font-display">
+              <div className="mb-7">
+                <span className="text-4xl font-extrabold font-display">
                   {p.price === "0" ? "Бесплатно" : `${p.price} ₽`}
                 </span>
                 {p.period && (
-                  <span className={`text-sm ${p.popular ? "text-primary-foreground/65" : "text-muted-foreground"}`}>
+                  <span className={`text-base ${p.popular ? "text-primary-foreground/65" : "text-muted-foreground"}`}>
                     {p.period}
                   </span>
                 )}
               </div>
 
-              <ul className="space-y-2.5 mb-8 flex-1">
+              <ul className="space-y-3 mb-9 flex-1">
                 {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm">
+                  <li key={f} className="flex items-start gap-3 text-base">
                     <Check
-                      size={15}
+                      size={17}
                       className={`mt-0.5 shrink-0 ${p.popular ? "text-secondary" : "text-primary"}`}
                     />
                     {f}
@@ -116,7 +116,7 @@ export function PricingSection() {
 
               <Button
                 asChild
-                className={`w-full rounded-full h-11 font-semibold text-sm ${
+                className={`w-full rounded-full h-13 font-semibold text-base ${
                   p.popular
                     ? "bg-white text-primary hover:bg-white/90"
                     : "gradient-primary text-primary-foreground"

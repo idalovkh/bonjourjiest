@@ -36,7 +36,7 @@ export function ReviewsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+          <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
             Отзывы <span className="gradient-text">учеников</span>
           </h2>
         </motion.div>
@@ -55,16 +55,16 @@ export function ReviewsSection() {
         >
           <CarouselContent className="-ml-3">
             {reviews.map((r, i) => (
-              <CarouselItem key={i} className="pl-3 basis-[300px] sm:basis-[340px]">
-                <div className="bg-card rounded-2xl border border-border/40 p-7 relative hover:border-primary/20 hover:shadow-lg transition-all duration-300 h-full">
-                  <Quote size={24} className="text-primary/10 absolute top-5 right-5" />
-                  <div className="flex gap-0.5 mb-3">
+              <CarouselItem key={i} className="pl-3 basis-[320px] sm:basis-[380px]">
+                <div className="bg-card rounded-2xl border border-border/40 p-8 relative hover:border-primary/20 hover:shadow-lg transition-all duration-300 h-full">
+                  <Quote size={28} className="text-primary/10 absolute top-6 right-6" />
+                  <div className="flex gap-1 mb-4">
                     {[...Array(5)].map((_, j) => (
-                      <Star key={j} size={13} className="fill-primary/80 text-primary/80" />
+                      <Star key={j} size={16} className="fill-primary/80 text-primary/80" />
                     ))}
                   </div>
-                  <p className="text-sm text-foreground/85 mb-4 leading-relaxed">"{r.text}"</p>
-                  <p className="text-sm font-semibold text-foreground">{r.name}</p>
+                  <p className="text-base text-foreground/85 mb-5 leading-relaxed">"{r.text}"</p>
+                  <p className="text-base font-semibold text-foreground">{r.name}</p>
                 </div>
               </CarouselItem>
             ))}

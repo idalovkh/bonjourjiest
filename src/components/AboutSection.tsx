@@ -50,10 +50,10 @@ export function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+          <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
             Почему <span className="gradient-text">Deshar School</span>
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-xl">
             Целый комплекс продуктов, которые гарантируют прогресс
           </p>
         </motion.div>
@@ -73,12 +73,12 @@ export function AboutSection() {
           <CarouselContent className="-ml-3">
             {features.map((f) => (
               <CarouselItem key={f.title} className="pl-3 basis-[280px] sm:basis-[300px]">
-                <div className={`bg-gradient-to-br ${f.gradient} rounded-2xl p-6 h-full border border-border/40 hover:border-primary/20 hover:shadow-lg transition-all duration-300 group`}>
-                  <div className="w-11 h-11 rounded-xl bg-card flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                    <f.icon size={22} className="text-primary" />
+                <div className={`bg-gradient-to-br ${f.gradient} rounded-2xl p-8 h-full border border-border/40 hover:border-primary/20 hover:shadow-lg transition-all duration-300 group`}>
+                  <div className="w-14 h-14 rounded-xl bg-card flex items-center justify-center mb-5 shadow-sm group-hover:scale-110 transition-transform">
+                    <f.icon size={26} className="text-primary" />
                   </div>
-                  <h3 className="font-display font-bold text-foreground mb-1.5 text-base">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                  <h3 className="font-display font-bold text-foreground mb-2 text-lg">{f.title}</h3>
+                  <p className="text-base text-muted-foreground leading-relaxed">{f.desc}</p>
                 </div>
               </CarouselItem>
             ))}

@@ -101,22 +101,22 @@ export function ContactSection() {
             <div className="relative grid lg:grid-cols-2 gap-8 lg:gap-12 p-8 sm:p-10 lg:p-14">
               {/* Left — text */}
               <div className="flex flex-col justify-center">
-                <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight">
+                <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white mb-4 tracking-tight">
                   Запишись на
                   <br />
                   пробный урок
                 </h2>
-                <p className="text-white/70 text-lg mb-8">
+                <p className="text-white/70 text-xl mb-10">
                   Менеджер свяжется и запишет на бесплатное занятие
                 </p>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {perks.map((p) => (
                     <div key={p.text} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
-                        <p.icon size={16} className="text-secondary" />
+                      <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                        <p.icon size={20} className="text-secondary" />
                       </div>
-                      <span className="text-sm text-white/80">{p.text}</span>
+                      <span className="text-base text-white/80">{p.text}</span>
                     </div>
                   ))}
                 </div>
@@ -124,7 +124,7 @@ export function ContactSection() {
 
               {/* Right — form */}
               <div className="flex items-center">
-                <div className="bg-card rounded-2xl p-8 shadow-2xl w-full">
+                <div className="bg-card rounded-2xl p-10 shadow-2xl w-full">
                   {submitted ? (
                     <div className="text-center py-8">
                       <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
@@ -134,67 +134,67 @@ export function ContactSection() {
                       <p className="text-muted-foreground text-sm">Мы свяжемся с вами в ближайшее время.</p>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                      <div className="text-center mb-2">
-                        <p className="text-sm font-semibold text-foreground">Оставьте заявку</p>
-                        <p className="text-xs text-muted-foreground">и мы перезвоним за 5 минут</p>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="text-center mb-3">
+                        <p className="text-base font-semibold text-foreground">Оставьте заявку</p>
+                        <p className="text-sm text-muted-foreground">и мы перезвоним за 5 минут</p>
                       </div>
 
                       <div>
-                        <Label htmlFor="name" className="text-sm font-medium">Имя</Label>
+                        <Label htmlFor="name" className="text-base font-medium">Имя</Label>
                         <Input
                           id="name"
                           placeholder="Ваше имя"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
-                          className="mt-1.5 rounded-xl h-12 border-border/60 focus:border-primary"
+                          className="mt-2 rounded-xl h-14 text-base border-border/60 focus:border-primary"
                           maxLength={100}
                         />
                       </div>
 
                       <div>
-                        <Label className="text-sm font-medium mb-2 block">Способ связи</Label>
-                        <div className="flex gap-2">
+                        <Label className="text-base font-medium mb-2.5 block">Способ связи</Label>
+                        <div className="flex gap-2.5">
                           {contactMethods.map((m) => (
                             <button
                               key={m.id}
                               type="button"
                               onClick={() => { setMethod(m.id); setContact(""); }}
                               title={m.label}
-                              className={`flex-1 flex items-center justify-center py-3 rounded-xl transition-all duration-200 ${
+                              className={`flex-1 flex items-center justify-center py-4 rounded-xl transition-all duration-200 ${
                                 method === m.id
                                   ? "bg-primary text-primary-foreground shadow-md"
                                   : "bg-muted text-muted-foreground hover:bg-muted/80"
                               }`}
                             >
-                              <m.icon size={18} />
+                              <m.icon size={22} />
                             </button>
                           ))}
                         </div>
                       </div>
 
                       <div>
-                        <Label htmlFor="contact" className="text-sm font-medium">{activeMethod.label}</Label>
+                        <Label htmlFor="contact" className="text-base font-medium">{activeMethod.label}</Label>
                         <Input
                           id="contact"
                           placeholder={activeMethod.placeholder}
                           value={contact}
                           onChange={(e) => setContact(e.target.value)}
-                          className="mt-1.5 rounded-xl h-12 border-border/60 focus:border-primary"
+                          className="mt-2 rounded-xl h-14 text-base border-border/60 focus:border-primary"
                           maxLength={200}
                         />
                       </div>
 
                       <Button
                         type="submit"
-                        className="w-full rounded-full h-13 text-sm font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
+                        className="w-full rounded-full h-14 text-base font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
                         size="lg"
                         disabled={loading}
                       >
                         {loading ? "Отправка..." : (
                           <>
                             Записаться бесплатно
-                            <ArrowRight size={16} className="ml-2" />
+                            <ArrowRight size={18} className="ml-2" />
                           </>
                         )}
                       </Button>
