@@ -3,9 +3,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 import ksenia from "@/assets/teachers/ksenia.webp";
 import maryam from "@/assets/teachers/maryam.webp";
@@ -74,7 +73,7 @@ const teachers = [
 
 export function TeachersSection() {
   return (
-    <section id="teachers" className="section-padding bg-muted/40">
+    <section id="teachers" className="section-padding bg-muted/40 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
@@ -89,54 +88,50 @@ export function TeachersSection() {
             Команда сертифицированных лингвистов с международным опытом
           </p>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <Carousel
-            opts={{ align: "start", loop: true }}
-            className="w-full max-w-5xl mx-auto"
-          >
-            <CarouselContent className="-ml-4">
-              {teachers.map((t) => (
-                <CarouselItem key={t.name} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                  <div className="card-elevated overflow-hidden hover:-translate-y-1 transition-all duration-300 group h-full flex flex-col">
-                    {/* Photo — fills container width */}
-                    <div className="relative bg-gradient-to-b from-accent/80 to-muted/40 overflow-hidden aspect-square">
-                      <img
-                        src={t.photo}
-                        alt={t.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <div className="p-5 flex-1 flex flex-col">
-                      <h3 className="font-display font-bold text-foreground">{t.name}</h3>
-                      {t.role && (
-                        <p className="text-xs font-semibold text-primary mb-1">{t.role}</p>
-                      )}
-                      <ul className="mt-2 space-y-1.5 flex-1">
-                        {t.facts.map((f) => (
-                          <li key={f} className="text-sm text-muted-foreground leading-snug flex items-start gap-2">
-                            <span className="w-1 h-1 rounded-full bg-primary/50 mt-1.5 shrink-0" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="flex justify-center gap-2 mt-8">
-              <CarouselPrevious className="static translate-y-0 rounded-full border-border" />
-              <CarouselNext className="static translate-y-0 rounded-full border-border" />
-            </div>
-          </Carousel>
-        </motion.div>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <Carousel
+          opts={{ align: "center", loop: true, dragFree: true }}
+          plugins={[Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true })]}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-3">
+            {teachers.map((t) => (
+              <CarouselItem key={t.name} className="pl-3 basis-[260px] sm:basis-[280px]">
+                <div className="bg-card rounded-2xl border border-border/40 overflow-hidden hover:border-primary/20 hover:shadow-lg transition-all duration-300 group h-full flex flex-col">
+                  <div className="relative bg-gradient-to-b from-accent/80 to-muted/40 overflow-hidden aspect-square">
+                    <img
+                      src={t.photo}
+                      alt={t.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-5 flex-1 flex flex-col">
+                    <h3 className="font-display font-bold text-foreground">{t.name}</h3>
+                    {t.role && (
+                      <p className="text-xs font-semibold text-primary mb-1">{t.role}</p>
+                    )}
+                    <ul className="mt-2 space-y-1.5 flex-1">
+                      {t.facts.map((f) => (
+                        <li key={f} className="text-sm text-muted-foreground leading-snug flex items-start gap-2">
+                          <span className="w-1 h-1 rounded-full bg-primary/50 mt-1.5 shrink-0" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </motion.div>
     </section>
   );
 }
