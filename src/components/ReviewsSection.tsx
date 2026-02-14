@@ -56,7 +56,7 @@ export function ReviewsSection() {
           <CarouselContent className="-ml-3">
             {reviews.map((r, i) => (
               <CarouselItem key={i} className="pl-3 basis-[320px] sm:basis-[380px]">
-                <div className="bg-card rounded-2xl border border-border/40 p-8 relative hover:border-primary/20 hover:shadow-lg transition-all duration-300 h-full">
+                <div className="bg-card rounded-2xl border border-border/40 p-8 relative hover:border-primary/20 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full">
                   <Quote size={28} className="text-primary/10 absolute top-6 right-6" />
                   <div className="flex gap-1 mb-4">
                     {[...Array(5)].map((_, j) => (

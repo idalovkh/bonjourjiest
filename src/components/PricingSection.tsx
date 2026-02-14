@@ -67,15 +67,15 @@ export function PricingSection() {
           {plans.map((p, i) => (
             <motion.div
               key={p.name}
-              className={`relative rounded-2xl p-9 flex flex-col ${
+              className={`relative rounded-2xl p-9 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
                 p.popular
-                  ? "gradient-primary text-primary-foreground ring-2 ring-primary/20 shadow-xl shadow-primary/15"
-                  : "card-elevated"
+                  ? "gradient-primary text-primary-foreground ring-2 ring-primary/20 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25"
+                  : "card-elevated hover:shadow-xl"
               }`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.08 }}
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.45, delay: i * 0.1, ease: "easeOut" }}
             >
               {p.popular && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground text-xs font-semibold px-4 py-1 rounded-full flex items-center gap-1.5 shadow-md">

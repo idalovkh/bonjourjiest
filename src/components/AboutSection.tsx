@@ -66,11 +66,11 @@ export function AboutSection() {
           {features.map((f, i) => (
             <motion.div
               key={f.title}
-              className={`group relative rounded-3xl bg-card border border-border/60 overflow-hidden transition-all duration-300 hover:-translate-y-1 ${f.span} ${f.tall ? "p-10 flex flex-col justify-between min-h-[280px]" : "p-8"}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.07 }}
+              className={`group relative rounded-3xl bg-card border border-border/60 overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/5 ${f.span} ${f.tall ? "p-10 flex flex-col justify-between min-h-[280px]" : "p-8"}`}
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.45, delay: i * 0.08, ease: "easeOut" }}
             >
               <div>
                 <div className={`w-14 h-14 rounded-2xl ${f.iconBg} flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 ${f.tall ? "mb-8 w-16 h-16" : "mb-6"}`}>
