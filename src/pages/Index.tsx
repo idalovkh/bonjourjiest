@@ -5,7 +5,9 @@ import { TeachersSection } from "@/components/TeachersSection";
 import { PricingSection } from "@/components/PricingSection";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { ContactSection } from "@/components/ContactSection";
+import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
+import { StickyCTA } from "@/components/StickyCTA";
 import { WaveDivider } from "@/components/Decorations";
 
 const Index = () => {
@@ -23,9 +25,12 @@ const Index = () => {
         <WaveDivider />
         <ReviewsSection />
         <WaveDivider flip className="[&_path]:fill-muted/40" />
+        <FAQSection />
+        <WaveDivider />
         <ContactSection />
       </main>
       <Footer />
+      <StickyCTA />
     </div>
   );
 };
