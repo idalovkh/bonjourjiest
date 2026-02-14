@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import owlEmblem from "@/assets/owl-emblem.webp";
-import heroIllustration from "@/assets/hero-illustration.webp";
+import emblem from "@/assets/emblem.webp";
 
 export function HeroSection() {
   return (
@@ -97,37 +97,49 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right — illustration */}
+          {/* Right — animated emblem */}
           <motion.div
-            className="order-1 lg:order-2 flex justify-center"
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
+            className="order-1 lg:order-2 flex justify-center items-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <div className="relative">
-              {/* Decorative ring */}
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 blur-xl" />
-              <img
-                src={heroIllustration}
-                alt="Онлайн обучение английскому"
-                className="relative w-full max-w-md lg:max-w-lg rounded-3xl"
+              {/* Glow behind emblem */}
+              <div className="absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
+              
+              <motion.img
+                src={emblem}
+                alt="Deshar School — эмблема"
+                className="relative w-64 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
+                animate={{
+                  y: [0, -12, 0],
+                  rotateY: [0, 8, 0, -8, 0],
+                  scaleX: [1, 1.04, 1, 0.96, 1],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               />
-              {/* Floating badge */}
+
+              {/* Floating badges */}
               <motion.div
-                className="absolute -bottom-3 -left-3 bg-card rounded-2xl border border-border/60 shadow-lg px-4 py-3"
+                className="absolute -bottom-4 -left-4 bg-card rounded-2xl border border-border/60 shadow-lg px-5 py-3.5"
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
-                <p className="text-xs font-semibold text-foreground">🎓 10 преподавателей</p>
-                <p className="text-[10px] text-muted-foreground">готовы начать сегодня</p>
+                <p className="text-sm font-semibold text-foreground">🎓 10 преподавателей</p>
+                <p className="text-xs text-muted-foreground">готовы начать сегодня</p>
               </motion.div>
               <motion.div
-                className="absolute -top-3 -right-3 bg-card rounded-2xl border border-border/60 shadow-lg px-4 py-3"
+                className="absolute -top-4 -right-4 bg-card rounded-2xl border border-border/60 shadow-lg px-5 py-3.5"
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
               >
-                <p className="text-xs font-semibold text-foreground">⭐ 4.9 / 5</p>
-                <p className="text-[10px] text-muted-foreground">средняя оценка</p>
+                <p className="text-sm font-semibold text-foreground">⭐ 4.9 / 5</p>
+                <p className="text-xs text-muted-foreground">средняя оценка</p>
               </motion.div>
             </div>
           </motion.div>
