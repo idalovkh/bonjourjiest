@@ -23,15 +23,15 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 pt-3">
       <nav
-        className={`mx-auto max-w-4xl flex items-center justify-between h-13 px-6 rounded-full transition-all duration-300 ${
+        className={`mx-auto max-w-5xl flex items-center justify-between h-14 px-7 rounded-full transition-all duration-300 ${
           scrolled
             ? "bg-background/90 backdrop-blur-xl shadow-sm border border-border/50"
             : "bg-background/60 backdrop-blur-md border border-transparent"
         }`}
       >
-        <a href="#" className="flex items-center gap-2">
-          <img src={logo} alt="Deshar School" className="h-7 w-auto" />
-          <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">
+        <a href="#" className="flex items-center gap-2.5">
+          <img src={logo} alt="Deshar School" className="h-8 w-auto" />
+          <span className="text-base font-bold text-foreground tracking-tight hidden sm:inline">
             Deshar School
           </span>
         </a>
