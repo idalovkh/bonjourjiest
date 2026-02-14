@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import owlEmblem from "@/assets/owl-emblem.webp";
 
 const stats = [
   { value: "С 2016", label: "года работаем" },
@@ -15,6 +16,15 @@ export function HeroSection() {
       <div className="absolute top-24 right-[10%] w-[500px] h-[500px] rounded-full bg-primary/8 blur-[100px] -z-10" />
       <div className="absolute bottom-10 left-[5%] w-[400px] h-[400px] rounded-full bg-secondary/8 blur-[100px] -z-10" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-accent/40 blur-[120px] -z-10" />
+
+      {/* Floating owl emblem */}
+      <motion.img
+        src={owlEmblem}
+        alt="Deshar School owl emblem"
+        className="absolute top-20 right-[8%] w-32 sm:w-44 lg:w-56 opacity-[0.07] pointer-events-none select-none"
+        animate={{ y: [0, -18, 0], rotate: [0, 2, -2, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      />
 
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
