@@ -17,28 +17,17 @@ export function HeroSection() {
       <div className="absolute bottom-10 left-[5%] w-[400px] h-[400px] rounded-full bg-secondary/8 blur-[100px] -z-10" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-accent/40 blur-[120px] -z-10" />
 
-      {/* Floating owl emblem */}
-      <motion.img
-        src={owlEmblem}
-        alt="Deshar School owl emblem"
-        className="absolute top-20 right-[8%] w-32 sm:w-44 lg:w-56 opacity-[0.07] pointer-events-none select-none"
-        animate={{ y: [0, -18, 0], rotate: [0, 2, -2, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-      />
-
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-2 rounded-full text-sm font-semibold mb-8 border border-primary/10">
-              <Sparkles size={14} />
-              Deshar School — онлайн-школа английского
-            </div>
-          </motion.div>
+          {/* Floating owl emblem */}
+          <motion.img
+            src={owlEmblem}
+            alt="Deshar School owl emblem"
+            className="mx-auto w-28 sm:w-36 lg:w-44 mb-6"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+            transition={{ opacity: { duration: 0.5 }, scale: { duration: 0.5 }, y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
+          />
 
           {/* Headline */}
           <motion.h1
