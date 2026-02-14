@@ -73,9 +73,8 @@ export function AboutSection() {
           <CarouselContent className="-ml-5">
             {features.map((f) => (
               <CarouselItem key={f.title} className="pl-5 basis-[320px] sm:basis-[360px]">
-                <div className="group relative rounded-3xl p-9 h-full bg-card border border-border/60 overflow-hidden transition-all duration-400 hover:shadow-xl hover:-translate-y-1"
-                  style={{ boxShadow: "0 2px 12px hsl(220 20% 14% / 0.04), 0 8px 32px hsl(220 20% 14% / 0.06)" }}
-                >
+                <div className="group relative rounded-3xl p-9 h-full bg-card border border-border/60 overflow-hidden transition-all duration-400 hover:-translate-y-1">
+
                   <div className="relative">
                     <div className={`w-16 h-16 rounded-2xl ${f.iconBg} flex items-center justify-center mb-7 shadow-lg group-hover:scale-105 transition-transform duration-300`}>
                       <f.icon size={28} className="text-white" strokeWidth={1.8} />
