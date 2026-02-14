@@ -113,9 +113,9 @@ export function HeroSection() {
                 alt="Deshar School — эмблема"
                 className="relative w-64 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
                 animate={{
-                  y: [0, -12, 0],
-                  rotateY: [0, 8, 0, -8, 0],
-                  scaleX: [1, 1.04, 1, 0.96, 1],
+                  y: [0, -14, 0],
+                  x: [0, 6, 0, -6, 0],
+                  rotate: [0, 2, 0, -2, 0],
                 }}
                 transition={{
                   duration: 4,
