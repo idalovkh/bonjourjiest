@@ -104,17 +104,16 @@ export function TeachersSection() {
                 <CarouselItem key={t.name} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                   <div className="card-elevated overflow-hidden hover:-translate-y-1 transition-all duration-300 group h-full flex flex-col">
                     {/* Photo — fills container width */}
-                    <div className="relative bg-gradient-to-b from-accent/80 to-muted/40 overflow-hidden aspect-square">
+                    <div className="relative bg-gradient-to-b from-accent/80 to-muted/40 overflow-hidden aspect-[4/3]">
                       <img
                         src={t.photo}
                         alt={t.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     </div>
 
-                    {/* Info */}
-                    <div className="p-5 flex-1 flex flex-col">
-                      <h3 className="font-display font-bold text-foreground text-lg">{t.name}</h3>
+                    <div className="p-4 flex-1 flex flex-col">
+                      <h3 className="font-display font-bold text-foreground">{t.name}</h3>
                       {t.role && (
                         <p className="text-xs font-semibold text-primary mb-1">{t.role}</p>
                       )}
