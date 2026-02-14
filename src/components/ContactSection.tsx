@@ -52,7 +52,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="section-padding">
+    <section id="contact" className="relative section-padding bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-md mx-auto">
           <motion.div

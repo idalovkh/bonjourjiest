@@ -47,7 +47,7 @@ const plans = [
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="section-padding">
+    <section id="pricing" className="relative section-padding">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
