@@ -6,6 +6,7 @@ import { PricingSection } from "@/components/PricingSection";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
+import { WaveDivider } from "@/components/Decorations";
 
 const Index = () => {
   return (
@@ -13,10 +14,15 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
+        <WaveDivider />
         <AboutSection />
+        <WaveDivider className="[&_path]:fill-muted/40" />
         <TeachersSection />
+        <WaveDivider flip className="[&_path]:fill-muted/40" />
         <PricingSection />
+        <WaveDivider />
         <ReviewsSection />
+        <WaveDivider flip className="[&_path]:fill-muted/40" />
         <ContactSection />
       </main>
       <Footer />
