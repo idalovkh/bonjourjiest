@@ -26,7 +26,7 @@ export function TrustMarquee() {
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         >
-          {trustItems.map((item, i) => (
+          {[...trustItems, ...trustItems].map((item, i) => (
             <span
               key={i}
               className="text-lg sm:text-xl font-bold tracking-wider text-muted-foreground/40 uppercase select-none"
