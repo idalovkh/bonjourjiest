@@ -1,4 +1,4 @@
-import { Send } from "lucide-react";
+import { Send, Youtube, Instagram } from "lucide-react";
 import logo from "@/assets/logo.webp";
 
 export function Footer() {
@@ -18,15 +18,17 @@ export function Footer() {
             <a href="#reviews" className="hover:text-foreground transition-colors">Отзывы</a>
           </div>
 
-          <a
-            href="https://t.me/+79067742949"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-base text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Send size={16} />
-            Telegram
-          </a>
+          <div className="flex items-center gap-5">
+            <a href="https://t.me/+79067742949" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Telegram">
+              <Send size={20} />
+            </a>
+            <a href="https://www.youtube.com/@desharschool" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="YouTube">
+              <Youtube size={20} />
+            </a>
+            <a href="https://www.instagram.com/deshar_school/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Instagram">
+              <Instagram size={20} />
+            </a>
+          </div>
         </div>
 
         <div className="border-t border-border pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
