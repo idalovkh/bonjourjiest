@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle, ArrowRight, Gift, Clock, UserCheck } from "lucide-react";
 import { z } from "zod";
-import contactIllustration from "@/assets/contact-illustration.webp";
+
 
 const leadSchema = z.object({
   name: z.string().trim().min(1, "Введите имя").max(100),
@@ -103,13 +103,8 @@ export function ContactSection() {
                   ))}
                 </div>
 
-                <motion.img
-                  src={contactIllustration}
-                  alt="Преподаватель"
-                  className="hidden lg:block w-64 mt-auto mx-auto drop-shadow-2xl"
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                />
+
+
               </div>
 
               {/* Right — form */}
