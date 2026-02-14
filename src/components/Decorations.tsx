@@ -16,16 +16,3 @@ export function WaveDivider({ flip = false, className = "" }: { flip?: boolean; 
     </div>
   );
 }
-
-export function DotPattern({ className = "" }: { className?: string }) {
-  return (
-    <div className={`absolute inset-0 -z-10 opacity-[0.03] ${className}`}>
-      <svg width="100%" height="100%">
-        <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1" className="fill-foreground" />
-        </pattern>
-        <rect width="100%" height="100%" fill="url(#dots)" />
-      </svg>
-    </div>
-  );
-}

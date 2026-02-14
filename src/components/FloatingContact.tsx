@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Phone, Instagram } from "lucide-react";
+import { useScrollY } from "@/hooks/use-scroll";
 
 const channels = [
   {
@@ -8,41 +9,35 @@ const channels = [
     label: "Telegram",
     icon: Send,
     href: "https://t.me/+79067742949",
-    color: "bg-[hsl(200,80%,50%)]",
+    color: "bg-sky-500",
   },
   {
     id: "whatsapp",
     label: "WhatsApp",
     icon: MessageCircle,
     href: "https://wa.me/79067742949",
-    color: "bg-[hsl(142,70%,42%)]",
+    color: "bg-emerald-600",
   },
   {
     id: "phone",
     label: "Позвонить",
     icon: Phone,
     href: "tel:+79067742949",
-    color: "bg-[hsl(217,91%,60%)]",
+    color: "bg-primary",
   },
   {
     id: "instagram",
     label: "Instagram",
     icon: Instagram,
     href: "https://www.instagram.com/deshar_school/",
-    color: "bg-[hsl(330,70%,55%)]",
+    color: "bg-pink-500",
   },
 ];
 
 export function FloatingContact() {
   const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const scrollY = useScrollY();
+  const visible = scrollY > 400;
 
   return (
     <AnimatePresence>
@@ -54,7 +49,6 @@ export function FloatingContact() {
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
         >
-          {/* Channel buttons */}
           <AnimatePresence>
             {open && (
               <motion.div
@@ -64,7 +58,6 @@ export function FloatingContact() {
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.2 }}
               >
-                {/* Mini card */}
                 <div className="bg-card rounded-2xl shadow-2xl border border-border/50 p-4 w-56">
                   <p className="text-sm font-semibold text-foreground mb-1">Свяжитесь с нами</p>
                   <p className="text-xs text-muted-foreground mb-3">Выберите удобный способ</p>
@@ -94,7 +87,6 @@ export function FloatingContact() {
             )}
           </AnimatePresence>
 
-          {/* Main FAB */}
           <button
             onClick={() => setOpen((v) => !v)}
             className="w-14 h-14 rounded-full gradient-primary shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
