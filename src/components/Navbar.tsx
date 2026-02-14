@@ -21,12 +21,12 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 pt-3">
+    <header className="fixed top-0 left-0 right-0 z-50">
       <nav
-        className={`mx-auto max-w-5xl flex items-center justify-between h-14 px-7 rounded-full transition-all duration-300 ${
+        className={`mx-auto flex items-center justify-between h-16 px-6 lg:px-10 transition-all duration-300 ${
           scrolled
-            ? "bg-background/90 backdrop-blur-xl shadow-sm border border-border/50"
-            : "bg-background/60 backdrop-blur-md border border-transparent"
+            ? "bg-background/90 backdrop-blur-xl shadow-sm border-b border-border/50"
+            : "bg-background/60 backdrop-blur-md"
         }`}
       >
         <a href="#" className="flex items-center gap-2.5">
@@ -68,7 +68,7 @@ export function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden mx-auto max-w-4xl mt-2 bg-background/95 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg px-5 pb-4 pt-2">
+        <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg px-5 pb-4 pt-2">
           {navLinks.map((l) => (
             <a
               key={l.href}
