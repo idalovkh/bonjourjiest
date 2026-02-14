@@ -9,6 +9,7 @@ import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { StickyCTA } from "@/components/StickyCTA";
 import { FloatingContact } from "@/components/FloatingContact";
+import { TrustMarquee } from "@/components/TrustMarquee";
 import { WaveDivider } from "@/components/Decorations";
 
 const Index = () => {
@@ -17,6 +18,7 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
+        <TrustMarquee />
         <WaveDivider />
         <AboutSection />
         <WaveDivider className="[&_path]:fill-muted/40" />

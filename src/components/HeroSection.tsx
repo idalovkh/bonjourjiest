@@ -1,20 +1,28 @@
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
 import owlEmblem from "@/assets/owl-emblem.webp";
 import emblem from "@/assets/emblem.webp";
 
 export function HeroSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
   return (
-    <section className="relative min-h-[100svh] flex items-center pt-20 pb-12 overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0 -z-10">
+    <section ref={sectionRef} className="relative min-h-[100svh] flex items-center pt-20 pb-12 overflow-hidden">
+      {/* Background decorations with parallax */}
+      <motion.div className="absolute inset-0 -z-10" style={{ y: bgY }}>
         <div className="absolute top-0 right-0 w-[60%] h-[70%] rounded-full bg-accent/60 blur-[160px]" />
         <div className="absolute bottom-0 left-0 w-[40%] h-[50%] rounded-full bg-secondary/5 blur-[120px]" />
         <div className="absolute top-1/3 left-1/4 w-3 h-3 rounded-full bg-primary/20 animate-pulse" />
         <div className="absolute top-1/2 right-1/3 w-2 h-2 rounded-full bg-secondary/30 animate-pulse delay-700" />
         <div className="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-primary/10 animate-pulse delay-1000" />
-      </div>
+      </motion.div>
 
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
