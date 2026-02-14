@@ -191,7 +191,7 @@ export function TeachersSection() {
                         src={t.photo}
                         alt={t.name}
                         loading="lazy"
-                        className="w-full h-full object-cover object-top"
+                        className="w-full h-full object-cover object-[center_20%] scale-[0.85]"
                       />
                     </div>
                     <div className="p-5 flex-1 flex flex-col">
