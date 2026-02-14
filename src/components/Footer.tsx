@@ -1,9 +1,16 @@
+import { motion } from "framer-motion";
 import { Send, Youtube, Instagram } from "lucide-react";
 import logo from "@/assets/logo.webp";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border py-12">
+    <motion.footer
+      className="border-t border-border py-12"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
           <div className="flex items-center gap-2.5">
@@ -38,6 +45,6 @@ export function Footer() {
           </a>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
