@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Send, CheckCircle, ArrowRight } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import { z } from "zod";
 
 const leadSchema = z.object({
@@ -52,73 +52,78 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-28 bg-muted/40">
+    <section id="contact" className="section-padding">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-md mx-auto">
           <motion.div
-            className="text-center mb-10"
+            className="text-center mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
-              Запишись на <span className="gradient-text">бесплатный урок</span>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+              Запишись на <span className="gradient-text">пробный урок</span>
             </h2>
-            <p className="text-muted-foreground text-lg">
-              Менеджер свяжется и запишет на пробное занятие
+            <p className="text-muted-foreground">
+              Менеджер свяжется и запишет на бесплатное занятие
             </p>
           </motion.div>
 
           <motion.div
-            className="bg-card rounded-2xl p-8 border border-border shadow-lg"
+            className="card-elevated p-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
             {submitted ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle size={32} className="text-secondary" />
+              <div className="text-center py-6">
+                <div className="w-14 h-14 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle size={28} className="text-secondary" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">Спасибо!</h3>
-                <p className="text-muted-foreground">Мы свяжемся с вами в ближайшее время.</p>
+                <h3 className="font-display text-xl font-bold text-foreground mb-2">Спасибо!</h3>
+                <p className="text-muted-foreground text-sm">Мы свяжемся с вами в ближайшее время.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="name" className="text-sm font-semibold">Имя</Label>
+                  <Label htmlFor="name" className="text-sm font-medium">Имя</Label>
                   <Input
                     id="name"
                     placeholder="Ваше имя"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="mt-1.5 rounded-xl h-12"
+                    className="mt-1.5 rounded-xl h-11"
                     maxLength={100}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="contact" className="text-sm font-semibold">Телеграм или телефон</Label>
+                  <Label htmlFor="contact" className="text-sm font-medium">Телеграм или телефон</Label>
                   <Input
                     id="contact"
-                    placeholder="@username или +7 (999) 999-99-99"
+                    placeholder="@username или +7 999 999-99-99"
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
-                    className="mt-1.5 rounded-xl h-12"
+                    className="mt-1.5 rounded-xl h-11"
                     maxLength={200}
                   />
                 </div>
-                <Button type="submit" className="w-full rounded-full h-14 text-base font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 transition-all" size="lg" disabled={loading}>
+                <Button
+                  type="submit"
+                  className="w-full rounded-full h-12 text-sm font-semibold gradient-primary shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-200"
+                  size="lg"
+                  disabled={loading}
+                >
                   {loading ? "Отправка..." : (
                     <>
-                      Хочу на консультацию
-                      <ArrowRight size={18} className="ml-2" />
+                      Записаться бесплатно
+                      <ArrowRight size={16} className="ml-2" />
                     </>
                   )}
                 </Button>
-                <p className="text-xs text-center text-muted-foreground">
+                <p className="text-xs text-center text-muted-foreground pt-1">
                   Нажимая кнопку, вы соглашаетесь с{" "}
-                  <a href="/privacy" className="underline hover:text-foreground">
+                  <a href="/privacy" className="underline hover:text-foreground transition-colors">
                     политикой конфиденциальности
                   </a>
                 </p>

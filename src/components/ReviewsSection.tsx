@@ -1,70 +1,58 @@
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const reviews = [
   {
-    name: "Ученик",
-    initials: "У1",
+    name: "Алексей",
     text: "Отличная школа! Преподаватели действительно учат говорить, а не просто делать упражнения. За 4 месяца заговорил на английском!",
   },
   {
-    name: "Ученик",
-    initials: "У2",
+    name: "Мария",
     text: "Современная платформа и удобные методы заучивания слов. Рекомендую всем, кто хочет выучить английский!",
   },
   {
-    name: "Ученик",
-    initials: "У3",
+    name: "Ирина",
     text: "Аттестованные Cambridge учителя — это чувствуется в качестве обучения. Очень довольна результатами!",
   },
   {
-    name: "Ученик",
-    initials: "У4",
+    name: "Дмитрий",
     text: "Начинал с нуля, а сейчас свободно общаюсь с иностранными коллегами. Школа работает с 2016 года — опыт виден!",
   },
 ];
 
 export function ReviewsSection() {
   return (
-    <section id="reviews" className="py-28">
+    <section id="reviews" className="section-padding bg-muted/40">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-14"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
-            Что говорят <span className="gradient-text">наши ученики</span>
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
+            Отзывы <span className="gradient-text">учеников</span>
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
           {reviews.map((r, i) => (
             <motion.div
               key={i}
-              className="bg-card rounded-2xl p-7 border border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative"
+              className="card-elevated p-7 relative hover:-translate-y-1 transition-all duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
+              transition={{ duration: 0.35, delay: i * 0.06 }}
             >
-              <Quote size={28} className="text-primary/15 absolute top-5 right-5" />
-              <div className="flex gap-0.5 mb-4">
+              <Quote size={24} className="text-primary/10 absolute top-5 right-5" />
+              <div className="flex gap-0.5 mb-3">
                 {[...Array(5)].map((_, j) => (
-                  <Star key={j} size={14} className="fill-primary text-primary" />
+                  <Star key={j} size={13} className="fill-primary/80 text-primary/80" />
                 ))}
               </div>
-              <p className="text-sm text-foreground mb-5 leading-relaxed">"{r.text}"</p>
-              <div className="flex items-center gap-3">
-                <Avatar className="w-8 h-8">
-                  <AvatarFallback className="bg-accent text-accent-foreground text-xs font-bold">
-                    {r.initials}
-                  </AvatarFallback>
-                </Avatar>
-                <p className="text-sm font-semibold text-foreground">{r.name}</p>
-              </div>
+              <p className="text-sm text-foreground/85 mb-4 leading-relaxed">"{r.text}"</p>
+              <p className="text-sm font-semibold text-foreground">{r.name}</p>
             </motion.div>
           ))}
         </div>
