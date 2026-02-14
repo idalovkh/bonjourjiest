@@ -1,5 +1,12 @@
 import { motion } from "framer-motion";
 import { Award, Calendar, Monitor, GraduationCap, Gift } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const features = [
   {
@@ -47,24 +54,34 @@ export function AboutSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              className="card-elevated p-7 hover:-translate-y-1 transition-all duration-300 group"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.06 }}
-            >
-              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                <f.icon size={20} className="text-primary" />
-              </div>
-              <h3 className="font-display font-bold text-foreground mb-1">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            className="w-full max-w-5xl mx-auto"
+          >
+            <CarouselContent className="-ml-4">
+              {features.map((f, i) => (
+                <CarouselItem key={f.title} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+                  <div className="card-elevated p-7 hover:-translate-y-1 transition-all duration-300 group h-full">
+                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
+                      <f.icon size={20} className="text-primary" />
+                    </div>
+                    <h3 className="font-display font-bold text-foreground mb-1">{f.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center gap-2 mt-8">
+              <CarouselPrevious className="static translate-y-0 rounded-full border-border" />
+              <CarouselNext className="static translate-y-0 rounded-full border-border" />
+            </div>
+          </Carousel>
+        </motion.div>
       </div>
     </section>
   );
