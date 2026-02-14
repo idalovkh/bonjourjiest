@@ -43,7 +43,7 @@ export function Footer() {
           <Button
             asChild
             size="lg"
-            className="rounded-full h-13 px-8 text-base font-semibold gradient-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 shrink-0"
+            className="rounded-full h-14 px-10 text-base font-semibold gradient-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 shrink-0"
           >
             <a href="#contact">
               Записаться бесплатно
