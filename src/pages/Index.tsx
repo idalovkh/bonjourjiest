@@ -8,6 +8,7 @@ import { ContactSection } from "@/components/ContactSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { StickyCTA } from "@/components/StickyCTA";
+import { FloatingContact } from "@/components/FloatingContact";
 import { WaveDivider } from "@/components/Decorations";
 
 const Index = () => {
@@ -31,6 +32,7 @@ const Index = () => {
       </main>
       <Footer />
       <StickyCTA />
+      <FloatingContact />
     </div>
   );
 };
