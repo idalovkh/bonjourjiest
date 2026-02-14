@@ -48,7 +48,7 @@ export function FloatingContact() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3"
+          className="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-50 flex flex-col items-end gap-3"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
