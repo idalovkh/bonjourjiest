@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import {
@@ -138,7 +138,9 @@ function TeacherModal({ teacher, onClose }: { teacher: Teacher; onClose: () => v
 
 export function TeachersSection() {
   const [selected, setSelected] = useState<Teacher | null>(null);
-  
+  const autoplayRef = useRef(
+    Autoplay({ delay: 2500, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: false })
+  );
 
   return (
     <>
@@ -166,8 +168,8 @@ export function TeachersSection() {
           transition={{ duration: 0.6 }}
         >
           <Carousel
-            opts={{ align: "center", loop: true, dragFree: true }}
-            plugins={[Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true })]}
+            opts={{ align: "center", loop: true }}
+            plugins={[autoplayRef.current]}
             className="w-full"
           >
             <CarouselContent className="-ml-3">
