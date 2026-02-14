@@ -154,14 +154,14 @@ export function ContactSection() {
 
                       <div>
                         <Label className="text-sm font-medium mb-2 block">Способ связи</Label>
-                        <div className="grid grid-cols-5 gap-1.5">
+                        <div className="flex gap-2">
                           {contactMethods.map((m) => (
                             <button
                               key={m.id}
                               type="button"
                               onClick={() => { setMethod(m.id); setContact(""); }}
                               title={m.label}
-                              className={`flex items-center justify-center py-3 rounded-xl transition-all duration-200 ${
+                              className={`flex-1 flex items-center justify-center py-3 rounded-xl transition-all duration-200 ${
                                 method === m.id
                                   ? "bg-primary text-primary-foreground shadow-md"
                                   : "bg-muted text-muted-foreground hover:bg-muted/80"
