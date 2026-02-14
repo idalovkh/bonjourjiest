@@ -8,11 +8,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle, ArrowRight, Gift, Clock, UserCheck, Mail, Phone, Send, MessageCircle } from "lucide-react";
 import { z } from "zod";
 
+const MaxIcon = ({ size = 16 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    <path d="M9 8l3 4 3-4" />
+    <path d="M9 16l3-4 3 4" />
+  </svg>
+);
+
 const contactMethods = [
   { id: "telegram", label: "Телеграм", icon: Send, placeholder: "@username" },
   { id: "whatsapp", label: "WhatsApp", icon: MessageCircle, placeholder: "+7 999 999-99-99" },
   { id: "phone", label: "Телефон", icon: Phone, placeholder: "+7 999 999-99-99" },
   { id: "email", label: "Почта", icon: Mail, placeholder: "you@example.com" },
+  { id: "max", label: "Max", icon: MaxIcon, placeholder: "@username" },
 ] as const;
 
 const leadSchema = z.object({
@@ -143,23 +152,22 @@ export function ContactSection() {
                         />
                       </div>
 
-                      {/* Contact method selector */}
                       <div>
                         <Label className="text-sm font-medium mb-2 block">Способ связи</Label>
-                        <div className="grid grid-cols-4 gap-1.5">
+                        <div className="grid grid-cols-5 gap-1.5">
                           {contactMethods.map((m) => (
                             <button
                               key={m.id}
                               type="button"
                               onClick={() => { setMethod(m.id); setContact(""); }}
-                              className={`flex flex-col items-center gap-1 py-2.5 px-1 rounded-xl text-[11px] font-medium transition-all duration-200 ${
+                              title={m.label}
+                              className={`flex items-center justify-center py-3 rounded-xl transition-all duration-200 ${
                                 method === m.id
                                   ? "bg-primary text-primary-foreground shadow-md"
                                   : "bg-muted text-muted-foreground hover:bg-muted/80"
                               }`}
                             >
-                              <m.icon size={16} />
-                              {m.label}
+                              <m.icon size={18} />
                             </button>
                           ))}
                         </div>
