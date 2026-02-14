@@ -5,9 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle, ArrowRight, Gift, Clock, UserCheck } from "lucide-react";
+import { CheckCircle, ArrowRight, Gift, Clock, UserCheck, Mail, Phone, Send, MessageCircle } from "lucide-react";
 import { z } from "zod";
 
+const contactMethods = [
+  { id: "telegram", label: "Телеграм", icon: Send, placeholder: "@username" },
+  { id: "whatsapp", label: "WhatsApp", icon: MessageCircle, placeholder: "+7 999 999-99-99" },
+  { id: "phone", label: "Телефон", icon: Phone, placeholder: "+7 999 999-99-99" },
+  { id: "email", label: "Почта", icon: Mail, placeholder: "you@example.com" },
+] as const;
 
 const leadSchema = z.object({
   name: z.string().trim().min(1, "Введите имя").max(100),
@@ -23,9 +29,12 @@ const perks = [
 export function ContactSection() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [method, setMethod] = useState<string>("telegram");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
+
+  const activeMethod = contactMethods.find((m) => m.id === method)!;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +51,7 @@ export function ContactSection() {
     setLoading(true);
     const { error } = await supabase
       .from("leads")
-      .insert({ name: parsed.data.name, contact: parsed.data.contact });
+      .insert({ name: parsed.data.name, contact: `[${method}] ${parsed.data.contact}` });
 
     setLoading(false);
     if (error) {
@@ -81,7 +90,7 @@ export function ContactSection() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(243,75%,70%,0.3),transparent_50%)]" />
 
             <div className="relative grid lg:grid-cols-2 gap-8 lg:gap-12 p-8 sm:p-10 lg:p-14">
-              {/* Left — text + illustration */}
+              {/* Left — text */}
               <div className="flex flex-col justify-center">
                 <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight">
                   Запишись на
@@ -92,7 +101,7 @@ export function ContactSection() {
                   Менеджер свяжется и запишет на бесплатное занятие
                 </p>
 
-                <div className="space-y-3 mb-8">
+                <div className="space-y-3">
                   {perks.map((p) => (
                     <div key={p.text} className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
@@ -102,9 +111,6 @@ export function ContactSection() {
                     </div>
                   ))}
                 </div>
-
-
-
               </div>
 
               {/* Right — form */}
@@ -124,6 +130,7 @@ export function ContactSection() {
                         <p className="text-sm font-semibold text-foreground">Оставьте заявку</p>
                         <p className="text-xs text-muted-foreground">и мы перезвоним за 5 минут</p>
                       </div>
+
                       <div>
                         <Label htmlFor="name" className="text-sm font-medium">Имя</Label>
                         <Input
@@ -135,17 +142,41 @@ export function ContactSection() {
                           maxLength={100}
                         />
                       </div>
+
+                      {/* Contact method selector */}
                       <div>
-                        <Label htmlFor="contact" className="text-sm font-medium">Телеграм или телефон</Label>
+                        <Label className="text-sm font-medium mb-2 block">Способ связи</Label>
+                        <div className="grid grid-cols-4 gap-1.5">
+                          {contactMethods.map((m) => (
+                            <button
+                              key={m.id}
+                              type="button"
+                              onClick={() => { setMethod(m.id); setContact(""); }}
+                              className={`flex flex-col items-center gap-1 py-2.5 px-1 rounded-xl text-[11px] font-medium transition-all duration-200 ${
+                                method === m.id
+                                  ? "bg-primary text-primary-foreground shadow-md"
+                                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                              }`}
+                            >
+                              <m.icon size={16} />
+                              {m.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="contact" className="text-sm font-medium">{activeMethod.label}</Label>
                         <Input
                           id="contact"
-                          placeholder="@username или +7 999 999-99-99"
+                          placeholder={activeMethod.placeholder}
                           value={contact}
                           onChange={(e) => setContact(e.target.value)}
                           className="mt-1.5 rounded-xl h-12 border-border/60 focus:border-primary"
                           maxLength={200}
                         />
                       </div>
+
                       <Button
                         type="submit"
                         className="w-full rounded-full h-13 text-sm font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
