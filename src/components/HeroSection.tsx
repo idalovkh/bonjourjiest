@@ -124,23 +124,7 @@ export function HeroSection() {
                 }}
               />
 
-              {/* Floating badges */}
-              <motion.div
-                className="absolute -bottom-4 -left-4 bg-card rounded-2xl border border-border/60 shadow-lg px-5 py-3.5"
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <p className="text-sm font-semibold text-foreground">🎓 10 преподавателей</p>
-                <p className="text-xs text-muted-foreground">готовы начать сегодня</p>
-              </motion.div>
-              <motion.div
-                className="absolute -top-4 -right-4 bg-card rounded-2xl border border-border/60 shadow-lg px-5 py-3.5"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              >
-                <p className="text-sm font-semibold text-foreground">⭐ 4.9 / 5</p>
-                <p className="text-xs text-muted-foreground">средняя оценка</p>
-              </motion.div>
+
             </div>
           </motion.div>
         </div>
