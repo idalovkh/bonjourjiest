@@ -94,9 +94,9 @@ export function ContactSection() {
             transition={{ duration: 0.5 }}
           >
             {/* Gradient background card */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-[hsl(255,65%,52%)]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-[hsl(210,80%,48%)]" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(172,66%,50%,0.15),transparent_50%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(243,75%,70%,0.3),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(217,91%,70%,0.3),transparent_50%)]" />
 
             <div className="relative grid lg:grid-cols-2 gap-8 lg:gap-12 p-8 sm:p-10 lg:p-14">
               {/* Left — text */}
