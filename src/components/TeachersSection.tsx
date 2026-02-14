@@ -175,8 +175,18 @@ export function TeachersSection() {
                 <CarouselItem key={t.name} className="pl-3 basis-[260px] sm:basis-[280px]">
                   <div
                     className="bg-card rounded-2xl border border-border/40 overflow-hidden hover:border-primary/20 hover:shadow-lg transition-all duration-300 group h-full flex flex-col"
+                    style={{ perspective: "800px" }}
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = (e.clientX - rect.left) / rect.width - 0.5;
+                      const y = (e.clientY - rect.top) / rect.height - 0.5;
+                      e.currentTarget.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale(1.02)`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "rotateY(0deg) rotateX(0deg) scale(1)";
+                    }}
                   >
-                    <div className="relative overflow-hidden aspect-square">
+                    <div className="relative overflow-hidden aspect-[3/4]">
                       <img
                         src={t.photo}
                         alt={t.name}
