@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle, ArrowRight, Gift, Clock, UserCheck } from "lucide-react";
 import { z } from "zod";
 
@@ -48,16 +47,32 @@ export function ContactSection() {
     }
 
     setLoading(true);
-    const { error } = await supabase
-      .from("leads")
-      .insert({ name: parsed.data.name, contact: `[telegram] ${parsed.data.contact}` });
-
-    if (!mountedRef.current) return;
-    setLoading(false);
-    if (error) {
+    let res: Response;
+    try {
+      res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: parsed.data.name, contact: parsed.data.contact }),
+      });
+    } catch {
+      if (!mountedRef.current) return;
+      setLoading(false);
       toast({
         title: "Ошибка",
         description: "Не удалось отправить заявку. Попробуйте ещё раз.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!mountedRef.current) return;
+    setLoading(false);
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      toast({
+        title: "Ошибка",
+        description: (data?.error as string) || "Не удалось отправить заявку. Попробуйте ещё раз.",
         variant: "destructive",
       });
       return;
