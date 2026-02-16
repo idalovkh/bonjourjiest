@@ -4,6 +4,22 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("framer-motion")) return "framer-motion";
+            if (id.includes("react-dom") || id.includes("react-router")) return "react-vendor";
+            if (id.includes("@radix-ui") || id.includes("lucide-react")) return "ui";
+            if (id.includes("@supabase")) return "supabase";
+            return "vendor";
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
   server: {
     host: "::",
     port: 8080,

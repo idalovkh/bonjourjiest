@@ -93,7 +93,7 @@ export function TeachersSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const { isScrolling } = useScrollScrolling();
   const autoplayRef = useRef(
-    Autoplay({ delay: 15000, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: false })
+    Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: false })
   );
 
   // Reset JS-driven tilt when scroll starts so no jump when scroll ends
@@ -133,7 +133,7 @@ export function TeachersSection() {
           transition={{ duration: 0.6 }}
         >
           <Carousel
-            opts={{ align: "center", loop: true }}
+            opts={{ align: "center", loop: true, startIndex: 0 }}
             plugins={[autoplayRef.current]}
             className="w-full pb-16 sm:pb-20"
           >
