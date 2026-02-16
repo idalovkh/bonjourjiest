@@ -82,7 +82,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const validation = validate(name, contact);
   if (!validation.ok) {
-    return res.status(validation.status).json({ error: validation.message });
+    const { status, message } = validation;
+    return res.status(status).json({ error: message });
   }
 
   try {
