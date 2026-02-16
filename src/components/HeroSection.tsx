@@ -54,7 +54,7 @@ export function HeroSection() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               Cambridge-сертифицированные преподаватели, своя платформа
-              и метод, где ты заговорите с первого урока
+              и метод, где ты заговоришь с первого урока
             </motion.p>
 
             <motion.div
