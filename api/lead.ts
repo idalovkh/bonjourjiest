@@ -91,9 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await sendTelegram(telegramText);
     await sendEmail(name, contact); // optional: no-op if SMTP not configured
     return res.status(200).json({ success: true });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("[lead]", message, err);
+  } catch {
     return res.status(500).json({ error: "Не удалось отправить заявку. Попробуйте позже." });
   }
 }
