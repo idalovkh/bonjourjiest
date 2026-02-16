@@ -22,7 +22,6 @@ const perks = [
 export function ContactSection() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
-  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const mountedRef = useRef(true);
   const { toast } = useToast();
@@ -34,7 +33,7 @@ export function ContactSection() {
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = leadSchema.safeParse({ name, contact });
     if (!parsed.success) {
@@ -46,40 +45,36 @@ export function ContactSection() {
       return;
     }
 
-    setLoading(true);
-    let res: Response;
-    try {
-      res = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: parsed.data.name, contact: parsed.data.contact }),
-      });
-    } catch {
-      if (!mountedRef.current) return;
-      setLoading(false);
-      toast({
-        title: "Ошибка",
-        description: "Не удалось отправить заявку. Попробуйте ещё раз.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!mountedRef.current) return;
-    setLoading(false);
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      toast({
-        title: "Ошибка",
-        description: (data?.error as string) || "Не удалось отправить заявку. Попробуйте ещё раз.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+    // Показываем успех сразу, запрос уходит в фоне
     setSubmitted(true);
     toast({ title: "Заявка отправлена!", description: "Мы свяжемся с вами в ближайшее время." });
+
+    fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: parsed.data.name, contact: parsed.data.contact }),
+    })
+      .then((res) => {
+        if (res.ok) return;
+        return res.json().then((data: { error?: string }) => {
+          if (mountedRef.current) {
+            toast({
+              title: "Ошибка отправки",
+              description: data?.error ?? "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.",
+              variant: "destructive",
+            });
+          }
+        });
+      })
+      .catch(() => {
+        if (mountedRef.current) {
+          toast({
+            title: "Ошибка отправки",
+            description: "Не удалось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram.",
+            variant: "destructive",
+          });
+        }
+      });
   };
 
   return (
@@ -174,14 +169,9 @@ export function ContactSection() {
                         type="submit"
                         className="w-full rounded-full min-h-[48px] h-14 text-base font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 touch-manipulation"
                         size="lg"
-                        disabled={loading}
                       >
-                        {loading ? "Отправка..." : (
-                          <>
-                            Записаться бесплатно
-                            <ArrowRight size={18} className="ml-2" />
-                          </>
-                        )}
+                        Записаться бесплатно
+                        <ArrowRight size={18} className="ml-2" />
                       </Button>
                       <p className="text-[11px] text-center text-muted-foreground">
                         Нажимая кнопку, вы соглашаетесь с{" "}
