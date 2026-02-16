@@ -9,9 +9,10 @@ const plans = [
     price: "6 490",
     period: "/мес",
     features: [
-      "Мини-группа до 6 человек",
-      "Доступ к онлайн-платформе",
-      "Домашние задания с проверкой",
+      "Мини-группа до 7 человек",
+      "Круглосуточный доступ к платформе",
+      "12 уроков в месяц",
+      "Разговорный клуб",
       "Сертифицированные преподаватели",
     ],
     popular: false,
@@ -22,10 +23,10 @@ const plans = [
     price: "13 600",
     period: "/мес",
     features: [
-      "Персональная программа",
       "Гибкое расписание",
-      "Доступ к онлайн-платформе",
-      "Индивидуальный подход",
+      "Круглосуточный доступ к платформе",
+      "Возможность переноса занятий",
+      "8 уроков в месяц",
       "Сертифицированные преподаватели",
     ],
     popular: true,
@@ -48,14 +49,14 @@ const plans = [
 export function PricingSection() {
   return (
     <section id="pricing" className="relative section-padding">
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.1 }}
         >
-           <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
+           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
              Тарифы
            </h2>
            <p className="text-xl text-muted-foreground">
@@ -63,18 +64,19 @@ export function PricingSection() {
            </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto items-stretch">
+        <div className="grid md:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto items-stretch">
           {plans.map((p, i) => (
             <motion.div
               key={p.name}
-              className={`relative rounded-2xl p-9 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
+              data-suppress-hover-during-scroll
+              className={`relative rounded-2xl p-6 sm:p-8 lg:p-9 flex flex-col transition-[transform,box-shadow] duration-300 can-hover:hover:-translate-y-1 ${
                 p.popular
-                  ? "gradient-primary text-primary-foreground ring-2 ring-primary/20 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25"
-                  : "card-elevated hover:shadow-xl"
+                  ? "gradient-primary text-primary-foreground ring-2 ring-primary/20 shadow-xl shadow-primary/15 can-hover:hover:shadow-2xl can-hover:hover:shadow-primary/25"
+                  : "card-elevated"
               }`}
-              initial={{ opacity: 0, y: 30, scale: 0.97 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.1, margin: "-20px" }}
               transition={{ duration: 0.45, delay: i * 0.1, ease: "easeOut" }}
             >
               {p.popular && (
@@ -116,7 +118,7 @@ export function PricingSection() {
 
               <Button
                 asChild
-                className={`w-full rounded-full h-13 font-semibold text-base ${
+                className={`w-full rounded-full min-h-[48px] h-13 font-semibold text-base touch-manipulation ${
                   p.popular
                     ? "bg-white text-primary hover:bg-white/90"
                     : "gradient-primary text-primary-foreground"

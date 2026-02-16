@@ -20,9 +20,9 @@ export function Navbar() {
   useBodyScrollLock(mobileOpen);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <nav
-        className={`mx-auto max-w-[1200px] flex items-center justify-between h-14 px-6 rounded-full transition-all duration-300 ${
+        className={`mx-auto max-w-[1200px] flex items-center justify-between min-h-14 h-14 px-4 sm:px-6 rounded-full transition-all duration-300 ${
           scrolled
             ? "bg-card/95 backdrop-blur-xl shadow-md border border-border/40"
             : "bg-card/80 backdrop-blur-lg shadow-sm border border-border/30"
@@ -58,9 +58,10 @@ export function Navbar() {
         </div>
 
         <button
-          className="md:hidden text-foreground p-2 -mr-2"
+          className="md:hidden text-foreground p-3 -mr-1 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full active:bg-muted/60 touch-manipulation"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
+          aria-label={mobileOpen ? "Закрыть меню" : "Открыть меню"}
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -80,7 +81,7 @@ export function Navbar() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setMobileOpen(false)}
-                className="block py-3.5 text-sm text-muted-foreground hover:text-foreground border-b border-border/30 last:border-0"
+                className="flex items-center py-4 min-h-[44px] text-base text-muted-foreground hover:text-foreground active:bg-muted/50 border-b border-border/30 last:border-0 touch-manipulation"
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
@@ -93,7 +94,7 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <Button asChild className="w-full mt-3 rounded-full gradient-primary text-sm" size="sm">
+              <Button asChild className="w-full mt-4 min-h-[48px] rounded-full gradient-primary text-base font-semibold touch-manipulation" size="lg">
                 <a href="#contact" onClick={() => setMobileOpen(false)}>Записаться</a>
               </Button>
             </motion.div>

@@ -1,9 +1,12 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useScrollScrolling } from "@/hooks/use-scroll-scrolling";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { TeacherModal } from "@/components/TeacherModal";
@@ -87,45 +90,61 @@ type Teacher = typeof teachers[number];
 
 export function TeachersSection() {
   const [selected, setSelected] = useState<Teacher | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const { isScrolling } = useScrollScrolling();
   const autoplayRef = useRef(
-    Autoplay({ delay: 2500, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: false })
+    Autoplay({ delay: 15000, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: false })
   );
+
+  // Reset JS-driven tilt when scroll starts so no jump when scroll ends
+  useEffect(() => {
+    if (!isScrolling) return;
+    const root = sectionRef.current;
+    if (!root) return;
+    root.querySelectorAll<HTMLElement>("[data-suppress-hover-during-scroll]").forEach((el) => {
+      el.style.transform = "";
+    });
+  }, [isScrolling]);
 
   return (
     <>
-      <section id="teachers" className="section-padding bg-muted/40 overflow-hidden">
-        <div className="container mx-auto px-4 lg:px-8">
+      <section ref={sectionRef} id="teachers" className="section-padding bg-muted/40 overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-14"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.1, margin: "-20px" }}
           >
             <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
               Наши <span className="gradient-text">преподаватели</span>
             </h2>
             <p className="text-lg text-muted-foreground">
-              Команда сертифицированных лингвистов с международным опытом
+              Команда сертифицированных лингвистов с большим опытом
             </p>
           </motion.div>
         </div>
 
         <motion.div
+          className="relative"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.1, margin: "-20px" }}
           transition={{ duration: 0.6 }}
         >
           <Carousel
             opts={{ align: "center", loop: true }}
             plugins={[autoplayRef.current]}
-            className="w-full"
+            className="w-full pb-16 sm:pb-20"
           >
+            <CarouselPrevious className="top-auto left-1/2 bottom-2 z-10 -translate-x-14 translate-y-0 h-11 w-11 rounded-full border-0 bg-card shadow-lg shadow-foreground/10 text-foreground can-hover:hover:bg-primary can-hover:hover:text-primary-foreground can-hover:hover:shadow-xl transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" />
+            <CarouselNext className="top-auto right-1/2 bottom-2 z-10 translate-x-14 translate-y-0 h-11 w-11 rounded-full border-0 bg-card shadow-lg shadow-foreground/10 text-foreground can-hover:hover:bg-primary can-hover:hover:text-primary-foreground can-hover:hover:shadow-xl transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" />
             <CarouselContent className="-ml-3">
               {teachers.map((t) => (
                 <CarouselItem key={t.name} className="pl-3 basis-[260px] sm:basis-[280px]">
                   <div
-                    className="bg-card rounded-2xl border border-border/40 overflow-hidden hover:border-primary/20 hover:shadow-lg transition-all duration-300 group h-full flex flex-col"
+                    data-suppress-hover-during-scroll
+                    className="bg-card rounded-2xl border border-border/40 overflow-hidden can-hover:hover:border-primary/20 can-hover:hover:shadow-lg transition-[transform,box-shadow,border-color] duration-300 group h-full flex flex-col"
                     style={{ perspective: "800px" }}
                     onMouseMove={(e) => {
                       const rect = e.currentTarget.getBoundingClientRect();
@@ -137,12 +156,12 @@ export function TeachersSection() {
                       e.currentTarget.style.transform = "rotateY(0deg) rotateX(0deg) scale(1)";
                     }}
                   >
-                    <div className="relative overflow-hidden aspect-[3/4]">
+                    <div className="relative min-h-0 shrink-0 overflow-hidden aspect-[3/4] w-full bg-muted/30">
                       <img
                         src={t.photo}
                         alt={t.name}
                         loading="lazy"
-                        className="w-full h-full object-cover object-[center_20%] scale-[0.85]"
+                        className="absolute inset-0 size-full scale-105 object-cover object-center"
                       />
                     </div>
                     <div className="p-5 flex-1 flex flex-col">

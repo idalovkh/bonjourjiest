@@ -1,12 +1,17 @@
+import { useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
 const Privacy = () => {
+  useEffect(() => {
+    document.title = "Политика конфиденциальности — Deshar School";
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 lg:px-8 py-24 max-w-3xl">
-        <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-8 tracking-tight">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 max-w-3xl">
+        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-foreground mb-6 sm:mb-8 tracking-tight">
           Политика в&nbsp;отношении обработки персональных данных
         </h1>
 

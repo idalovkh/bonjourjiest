@@ -99,9 +99,16 @@
     scroll-behavior: smooth;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   h1, h2, h3, h4 {
     font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif;
   }
+
 }
 
 @layer utilities {
@@ -131,8 +138,36 @@
     box-shadow: 0 1px 3px hsl(230 25% 14% / 0.06), 0 12px 32px hsl(230 25% 14% / 0.08);
   }
 
+  /* Suppress decorative hover during scroll to prevent flicker */
+  html.is-scrolling .card-elevated:hover {
+    box-shadow: 0 1px 3px hsl(230 25% 14% / 0.04), 0 8px 24px hsl(230 25% 14% / 0.04);
+    transition: none !important;
+  }
+  html.is-scrolling [data-suppress-hover-during-scroll]:hover {
+    transform: none !important;
+    box-shadow: 0 1px 3px hsl(230 25% 14% / 0.04), 0 8px 24px hsl(230 25% 14% / 0.04) !important;
+    transition: none !important;
+  }
+  html.is-scrolling [data-suppress-hover-during-scroll]:hover [data-suppress-hover-icon] {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* No transition for 80ms after scroll stops to prevent hover "wave" blink */
+  html.scroll-just-ended [data-suppress-hover-during-scroll],
+  html.scroll-just-ended .card-elevated {
+    transition: none !important;
+  }
+  html.scroll-just-ended [data-suppress-hover-during-scroll] [data-suppress-hover-icon] {
+    transition: none !important;
+  }
+
   .section-padding {
-    @apply py-20 sm:py-28 lg:py-32;
+    @apply py-14 sm:py-20 lg:py-28 xl:py-32;
+  }
+
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 
   .btn-glow {

@@ -1,17 +1,32 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
+
+const THROTTLE_MS = 120;
 
 /**
- * Shared scroll-position hook to avoid duplicate scroll listeners.
- * Returns current scrollY value, updated on every scroll event.
+ * Shared scroll-position hook. Updates are throttled to reduce re-renders and scroll jank.
  */
 export function useScrollY() {
   const [scrollY, setScrollY] = useState(0);
+  const lastRun = useRef(0);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
+    const onScroll = () => {
+      if (rafId.current != null) return;
+      rafId.current = requestAnimationFrame(() => {
+        rafId.current = null;
+        const now = Date.now();
+        if (now - lastRun.current < THROTTLE_MS) return;
+        lastRun.current = now;
+        setScrollY(window.scrollY);
+      });
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    setScrollY(window.scrollY);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId.current != null) cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   return scrollY;

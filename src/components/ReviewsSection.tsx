@@ -1,11 +1,5 @@
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 const reviews = [
   {
@@ -26,50 +20,68 @@ const reviews = [
   },
 ];
 
+function ReviewCard({
+  name,
+  text,
+  className = "",
+}: {
+  name: string;
+  text: string;
+  className?: string;
+}) {
+  return (
+    <div
+      data-suppress-hover-during-scroll
+      className={`shrink-0 w-[320px] sm:w-[380px] bg-card rounded-2xl border border-border/40 p-8 relative can-hover:hover:border-primary/20 can-hover:hover:shadow-lg can-hover:hover:-translate-y-1 transition-[transform,box-shadow,border-color] duration-300 h-full ${className}`}
+    >
+      <Quote size={28} className="text-primary/10 absolute top-6 right-6" />
+      <div className="flex gap-1 mb-4">
+        {[...Array(5)].map((_, j) => (
+          <Star key={j} size={16} className="fill-primary/80 text-primary/80" />
+        ))}
+      </div>
+      <p className="text-base text-foreground/85 mb-5 leading-relaxed">"{text}"</p>
+      <p className="text-base font-semibold text-foreground">{name}</p>
+    </div>
+  );
+}
+
 export function ReviewsSection() {
+  const duplicatedReviews = [...reviews, ...reviews];
+
   return (
     <section id="reviews" className="section-padding bg-muted/40 overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.1, margin: "-20px" }}
         >
-          <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
             Отзывы <span className="gradient-text">учеников</span>
           </h2>
         </motion.div>
       </div>
 
       <motion.div
+        className="group"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, amount: 0.1, margin: "-20px" }}
         transition={{ duration: 0.6 }}
       >
-        <Carousel
-          opts={{ align: "center", loop: true, dragFree: true }}
-          plugins={[Autoplay({ delay: 3500, stopOnInteraction: false, stopOnMouseEnter: true })]}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-3">
-            {reviews.map((r, i) => (
-              <CarouselItem key={i} className="pl-3 basis-[320px] sm:basis-[380px]">
-                <div className="bg-card rounded-2xl border border-border/40 p-8 relative hover:border-primary/20 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full">
-                  <Quote size={28} className="text-primary/10 absolute top-6 right-6" />
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, j) => (
-                      <Star key={j} size={16} className="fill-primary/80 text-primary/80" />
-                    ))}
-                  </div>
-                  <p className="text-base text-foreground/85 mb-5 leading-relaxed">"{r.text}"</p>
-                  <p className="text-base font-semibold text-foreground">{r.name}</p>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        <div className="relative">
+          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-muted/40 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-muted/40 to-transparent z-10 pointer-events-none" />
+          <div className="overflow-hidden">
+            <div className="flex gap-3 w-max will-change-transform animate-reviews-marquee group-hover:[animation-play-state:paused]">
+              {duplicatedReviews.map((r, i) => (
+                <ReviewCard key={`${r.name}-${i}`} name={r.name} text={r.text} />
+              ))}
+            </div>
+          </div>
+        </div>
       </motion.div>
     </section>
   );

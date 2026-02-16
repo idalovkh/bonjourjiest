@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { AboutSection } from "@/components/AboutSection";
@@ -7,19 +8,23 @@ import { ReviewsSection } from "@/components/ReviewsSection";
 import { ContactSection } from "@/components/ContactSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
-import { StickyCTA } from "@/components/StickyCTA";
 import { FloatingContact } from "@/components/FloatingContact";
 import { TrustMarquee } from "@/components/TrustMarquee";
 import { WaveDivider } from "@/components/Decorations";
 
+const PAGE_TITLE = "Deshar School — Английский с нуля за 4 месяца";
+
 const Index = () => {
+  useEffect(() => {
+    document.title = PAGE_TITLE;
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main>
         <HeroSection />
         <TrustMarquee />
-        <WaveDivider />
         <AboutSection />
         <WaveDivider className="[&_path]:fill-muted/40" />
         <TeachersSection />
@@ -33,7 +38,6 @@ const Index = () => {
         <ContactSection />
       </main>
       <Footer />
-      <StickyCTA />
       <FloatingContact />
     </div>
   );

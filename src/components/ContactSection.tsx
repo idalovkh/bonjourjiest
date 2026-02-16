@@ -1,28 +1,13 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle, ArrowRight, Gift, Clock, UserCheck, Mail, Phone, Send, MessageCircle } from "lucide-react";
+import { CheckCircle, ArrowRight, Gift, Clock, UserCheck } from "lucide-react";
 import { z } from "zod";
-
-const MaxIcon = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-    <path d="M9 8l3 4 3-4" />
-    <path d="M9 16l3-4 3 4" />
-  </svg>
-);
-
-const contactMethods = [
-  { id: "telegram", label: "Телеграм", icon: Send, placeholder: "@username" },
-  { id: "whatsapp", label: "WhatsApp", icon: MessageCircle, placeholder: "+7 999 999-99-99" },
-  { id: "phone", label: "Телефон", icon: Phone, placeholder: "+7 999 999-99-99" },
-  { id: "email", label: "Почта", icon: Mail, placeholder: "you@example.com" },
-  { id: "max", label: "Max", icon: MaxIcon, placeholder: "@username" },
-] as const;
 
 const leadSchema = z.object({
   name: z.string().trim().min(1, "Введите имя").max(100),
@@ -30,20 +15,25 @@ const leadSchema = z.object({
 });
 
 const perks = [
-  { icon: Gift, text: "Первый урок бесплатно" },
+  { icon: Gift, text: "Первый урок бесплатный" },
   { icon: Clock, text: "Занимает всего 25 минут" },
-  { icon: UserCheck, text: "Определим ваш уровень" },
+  { icon: UserCheck, text: "Определим твой уровень" },
 ];
 
 export function ContactSection() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
-  const [method, setMethod] = useState<string>("telegram");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const mountedRef = useRef(true);
   const { toast } = useToast();
 
-  const activeMethod = contactMethods.find((m) => m.id === method)!;
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,8 +50,9 @@ export function ContactSection() {
     setLoading(true);
     const { error } = await supabase
       .from("leads")
-      .insert({ name: parsed.data.name, contact: `[${method}] ${parsed.data.contact}` });
+      .insert({ name: parsed.data.name, contact: `[telegram] ${parsed.data.contact}` });
 
+    if (!mountedRef.current) return;
     setLoading(false);
     if (error) {
       toast({
@@ -84,13 +75,13 @@ export function ContactSection() {
         <div className="absolute bottom-0 right-1/4 w-[40%] h-[50%] rounded-full bg-secondary/5 blur-[100px]" />
       </div>
 
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <motion.div
             className="relative rounded-3xl overflow-hidden"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.1, margin: "-20px" }}
             transition={{ duration: 0.5 }}
           >
             {/* Gradient background card */}
@@ -98,10 +89,10 @@ export function ContactSection() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(172,66%,50%,0.15),transparent_50%)]" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(217,91%,70%,0.3),transparent_50%)]" />
 
-            <div className="relative grid lg:grid-cols-2 gap-8 lg:gap-12 p-8 sm:p-10 lg:p-14">
+            <div className="relative grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 p-5 sm:p-8 lg:p-14">
               {/* Left — text */}
               <div className="flex flex-col justify-center">
-                <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white mb-4 tracking-tight">
+                <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 sm:mb-4 tracking-tight">
                   Запишись на
                   <br />
                   пробный урок
@@ -124,7 +115,7 @@ export function ContactSection() {
 
               {/* Right — form */}
               <div className="flex items-center">
-                <div className="bg-card rounded-2xl p-10 shadow-2xl w-full">
+                <div className="bg-card rounded-2xl p-6 sm:p-8 lg:p-10 shadow-2xl w-full">
                   {submitted ? (
                     <div className="text-center py-8">
                       <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
@@ -136,8 +127,8 @@ export function ContactSection() {
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="text-center mb-3">
-                        <p className="text-base font-semibold text-foreground">Оставьте заявку</p>
-                        <p className="text-sm text-muted-foreground">и мы перезвоним за 5 минут</p>
+                        <p className="text-base font-semibold text-foreground">Оставь заявку</p>
+                        <p className="text-sm text-muted-foreground">и мы с тобой свяжемся</p>
                       </div>
 
                       <div>
@@ -153,31 +144,10 @@ export function ContactSection() {
                       </div>
 
                       <div>
-                        <Label className="text-base font-medium mb-2.5 block">Способ связи</Label>
-                        <div className="flex gap-2.5">
-                          {contactMethods.map((m) => (
-                            <button
-                              key={m.id}
-                              type="button"
-                              onClick={() => { setMethod(m.id); setContact(""); }}
-                              title={m.label}
-                              className={`flex-1 flex items-center justify-center py-4 rounded-xl transition-all duration-200 ${
-                                method === m.id
-                                  ? "bg-primary text-primary-foreground shadow-md"
-                                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-                              }`}
-                            >
-                              <m.icon size={22} />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="contact" className="text-base font-medium">{activeMethod.label}</Label>
+                        <Label htmlFor="contact" className="text-base font-medium">Ник или номер в Telegram</Label>
                         <Input
                           id="contact"
-                          placeholder={activeMethod.placeholder}
+                          placeholder="@username или +7 999 999-99-99"
                           value={contact}
                           onChange={(e) => setContact(e.target.value)}
                           className="mt-2 rounded-xl h-14 text-base border-border/60 focus:border-primary"
@@ -187,7 +157,7 @@ export function ContactSection() {
 
                       <Button
                         type="submit"
-                        className="w-full rounded-full h-14 text-base font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
+                        className="w-full rounded-full min-h-[48px] h-14 text-base font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 touch-manipulation"
                         size="lg"
                         disabled={loading}
                       >
@@ -200,9 +170,9 @@ export function ContactSection() {
                       </Button>
                       <p className="text-[11px] text-center text-muted-foreground">
                         Нажимая кнопку, вы соглашаетесь с{" "}
-                        <a href="/privacy" className="underline hover:text-foreground transition-colors">
+                        <Link to="/privacy" className="underline hover:text-foreground transition-colors">
                           политикой конфиденциальности
-                        </a>
+                        </Link>
                       </p>
                     </form>
                   )}
