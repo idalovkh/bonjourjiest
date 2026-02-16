@@ -12,7 +12,6 @@ export default defineConfig({
             if (id.includes("framer-motion")) return "framer-motion";
             if (id.includes("react-dom") || id.includes("react-router")) return "react-vendor";
             if (id.includes("@radix-ui") || id.includes("lucide-react")) return "ui";
-            if (id.includes("@supabase")) return "supabase";
             return "vendor";
           }
         },
