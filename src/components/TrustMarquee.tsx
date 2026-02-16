@@ -16,7 +16,7 @@ export function TrustMarquee() {
         <div className="flex items-center gap-12 whitespace-nowrap will-change-transform animate-trust-marquee w-max">
           {[...trustItems, ...trustItems, ...trustItems, ...trustItems].map((item, i) => (
             <span
-              key={i}
+              key={`${item}-${i}`}
               className="text-lg sm:text-xl font-bold tracking-wider text-muted-foreground/40 uppercase select-none"
             >
               {item}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,12 +29,12 @@ export function Navbar() {
             : "bg-card/80 backdrop-blur-lg shadow-sm border border-border/30"
         }`}
       >
-        <a href="#" className="flex items-center gap-2.5">
+        <Link to="/" className="flex items-center gap-2.5">
           <img src={logo} alt="Deshar School" className="h-7 w-auto" />
           <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">
             Deshar School
           </span>
-        </a>
+        </Link>
 
         <div className="hidden md:flex items-center gap-7">
           {navLinks.map((l) => (

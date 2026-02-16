@@ -58,6 +58,7 @@ export function ContactSection() {
         if (res.ok) return;
         return res.json().then((data: { error?: string }) => {
           if (mountedRef.current) {
+            setSubmitted(false);
             toast({
               title: "Ошибка отправки",
               description: data?.error ?? "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.",
@@ -68,6 +69,7 @@ export function ContactSection() {
       })
       .catch(() => {
         if (mountedRef.current) {
+          setSubmitted(false);
           toast({
             title: "Ошибка отправки",
             description: "Не удалось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram.",
