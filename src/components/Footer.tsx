@@ -115,14 +115,14 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:c1esi@mail.ru" className="flex items-center gap-2.5 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
+                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
                   <Mail size={15} className="shrink-0 text-primary" />
-                  c1esi@mail.ru
+                  support@desharschool.ru
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <Clock size={15} className="shrink-0 text-primary" />
-                Пн–Сб, 9:00–21:00
+                Пн–Пт, 10:00–20:00
               </li>
             </ul>
           </div>
