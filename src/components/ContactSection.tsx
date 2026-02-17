@@ -56,12 +56,13 @@ export function ContactSection() {
     })
       .then((res) => {
         if (res.ok) return;
-        return res.json().then((data: { error?: string }) => {
+        return res.json().then((data: { error?: string; detail?: string }) => {
           if (mountedRef.current) {
             setSubmitted(false);
+            const description = data?.detail ?? data?.error ?? "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.";
             toast({
               title: "Ошибка отправки",
-              description: data?.error ?? "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.",
+              description,
               variant: "destructive",
             });
           }

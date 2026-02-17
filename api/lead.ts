@@ -89,9 +89,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const telegramText = `🆕 <b>Заявка на пробный урок</b>\n\n👤 Имя: ${escapeHtml(name)}\n📱 Контакт: ${escapeHtml(contact)}`;
     await sendTelegram(telegramText);
-    await sendEmail(name, contact); // optional: no-op if SMTP not configured
+    try {
+      await sendEmail(name, contact);
+    } catch (e) {
+      // Письмо опционально: не ломаем ответ, заявка уже в Telegram
+      console.error("[lead] SMTP error:", e instanceof Error ? e.message : e);
+    }
     return res.status(200).json({ success: true });
-  } catch {
-    return res.status(500).json({ error: "Не удалось отправить заявку. Попробуйте позже." });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    const payload: { error: string; detail?: string } = { error: "Не удалось отправить заявку. Попробуйте позже." };
+    if (process.env.DEBUG_LEAD) payload.detail = message;
+    return res.status(500).json(payload);
   }
 }

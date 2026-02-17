@@ -25,6 +25,13 @@ export default defineConfig({
     hmr: {
       overlay: false,
     },
+    // Локально /api/* проксируется на прод (Vercel); на деплое прокси не используется
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_ORIGIN ?? "https://deshar-school-landing.vercel.app",
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [react()],
   resolve: {
