@@ -32,10 +32,19 @@ const prefetchAll = () => {
 const Index = () => {
   useEffect(() => {
     document.title = PAGE_TITLE;
-    // Prefetch all lazy chunks while browser is idle — instant reveal on scroll
-    if ("requestIdleCallback" in window) {
-      const id = requestIdleCallback(prefetchAll, { timeout: 3000 });
-      return () => cancelIdleCallback(id);
+    // Safari-safe idle prefetch with fallback
+    const win = window as Window & {
+      requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    if (typeof win.requestIdleCallback === "function") {
+      const id = win.requestIdleCallback(prefetchAll, { timeout: 3000 });
+      return () => {
+        if (typeof win.cancelIdleCallback === "function") {
+          win.cancelIdleCallback(id);
+        }
+      };
     }
     // Fallback: prefetch after short delay on browsers without requestIdleCallback
     const t = setTimeout(prefetchAll, 2000);

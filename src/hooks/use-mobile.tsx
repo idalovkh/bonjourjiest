@@ -7,12 +7,28 @@ export function useIsMobile() {
 
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const legacyMql = mql as MediaQueryList & {
+      addListener?: (listener: (this: MediaQueryList, ev: MediaQueryListEvent) => void) => void;
+      removeListener?: (listener: (this: MediaQueryList, ev: MediaQueryListEvent) => void) => void;
+    };
     const onChange = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
-    mql.addEventListener("change", onChange);
+
+    if ("addEventListener" in mql) {
+      mql.addEventListener("change", onChange);
+    } else {
+      legacyMql.addListener?.(onChange);
+    }
+
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    return () => mql.removeEventListener("change", onChange);
+    return () => {
+      if ("removeEventListener" in mql) {
+        mql.removeEventListener("change", onChange);
+      } else {
+        legacyMql.removeListener?.(onChange);
+      }
+    };
   }, []);
 
   return !!isMobile;

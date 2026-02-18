@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import legacy from "@vitejs/plugin-legacy";
 import { imagetools } from "vite-imagetools";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -8,6 +9,11 @@ import { fileURLToPath } from "url";
 export default defineConfig({
   plugins: [
     react(),
+    legacy({
+      targets: ["iOS >= 12", "Safari >= 12", "defaults"],
+      modernPolyfills: true,
+      renderLegacyChunks: true,
+    }),
     imagetools({
       // Apply resize transforms automatically by asset path — no query strings in imports
       defaultDirectives: (url) => {
