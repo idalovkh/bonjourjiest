@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useScrollY, useBodyScrollLock } from "@/hooks/use-scroll";
-import logo from "@/assets/logo.webp?w=280&format=webp";
+import logo from "@/assets/logo.webp";
 
 const navLinks = [
   { href: "#about", label: "О школе" },

@@ -18,9 +18,28 @@ const SECTION_FALLBACK = <div className="section-padding min-h-[120px]" aria-hid
 
 const PAGE_TITLE = "Deshar School — Английский с нуля за 4 месяца";
 
+const prefetchAll = () => {
+  import("@/components/AboutSection");
+  import("@/components/TeachersSection");
+  import("@/components/PricingSection");
+  import("@/components/ReviewsSection");
+  import("@/components/FAQSection");
+  import("@/components/ContactSection");
+  import("@/components/Footer");
+  import("@/components/FloatingContact");
+};
+
 const Index = () => {
   useEffect(() => {
     document.title = PAGE_TITLE;
+    // Prefetch all lazy chunks while browser is idle — instant reveal on scroll
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(prefetchAll, { timeout: 3000 });
+      return () => cancelIdleCallback(id);
+    }
+    // Fallback: prefetch after short delay on browsers without requestIdleCallback
+    const t = setTimeout(prefetchAll, 2000);
+    return () => clearTimeout(t);
   }, []);
 
   return (

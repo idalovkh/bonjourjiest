@@ -73,7 +73,7 @@ export function TeacherModal({ teacher, onClose }: TeacherModalProps) {
                 width={400}
                 height={533}
                 decoding="async"
-                className="absolute inset-0 size-full scale-120 object-cover object-center"
+                className="absolute inset-0 size-full scale-[1.2] object-cover object-center"
               />
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto p-6">

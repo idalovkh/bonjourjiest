@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
-import emblem from "@/assets/emblem.webp?w=720&format=webp";
+import emblem from "@/assets/emblem.webp";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const bgDecorations = (
@@ -29,7 +29,7 @@ export function HeroSection() {
   const transition = reducedMotion ? instantTransition : undefined;
 
   return (
-    <section ref={sectionRef} className="relative min-h-[100svh] flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
+    <section ref={sectionRef} className="relative min-h-screen min-h-[100svh] flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
       {/* Background: static on mobile or reduced-motion to avoid scroll jank */}
       {isMobile || reducedMotion ? (
         <div className="absolute inset-0 -z-10">{bgDecorations}</div>

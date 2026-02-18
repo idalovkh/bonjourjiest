@@ -5,22 +5,24 @@ interface LazySectionProps {
   fallback?: ReactNode;
   /** Distance from viewport edge at which children start loading */
   rootMargin?: string;
+  className?: string;
 }
 
 /**
  * Defers rendering children until the section is within rootMargin of the viewport.
- * Prevents network requests for off-screen lazy chunks on initial load.
+ * Wraps content in a div with content-visibility:auto to skip off-screen paint/layout.
  */
 export function LazySection({
   children,
   fallback = null,
   rootMargin = "300px",
+  className,
 }: LazySectionProps) {
-  const sentinelRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
-    const el = sentinelRef.current;
+    const el = wrapperRef.current;
     if (!el) return;
 
     // Fallback for environments without IntersectionObserver (e.g. old WebView)
@@ -44,9 +46,8 @@ export function LazySection({
   }, [rootMargin]);
 
   return (
-    <>
-      <div ref={sentinelRef} aria-hidden="true" />
+    <div ref={wrapperRef} className={className ?? "cv-section"}>
       {shouldRender ? children : fallback}
-    </>
+    </div>
   );
 }

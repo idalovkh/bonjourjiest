@@ -11,17 +11,16 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { TeacherModal } from "@/components/TeacherModal";
 
-// Resized at build time to 600px width for faster load (card ~300px, 2x retina)
-import ksenia from "@/assets/teachers/ksenia.webp?w=600&format=webp";
-import maryam from "@/assets/teachers/maryam.webp?w=600&format=webp";
-import tanzila from "@/assets/teachers/tanzila.webp?w=600&format=webp";
-import arina from "@/assets/teachers/arina.webp?w=600&format=webp";
-import marianna from "@/assets/teachers/marianna.webp?w=600&format=webp";
-import zubair from "@/assets/teachers/zubair.webp?w=600&format=webp";
-import anna from "@/assets/teachers/anna.webp?w=600&format=webp";
-import oleg from "@/assets/teachers/oleg.webp?w=600&format=webp";
-import gais from "@/assets/teachers/gais.webp?w=600&format=webp";
-import zuli from "@/assets/teachers/zuli.webp?w=600&format=webp";
+import ksenia from "@/assets/teachers/ksenia.webp";
+import maryam from "@/assets/teachers/maryam.webp";
+import tanzila from "@/assets/teachers/tanzila.webp";
+import arina from "@/assets/teachers/arina.webp";
+import marianna from "@/assets/teachers/marianna.webp";
+import zubair from "@/assets/teachers/zubair.webp";
+import anna from "@/assets/teachers/anna.webp";
+import oleg from "@/assets/teachers/oleg.webp";
+import gais from "@/assets/teachers/gais.webp";
+import zuli from "@/assets/teachers/zuli.webp";
 
 const teachers = [
   {
@@ -138,8 +137,8 @@ export function TeachersSection() {
             plugins={[autoplayRef.current]}
             className="w-full pb-16 sm:pb-20"
           >
-            <CarouselPrevious className="top-auto left-1/2 bottom-2 z-10 -translate-x-14 translate-y-0 h-11 w-11 rounded-full border-0 bg-card shadow-lg shadow-foreground/10 text-foreground can-hover:hover:bg-primary can-hover:hover:text-primary-foreground can-hover:hover:shadow-xl transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" />
-            <CarouselNext className="top-auto right-1/2 bottom-2 z-10 translate-x-14 translate-y-0 h-11 w-11 rounded-full border-0 bg-card shadow-lg shadow-foreground/10 text-foreground can-hover:hover:bg-primary can-hover:hover:text-primary-foreground can-hover:hover:shadow-xl transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" />
+            <CarouselPrevious className="top-auto left-1/2 bottom-2 z-10 -translate-x-14 translate-y-0 h-11 w-11 min-w-[44px] min-h-[44px] touch-manipulation rounded-full border-0 bg-card shadow-lg shadow-foreground/10 text-foreground can-hover:hover:bg-primary can-hover:hover:text-primary-foreground can-hover:hover:shadow-xl transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" />
+            <CarouselNext className="top-auto right-1/2 bottom-2 z-10 translate-x-14 translate-y-0 h-11 w-11 min-w-[44px] min-h-[44px] touch-manipulation rounded-full border-0 bg-card shadow-lg shadow-foreground/10 text-foreground can-hover:hover:bg-primary can-hover:hover:text-primary-foreground can-hover:hover:shadow-xl transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" />
             <CarouselContent className="-ml-3">
               {teachers.map((t) => (
                 <CarouselItem key={t.name} className="pl-3 basis-[260px] sm:basis-[280px]">

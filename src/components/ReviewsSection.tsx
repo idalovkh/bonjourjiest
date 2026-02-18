@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 
@@ -48,6 +49,20 @@ function ReviewCard({
 
 export function ReviewsSection() {
   const duplicatedReviews = [...reviews, ...reviews];
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        el.style.animationPlayState = entry.isIntersecting ? "running" : "paused";
+      },
+      { rootMargin: "100px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section id="reviews" className="section-padding bg-muted/40 overflow-hidden">
@@ -75,7 +90,7 @@ export function ReviewsSection() {
           <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-muted/40 to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-muted/40 to-transparent z-10 pointer-events-none" />
           <div className="overflow-hidden">
-            <div className="flex gap-3 w-max will-change-transform animate-reviews-marquee group-hover:[animation-play-state:paused]">
+            <div ref={trackRef} className="flex gap-3 w-max will-change-transform animate-reviews-marquee group-hover:[animation-play-state:paused]">
               {duplicatedReviews.map((r, i) => (
                 <ReviewCard key={`${r.name}-${i}`} name={r.name} text={r.text} />
               ))}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Send, Youtube, Phone, Mail, Clock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.webp?w=280&format=webp";
+import logo from "@/assets/logo.webp";
 
 const navColumns = [
   {
