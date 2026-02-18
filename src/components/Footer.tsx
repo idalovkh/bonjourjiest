@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Send, Youtube, Phone, Mail, Clock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.webp";
+import logo from "@/assets/logo.webp?w=280&format=webp";
 
 const navColumns = [
   {
@@ -59,7 +59,7 @@ export function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2.5 mb-5">
-              <img src={logo} alt="Deshar School" className="h-9 w-auto" />
+              <img src={logo} alt="Deshar School" className="h-9 w-auto" width={180} height={36} decoding="async" />
               <span className="text-base font-bold text-foreground tracking-tight">Deshar School</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">

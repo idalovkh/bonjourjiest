@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useScrollY, useBodyScrollLock } from "@/hooks/use-scroll";
-import logo from "@/assets/logo.webp";
+import logo from "@/assets/logo.webp?w=280&format=webp";
 
 const navLinks = [
   { href: "#about", label: "О школе" },
@@ -13,10 +13,15 @@ const navLinks = [
   { href: "#reviews", label: "Отзывы" },
 ];
 
+const instantTransition = { duration: 0 };
+
 export function Navbar() {
   const scrollY = useScrollY();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
   const scrolled = scrollY > 20;
+  const menuTransition = reducedMotion ? instantTransition : { duration: 0.25, ease: "easeInOut" as const };
+  const linkStagger = reducedMotion ? 0 : 0.05;
 
   useBodyScrollLock(mobileOpen);
 
@@ -30,7 +35,7 @@ export function Navbar() {
         }`}
       >
         <Link to="/" className="flex items-center gap-2.5">
-          <img src={logo} alt="Deshar School" className="h-7 w-auto" />
+          <img src={logo} alt="Deshar School" className="h-7 w-auto" width={140} height={36} decoding="async" />
           <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">
             Deshar School
           </span>
@@ -75,7 +80,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={menuTransition}
           >
             {navLinks.map((l, i) => (
               <motion.a
@@ -85,7 +90,7 @@ export function Navbar() {
                 className="flex items-center py-4 min-h-[44px] text-base text-muted-foreground hover:text-foreground active:bg-muted/50 border-b border-border/30 last:border-0 touch-manipulation"
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * linkStagger, duration: menuTransition.duration }}
               >
                 {l.label}
               </motion.a>
@@ -93,7 +98,7 @@ export function Navbar() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: reducedMotion ? 0 : 0.2, duration: menuTransition.duration }}
             >
               <Button asChild className="w-full mt-4 min-h-[48px] rounded-full gradient-primary text-base font-semibold touch-manipulation" size="lg">
                 <a href="#contact" onClick={() => setMobileOpen(false)}>Записаться</a>

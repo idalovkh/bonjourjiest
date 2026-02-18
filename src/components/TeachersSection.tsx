@@ -11,16 +11,17 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { TeacherModal } from "@/components/TeacherModal";
 
-import ksenia from "@/assets/teachers/ksenia.webp";
-import maryam from "@/assets/teachers/maryam.webp";
-import tanzila from "@/assets/teachers/tanzila.webp";
-import arina from "@/assets/teachers/arina.webp";
-import marianna from "@/assets/teachers/marianna.webp";
-import zubair from "@/assets/teachers/zubair.webp";
-import anna from "@/assets/teachers/anna.webp";
-import oleg from "@/assets/teachers/oleg.webp";
-import gais from "@/assets/teachers/gais.webp";
-import zuli from "@/assets/teachers/zuli.webp";
+// Resized at build time to 600px width for faster load (card ~300px, 2x retina)
+import ksenia from "@/assets/teachers/ksenia.webp?w=600&format=webp";
+import maryam from "@/assets/teachers/maryam.webp?w=600&format=webp";
+import tanzila from "@/assets/teachers/tanzila.webp?w=600&format=webp";
+import arina from "@/assets/teachers/arina.webp?w=600&format=webp";
+import marianna from "@/assets/teachers/marianna.webp?w=600&format=webp";
+import zubair from "@/assets/teachers/zubair.webp?w=600&format=webp";
+import anna from "@/assets/teachers/anna.webp?w=600&format=webp";
+import oleg from "@/assets/teachers/oleg.webp?w=600&format=webp";
+import gais from "@/assets/teachers/gais.webp?w=600&format=webp";
+import zuli from "@/assets/teachers/zuli.webp?w=600&format=webp";
 
 const teachers = [
   {
@@ -160,7 +161,10 @@ export function TeachersSection() {
                       <img
                         src={t.photo}
                         alt={t.name}
+                        width={300}
+                        height={400}
                         loading="lazy"
+                        decoding="async"
                         className="absolute inset-0 size-full scale-105 object-cover object-center"
                       />
                     </div>

@@ -70,6 +70,9 @@ export function TeacherModal({ teacher, onClose }: TeacherModalProps) {
               <img
                 src={teacher.photo}
                 alt={teacher.name}
+                width={400}
+                height={533}
+                decoding="async"
                 className="absolute inset-0 size-full scale-120 object-cover object-center"
               />
             </div>
