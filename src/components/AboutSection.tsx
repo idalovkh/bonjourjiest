@@ -20,8 +20,8 @@ const features = [
   },
   {
     icon: MessageCircle,
-    title: "Учим говорить",
-    desc: "Уроки где учатся говорить, а не делать упражнения",
+    title: "Разговорный английский",
+    desc: "Уроки, на которых учим говорить, а не просто делать грамматические упражнения",
     iconBg: "bg-gradient-to-br from-emerald-400 to-teal-500",
     span: "",
     tall: false,
@@ -37,7 +37,7 @@ const features = [
   {
     icon: Zap,
     title: "Первый урок бесплатый",
-    desc: "Попробуйте формат обучения без обязательств",
+    desc: "Попробуй формат обучения без обязательств",
     iconBg: "bg-gradient-to-br from-violet-500 to-purple-500",
     span: "sm:col-span-2 lg:col-span-1",
     tall: false,

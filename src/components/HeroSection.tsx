@@ -43,8 +43,8 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              Английский станет для тебя таким же{" "}
-              <span className="gradient-text">лёгким и понятным</span>, как и русский
+              Научим тебя говорить по-английски{" "}
+              <span className="gradient-text">с нуля</span>
             </motion.h1>
 
             <motion.p
@@ -53,8 +53,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Cambridge-сертифицированные преподаватели, своя платформа
-              и метод, где ты заговоришь с первого урока
+              Английский станет для тебя таким же понятным, как и русский
             </motion.p>
 
             <motion.div
@@ -84,19 +83,18 @@ export function HeroSection() {
             </motion.div>
 
             <motion.div
-              className="flex justify-center lg:justify-start divide-x divide-border"
+              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-2 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
               {[
-                { value: "С 2016", label: "года работаем" },
-                { value: "Cambridge", label: "аттестация" },
-                { value: "1-й урок", label: "бесплатно" },
-              ].map((s, i) => (
-                <div key={s.label} className={`${i === 0 ? 'pr-8 sm:pr-10' : 'px-8 sm:px-10'} text-center lg:text-left`}>
-                  <span className="block text-xl sm:text-2xl font-bold text-foreground">{s.value}</span>
-                  <span className="text-sm text-muted-foreground">{s.label}</span>
+                "Работаем c 2016 года",
+                "Профессиональные лингвисты",
+                "1-й урок бесплатный",
+              ].map((text, i) => (
+                <div key={text} className={`py-2 sm:py-0 ${i === 0 ? 'sm:pr-8 sm:pr-10' : 'sm:px-8 sm:px-10'} shrink-0 text-center lg:text-left first:pt-0 last:pb-0`}>
+                  <span className="block text-base sm:text-lg font-bold text-foreground sm:whitespace-nowrap">{text}</span>
                 </div>
               ))}
             </motion.div>

@@ -145,10 +145,10 @@ export function ContactSection() {
                       </div>
 
                       <div>
-                        <Label htmlFor="name" className="text-base font-medium">Имя</Label>
+                        <Label htmlFor="name" className="text-base font-medium">Как тебя зовут?</Label>
                         <Input
                           id="name"
-                          placeholder="Ваше имя"
+                          placeholder="Твое имя"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           className="mt-2 rounded-xl h-14 text-base border-border/60 focus:border-primary"

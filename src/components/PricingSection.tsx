@@ -19,7 +19,7 @@ const plans = [
   },
   {
     name: "Индивидуально",
-    subtitle: "Персональная программа",
+    subtitle: "Уроки 1 на 1 с учителем",
     price: "13 600",
     period: "/мес",
     features: [
@@ -60,7 +60,7 @@ export function PricingSection() {
              Тарифы
            </h2>
            <p className="text-xl text-muted-foreground">
-             Выберите формат, который подходит именно вам
+            Выбери удобный для себя формат
            </p>
         </motion.div>
 
