@@ -1,4 +1,4 @@
-/* Fonts loaded non-blocking via <link> in index.html */
+/* Third-party font requests removed from critical path. */
 /* Fallback fonts sized to approximate DM Sans / Plus Jakarta Sans — minimises FOUT layout shift */
 @font-face {
   font-family: 'DM Sans Fallback';
