@@ -44,9 +44,6 @@ jobs:
       url: https://desharschool.ru
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -55,15 +52,18 @@ jobs:
 
       - name: Setup SSH
         run: |
+          set -e
           mkdir -p ~/.ssh
           echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.PROD_SERVER_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H "${{ secrets.PROD_SERVER_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Ensure deploy directory exists
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} \
-            "sudo mkdir -p /var/www/deshar-school && sudo chown ${{ secrets.PROD_SERVER_USER }}:${{ secrets.PROD_SERVER_USER }} /var/www/deshar-school"
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            sudo mkdir -p /var/www/deshar-school
+            sudo chown -R ${{ secrets.PROD_SERVER_USER }}:${{ secrets.PROD_SERVER_USER }} /var/www/deshar-school
+          '"
 
       - name: Deploy static + API with rsync
         run: |
@@ -76,37 +76,82 @@ jobs:
             --exclude .env \
             --filter 'P .env' \
             ./ \
-            ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/deshar-school/
+            "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/deshar-school/"
           rsync -avz --delete --progress \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./dist/ \
-            ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/deshar-school/
+            "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/deshar-school/"
+
+      - name: Ensure Node.js, npm and pm2 on server (auto-install if missing)
+        run: |
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            set -euo pipefail
+
+            if ! command -v node >/dev/null 2>&1; then
+              echo \"Node not found. Installing Node 20...\"
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get update -y
+              sudo apt-get install -y nodejs
+            fi
+
+            if ! command -v npm >/dev/null 2>&1; then
+              echo \"npm not found after node install. Installing nodejs again...\"
+              sudo apt-get install -y nodejs
+            fi
+
+            if ! command -v pm2 >/dev/null 2>&1; then
+              echo \"pm2 not found. Installing pm2...\"
+              sudo npm install -g pm2
+            fi
+
+            node -v
+            npm -v
+            pm2 -v
+          '"
 
       - name: Write runtime .env from GitHub Secrets
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} <<EOF
-          cat > /var/www/deshar-school/.env <<EOT
-          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
-          SMTP_HOST=${{ secrets.SMTP_HOST }}
-          SMTP_PORT=${{ secrets.SMTP_PORT }}
-          SMTP_USER=${{ secrets.SMTP_USER }}
-          SMTP_PASS=${{ secrets.SMTP_PASS }}
-          MAIL_FROM=${{ secrets.MAIL_FROM }}
-          MAIL_TO=${{ secrets.MAIL_TO }}
-          EOT
-          chmod 600 /var/www/deshar-school/.env
-          EOF
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            set -euo pipefail
+
+            umask 077
+            printf \"%s\n\" \
+              \"TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}\" \
+              \"TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}\" \
+              \"SMTP_HOST=${SMTP_HOST}\" \
+              \"SMTP_PORT=${SMTP_PORT}\" \
+              \"SMTP_USER=${SMTP_USER}\" \
+              \"SMTP_PASS=${SMTP_PASS}\" \
+              \"MAIL_FROM=${MAIL_FROM}\" \
+              \"MAIL_TO=${MAIL_TO}\" \
+              > /var/www/deshar-school/.env
+
+            chmod 600 /var/www/deshar-school/.env
+          '"
 
       - name: Install deps and restart API
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} \
-            "cd /var/www/deshar-school && npm ci && (pm2 restart deshar-api || pm2 start ecosystem.config.cjs)"
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            set -euo pipefail
+            cd /var/www/deshar-school
+            npm ci
+            pm2 restart deshar-api || pm2 start ecosystem.config.cjs
+          '"
 
       - name: Verify deployment
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} \
-            "test -f /var/www/deshar-school/index.html && echo 'Landing deployed successfully'"
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            test -f /var/www/deshar-school/index.html && echo \"Landing deployed successfully\"
+          '"
 
       - name: Cleanup SSH
         if: always()
