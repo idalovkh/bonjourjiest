@@ -80,7 +80,7 @@ jobs:
             --filter 'P .env' \
             ./ \
             "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/deshar-school/"
-          rsync -avz --delete --progress \
+          rsync -avz --progress \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./dist/ \
             "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/deshar-school/"
