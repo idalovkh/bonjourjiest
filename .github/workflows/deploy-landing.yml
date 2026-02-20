@@ -60,6 +60,11 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.PROD_SERVER_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Ensure deploy directory exists
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} \
+            "sudo mkdir -p /var/www/deshar-school && sudo chown ${{ secrets.PROD_SERVER_USER }}:${{ secrets.PROD_SERVER_USER }} /var/www/deshar-school"
+
       - name: Deploy static + API with rsync
         run: |
           rsync -avz --delete --progress \
@@ -76,6 +81,22 @@ jobs:
             -e "ssh -i ~/.ssh/id_rsa" \
             ./dist/ \
             ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/deshar-school/
+
+      - name: Write runtime .env from GitHub Secrets
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} <<EOF
+          cat > /var/www/deshar-school/.env <<EOT
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+          SMTP_HOST=${{ secrets.SMTP_HOST }}
+          SMTP_PORT=${{ secrets.SMTP_PORT }}
+          SMTP_USER=${{ secrets.SMTP_USER }}
+          SMTP_PASS=${{ secrets.SMTP_PASS }}
+          MAIL_FROM=${{ secrets.MAIL_FROM }}
+          MAIL_TO=${{ secrets.MAIL_TO }}
+          EOT
+          chmod 600 /var/www/deshar-school/.env
+          EOF
 
       - name: Install deps and restart API
         run: |
