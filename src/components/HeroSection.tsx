@@ -5,10 +5,11 @@ import { useRef } from "react";
 import emblem from "@/assets/emblem.webp";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const bgDecorations = (
+/** Lighter blur on mobile to reduce iOS Safari GPU load */
+const bgDecorations = (lightBlur = false) => (
   <>
-    <div className="absolute top-0 right-0 w-[60%] h-[70%] rounded-full bg-accent/60 blur-[160px]" />
-    <div className="absolute bottom-0 left-0 w-[40%] h-[50%] rounded-full bg-secondary/5 blur-[120px]" />
+    <div className={`absolute top-0 right-0 w-[60%] h-[70%] rounded-full bg-accent/60 ${lightBlur ? "blur-[80px]" : "blur-[160px]"}`} />
+    <div className={`absolute bottom-0 left-0 w-[40%] h-[50%] rounded-full bg-secondary/5 ${lightBlur ? "blur-[60px]" : "blur-[120px]"}`} />
     <div className="absolute top-1/3 left-1/4 w-3 h-3 rounded-full bg-primary/20 animate-pulse" />
     <div className="absolute top-1/2 right-1/3 w-2 h-2 rounded-full bg-secondary/30 animate-pulse delay-700" />
     <div className="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-primary/10 animate-pulse delay-1000" />
@@ -29,12 +30,12 @@ export function HeroSection() {
   const transition = reducedMotion ? instantTransition : undefined;
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen min-h-[100svh] flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
       {/* Background: static on mobile or reduced-motion to avoid scroll jank */}
       {isMobile || reducedMotion ? (
-        <div className="absolute inset-0 -z-10">{bgDecorations}</div>
+        <div className="absolute inset-0 -z-10">{bgDecorations(true)}</div>
       ) : (
-        <motion.div className="absolute inset-0 -z-10" style={{ y: bgY }}>{bgDecorations}</motion.div>
+        <motion.div className="absolute inset-0 -z-10" style={{ y: bgY }}>{bgDecorations(false)}</motion.div>
       )}
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

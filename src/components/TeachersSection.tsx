@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useScrollScrolling } from "@/hooks/use-scroll-scrolling";
+import { useHasHover } from "@/hooks/use-mobile";
 import {
   Carousel,
   CarouselContent,
@@ -92,6 +93,7 @@ export function TeachersSection() {
   const [selected, setSelected] = useState<Teacher | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const { isScrolling } = useScrollScrolling();
+  const hasHover = useHasHover();
   const autoplayRef = useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: false })
   );
@@ -145,16 +147,24 @@ export function TeachersSection() {
                   <div
                     data-suppress-hover-during-scroll
                     className="bg-card rounded-2xl border border-border/40 overflow-hidden can-hover:hover:border-primary/20 can-hover:hover:shadow-lg transition-[transform,box-shadow,border-color] duration-300 group h-full flex flex-col"
-                    style={{ perspective: "800px" }}
-                    onMouseMove={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const x = (e.clientX - rect.left) / rect.width - 0.5;
-                      const y = (e.clientY - rect.top) / rect.height - 0.5;
-                      e.currentTarget.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale(1.02)`;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "rotateY(0deg) rotateX(0deg) scale(1)";
-                    }}
+                    style={hasHover ? { perspective: "800px" } : undefined}
+                    onMouseMove={
+                      hasHover
+                        ? (e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const x = (e.clientX - rect.left) / rect.width - 0.5;
+                            const y = (e.clientY - rect.top) / rect.height - 0.5;
+                            e.currentTarget.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale(1.02)`;
+                          }
+                        : undefined
+                    }
+                    onMouseLeave={
+                      hasHover
+                        ? (e) => {
+                            e.currentTarget.style.transform = "rotateY(0deg) rotateX(0deg) scale(1)";
+                          }
+                        : undefined
+                    }
                   >
                     <div className="relative min-h-0 shrink-0 overflow-hidden aspect-[3/4] w-full bg-muted/30">
                       <img

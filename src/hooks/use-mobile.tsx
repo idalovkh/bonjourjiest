@@ -33,3 +33,32 @@ export function useIsMobile() {
 
   return !!isMobile;
 }
+
+/** True when primary input can hover (desktop). False on touch-only devices (e.g. iPhone). */
+export function useHasHover() {
+  const [hasHover, setHasHover] = React.useState(true);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia("(hover: hover)");
+    const legacyMql = mql as MediaQueryList & {
+      addListener?: (listener: () => void) => void;
+      removeListener?: (listener: () => void) => void;
+    };
+    const onChange = () => setHasHover(mql.matches);
+    if ("addEventListener" in mql) {
+      mql.addEventListener("change", onChange);
+    } else {
+      legacyMql.addListener?.(onChange);
+    }
+    setHasHover(mql.matches);
+    return () => {
+      if ("removeEventListener" in mql) {
+        mql.removeEventListener("change", onChange);
+      } else {
+        legacyMql.removeListener?.(onChange);
+      }
+    };
+  }, []);
+
+  return hasHover;
+}
