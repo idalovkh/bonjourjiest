@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import legacy from "@vitejs/plugin-legacy";
+import react from "@vitejs/plugin-react";
 import { imagetools } from "vite-imagetools";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -9,11 +8,8 @@ import { fileURLToPath } from "url";
 export default defineConfig({
   plugins: [
     react(),
-    legacy({
-      targets: ["iOS >= 15", "Safari >= 15", "defaults"],
-      modernPolyfills: true,
-      renderLegacyChunks: true,
-    }),
+    // legacy disabled: known to cause iOS Safari white screen; iOS 15+ supports ES modules
+    // legacy({ targets: ["iOS >= 15", "Safari >= 15", "defaults"], ... }),
     imagetools({
       // Apply resize transforms automatically by asset path — no query strings in imports
       defaultDirectives: (url) => {
