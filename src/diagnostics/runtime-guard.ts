@@ -94,6 +94,34 @@ function ensureFallbackCard(): HTMLDivElement {
   return root;
 }
 
+const CHUNK_RELOAD_KEY = "chunk-reload-ts";
+const CHUNK_RELOAD_WINDOW_MS = 15_000;
+const CHUNK_RELOAD_MAX = 1;
+
+function isChunkLoadError(message: string): boolean {
+  return (
+    /loading chunk .* failed/i.test(message) ||
+    /chunkloaderror/i.test(message) ||
+    /failed to fetch dynamically imported module/i.test(message)
+  );
+}
+
+function tryChunkReload(): boolean {
+  try {
+    if (typeof window === "undefined" || typeof sessionStorage === "undefined") return false;
+    const raw = sessionStorage.getItem(CHUNK_RELOAD_KEY);
+    const entries: number[] = raw ? JSON.parse(raw) : [];
+    const now = Date.now();
+    const recent = entries.filter((t) => now - t < CHUNK_RELOAD_WINDOW_MS);
+    if (recent.length >= CHUNK_RELOAD_MAX) return false;
+    recent.push(now);
+    sessionStorage.setItem(CHUNK_RELOAD_KEY, JSON.stringify(recent));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function toStringReason(reason: unknown): { message: string; stack?: string } {
   if (reason instanceof Error) {
     return { message: reason.message, stack: reason.stack };
@@ -113,8 +141,13 @@ function report(payload: ErrorPayload) {
   if (!import.meta.env.PROD) return;
   if (typeof document === "undefined") return;
   if (shown) return;
-  shown = true;
 
+  if (isChunkLoadError(payload.message) && tryChunkReload()) {
+    window.location.reload();
+    return;
+  }
+
+  shown = true;
   ensureFallbackCard();
   if (isDebugMode()) {
     const overlay = ensureOverlay();

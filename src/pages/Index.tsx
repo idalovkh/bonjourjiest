@@ -19,14 +19,14 @@ const SECTION_FALLBACK = <div className="section-padding min-h-[120px]" aria-hid
 const PAGE_TITLE = "Deshar School — Английский с нуля за 4 месяца";
 
 const prefetchAll = () => {
-  import("@/components/AboutSection");
-  import("@/components/TeachersSection");
-  import("@/components/PricingSection");
-  import("@/components/ReviewsSection");
-  import("@/components/FAQSection");
-  import("@/components/ContactSection");
-  import("@/components/Footer");
-  import("@/components/FloatingContact");
+  import("@/components/AboutSection").catch(() => {});
+  import("@/components/TeachersSection").catch(() => {});
+  import("@/components/PricingSection").catch(() => {});
+  import("@/components/ReviewsSection").catch(() => {});
+  import("@/components/FAQSection").catch(() => {});
+  import("@/components/ContactSection").catch(() => {});
+  import("@/components/Footer").catch(() => {});
+  import("@/components/FloatingContact").catch(() => {});
 };
 
 const Index = () => {
