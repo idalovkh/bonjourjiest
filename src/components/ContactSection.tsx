@@ -159,9 +159,9 @@ export function ContactSection() {
                       </div>
 
                       <div>
-                        <Label htmlFor="contact" className="text-base font-medium">Ник или номер в Telegram</Label>
+                        <Label htmlFor="contact-field" className="text-base font-medium">Ник или номер в Telegram</Label>
                         <Input
-                          id="contact"
+                          id="contact-field"
                           placeholder="@username или +7 999 999-99-99"
                           value={contact}
                           onChange={(e) => setContact(e.target.value)}
