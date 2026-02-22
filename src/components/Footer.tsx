@@ -89,14 +89,14 @@ export function Footer() {
               </h4>
               <ul className="space-y-3">
                 {col.links.map((link) => (
-<li key={link.label}>
-                <a
-                  href={link.href}
-                  className="block py-2.5 min-h-[44px] flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 touch-manipulation -my-2.5"
-                >
-                  {link.label}
-                </a>
-              </li>
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="block py-2.5 min-h-[44px] flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 touch-manipulation -my-2.5"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -115,7 +115,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
+                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 break-all sm:break-normal">
                   <Mail size={15} className="shrink-0 text-primary" />
                   support@desharschool.ru
                 </a>

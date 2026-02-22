@@ -118,7 +118,7 @@ export function HeroSection() {
                 <img
                   src={emblem}
                   alt="Deshar School — эмблема"
-                  className="relative w-64 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
+                  className="relative w-56 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
                   width={352}
                   height={352}
                   fetchPriority="high"
@@ -128,7 +128,7 @@ export function HeroSection() {
                 <motion.img
                   src={emblem}
                   alt="Deshar School — эмблема"
-                  className="relative w-64 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
+                  className="relative w-56 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
                   width={352}
                   height={352}
                   fetchPriority="high"

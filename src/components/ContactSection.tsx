@@ -104,9 +104,9 @@ export function ContactSection() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(172,66%,50%,0.15),transparent_50%)]" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(217,91%,70%,0.3),transparent_50%)]" />
 
-            <div className="relative grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 p-5 sm:p-8 lg:p-14">
+            <div className="relative grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 p-5 sm:p-8 lg:p-14 min-w-0">
               {/* Left — text */}
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center min-w-0">
                 <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 sm:mb-4 tracking-tight">
                   Запишись на
                   <br />
@@ -129,8 +129,8 @@ export function ContactSection() {
               </div>
 
               {/* Right — form */}
-              <div className="flex items-center">
-                <div className="bg-card rounded-2xl p-6 sm:p-8 lg:p-10 shadow-2xl w-full">
+              <div className="flex items-center min-w-0">
+                <div className="bg-card rounded-2xl p-6 sm:p-8 lg:p-10 shadow-2xl w-full min-w-0">
                   {submitted ? (
                     <div className="text-center py-8">
                       <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
