@@ -1,7 +1,6 @@
-import { useEffect, lazy, Suspense, type ComponentType } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { Navbar } from "@/components/Navbar";
-import { TrustMarquee } from "@/components/TrustMarquee";
+import { lazy, Suspense, useEffect, type ComponentType } from "react";
 import { WaveDivider } from "@/components/Decorations";
 import { lazyRetry } from "@/utils/lazy-retry";
 
@@ -16,8 +15,10 @@ const Footer = lazyLoad(() => import("@/components/Footer").then((m) => ({ defau
 const PricingSection = lazyLoad(() => import("@/components/PricingSection").then((m) => ({ default: m.PricingSection })));
 const ReviewsSection = lazyLoad(() => import("@/components/ReviewsSection").then((m) => ({ default: m.ReviewsSection })));
 const TeachersSection = lazyLoad(() => import("@/components/TeachersSection").then((m) => ({ default: m.TeachersSection })));
+const TrustMarquee = lazyLoad(() => import("@/components/TrustMarquee").then((m) => ({ default: m.TrustMarquee })));
 
 const SECTION_FALLBACK = <div className="section-padding min-h-[200px]" aria-hidden />;
+const MARQUEE_FALLBACK = <div className="py-8 sm:py-10 border-y border-border/40 bg-muted/30 min-h-[3rem]" aria-hidden />;
 
 const PAGE_TITLE = "Deshar School — Английский с нуля за 4 месяца";
 
@@ -31,7 +32,9 @@ const Index = () => {
       <Navbar />
       <main className="relative">
         <HeroSection />
-        <TrustMarquee />
+        <Suspense fallback={MARQUEE_FALLBACK}>
+          <TrustMarquee />
+        </Suspense>
 
         <Suspense fallback={SECTION_FALLBACK}>
           <AboutSection />

@@ -6,11 +6,11 @@ import emblem from "@/assets/emblem.webp";
 import { useIsMobile, useHasHover } from "@/hooks/use-mobile";
 import { fadeIn, fadeInDelayed, fadeInLate, fadeInMore, instantTransition, scaleIn } from "@/lib/transitions";
 
-/** Lighter blur on mobile to reduce iOS Safari GPU load. Mobile uses minimal blur (40/30) for perf. */
+/** Desktop: blur. Mobile (lightBlur): no blur, CSS gradient via hero-bg-no-blur — reduces Safari GPU load. */
 const bgDecorations = (lightBlur = false) => (
   <>
-    <div className={`absolute top-0 right-0 w-[60%] h-[70%] rounded-full bg-accent/60 ${lightBlur ? "blur-[40px]" : "blur-[160px]"}`} />
-    <div className={`absolute bottom-0 left-0 w-[40%] h-[50%] rounded-full bg-secondary/5 ${lightBlur ? "blur-[30px]" : "blur-[120px]"}`} />
+    <div className={`hero-bg-accent absolute top-0 right-0 w-[60%] h-[70%] rounded-full bg-accent/60 ${lightBlur ? "hero-bg-no-blur" : "blur-[160px]"}`} />
+    <div className={`hero-bg-secondary absolute bottom-0 left-0 w-[40%] h-[50%] rounded-full bg-secondary/5 ${lightBlur ? "hero-bg-no-blur" : "blur-[120px]"}`} />
     <div className="absolute top-1/3 left-1/4 w-3 h-3 rounded-full bg-primary/20 animate-pulse" />
     <div className="absolute top-1/2 right-1/3 w-2 h-2 rounded-full bg-secondary/30 animate-pulse delay-700" />
     <div className="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-primary/10 animate-pulse delay-1000" />
@@ -118,7 +118,7 @@ export function HeroSection() {
                 <img
                   src={emblem}
                   alt="Deshar School — эмблема"
-                  className="relative w-56 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
+                  className="relative w-56 sm:w-80 lg:w-[22rem] hero-emblem-shadow"
                   width={352}
                   height={352}
                   fetchPriority="high"
@@ -128,7 +128,7 @@ export function HeroSection() {
                 <motion.img
                   src={emblem}
                   alt="Deshar School — эмблема"
-                  className="relative w-56 sm:w-80 lg:w-[22rem] drop-shadow-2xl"
+                  className="relative w-56 sm:w-80 lg:w-[22rem] hero-emblem-shadow"
                   width={352}
                   height={352}
                   fetchPriority="high"
