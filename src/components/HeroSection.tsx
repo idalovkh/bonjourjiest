@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import emblem from "@/assets/emblem.webp";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useHasHover } from "@/hooks/use-mobile";
 import { fadeIn, fadeInDelayed, fadeInLate, fadeInMore, instantTransition, scaleIn } from "@/lib/transitions";
 
 /** Lighter blur on mobile to reduce iOS Safari GPU load */
@@ -20,6 +20,7 @@ const bgDecorations = (lightBlur = false) => (
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
+  const hasHover = useHasHover();
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -104,7 +105,7 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right — emblem (no float animation on mobile to reduce jank) */}
+          {/* Right — emblem (no float animation on touch devices / mobile; reduces CPU load) */}
           <motion.div
             className="order-1 lg:order-2 flex justify-center items-center"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -113,7 +114,7 @@ export function HeroSection() {
           >
             <div className="relative">
               <div className="absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
-              {isMobile || reducedMotion ? (
+              {!hasHover || isMobile || reducedMotion ? (
                 <img
                   src={emblem}
                   alt="Deshar School — эмблема"
@@ -137,11 +138,7 @@ export function HeroSection() {
                     x: [0, 6, 0, -6, 0],
                     rotate: [0, 2, 0, -2, 0],
                   }}
-                  transition={
-                    reducedMotion
-                      ? { duration: 0 }
-                      : { duration: 4, repeat: Infinity, ease: "easeInOut" }
-                  }
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 />
               )}
             </div>
