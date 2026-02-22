@@ -10,7 +10,7 @@ const Privacy = () => {
   return (
     <div className="min-h-screen min-h-screen-ios bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 max-w-3xl">
+      <main className="container mx-auto py-16 sm:py-24 max-w-3xl">
         <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-foreground mb-6 sm:mb-8 tracking-tight">
           Политика в&nbsp;отношении обработки персональных данных
         </h1>

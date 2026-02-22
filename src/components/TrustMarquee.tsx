@@ -27,8 +27,8 @@ export function TrustMarquee() {
   return (
     <section className="py-8 sm:py-10 overflow-hidden border-y border-border/40 bg-muted/30">
       <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
         <div ref={trackRef} className="flex items-center gap-12 whitespace-nowrap animate-trust-marquee motion-reduce:animate-none w-max">
           {[...trustItems, ...trustItems, ...trustItems, ...trustItems].map((item, i) => (

@@ -33,7 +33,7 @@ export function Footer() {
     <footer className="bg-background" role="contentinfo">
       {/* CTA strip */}
       <div className="border-y border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="container mx-auto py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
             <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
               Готов начать говорить на&nbsp;английском?
@@ -54,7 +54,7 @@ export function Footer() {
       </div>
 
       {/* Main footer content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
+      <div className="container mx-auto py-10 sm:py-12 lg:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
@@ -131,7 +131,7 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+        <div className="container mx-auto py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Deshar School. Все права защищены.</p>
           <Link to="/privacy" className="py-2 min-h-[44px] inline-flex items-center hover:text-foreground transition-colors touch-manipulation -my-2">
             Политика конфиденциальности

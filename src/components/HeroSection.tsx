@@ -38,7 +38,7 @@ export function HeroSection() {
         <motion.div className="absolute inset-0 -z-10" style={{ y: bgY }}>{bgDecorations(false)}</motion.div>
       )}
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left — text content */}
           <div className="text-center lg:text-left order-2 lg:order-1">

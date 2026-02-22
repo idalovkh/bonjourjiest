@@ -90,7 +90,7 @@ export function ContactSection() {
         <div className={`absolute bottom-0 right-1/4 w-[40%] h-[50%] rounded-full bg-secondary/5 ${isMobile ? "blur-[50px]" : "blur-[100px]"}`} />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <div className="max-w-5xl mx-auto">
           <motion.div
             className="relative rounded-3xl overflow-hidden"

@@ -67,7 +67,7 @@ export function ReviewsSection() {
 
   return (
     <section id="reviews" className="section-padding bg-muted/40 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
           initial={{ opacity: 0 }}

@@ -213,11 +213,6 @@
     min-height: 100dvh;
   }
 
-  /* Prevent horizontal overscroll/bounce on mobile */
-  .overflow-x-clip-mobile {
-    overflow-x: clip;
-  }
-
   /* Smooth momentum scroll on iOS */
   .scroll-touch {
     -webkit-overflow-scrolling: touch;

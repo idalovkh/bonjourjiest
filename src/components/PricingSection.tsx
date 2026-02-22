@@ -49,7 +49,7 @@ const plans = [
 export function PricingSection() {
   return (
     <section id="pricing" className="relative section-padding">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
           initial={{ opacity: 0 }}
