@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useScrollY, useBodyScrollLock } from "@/hooks/use-scroll";
+import { useIsMobile } from "@/hooks/use-mobile";
 import logo from "@/assets/logo.webp";
 
 const navLinks = [
@@ -17,6 +18,7 @@ const instantTransition = { duration: 0 };
 
 export function Navbar() {
   const scrollY = useScrollY();
+  const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
   const reducedMotion = useReducedMotion();
   const scrolled = scrollY > 20;
@@ -30,8 +32,12 @@ export function Navbar() {
       <nav
         className={`mx-auto max-w-[1200px] flex items-center justify-between min-h-14 h-14 px-4 sm:px-6 rounded-full transition-all duration-300 ${
           scrolled
-            ? "bg-card/95 backdrop-blur-xl shadow-md border border-border/40"
-            : "bg-card/80 backdrop-blur-lg shadow-sm border border-border/30"
+            ? isMobile
+              ? "bg-card/95 backdrop-blur-md shadow-md border border-border/40"
+              : "bg-card/95 backdrop-blur-xl shadow-md border border-border/40"
+            : isMobile
+              ? "bg-card/80 backdrop-blur-sm shadow-sm border border-border/30"
+              : "bg-card/80 backdrop-blur-lg shadow-sm border border-border/30"
         }`}
       >
         <Link to="/" className="flex items-center gap-2.5">
@@ -76,7 +82,7 @@ export function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            className="md:hidden mx-auto max-w-[1200px] mt-2 bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-lg px-5 pb-4 pt-2 overflow-hidden"
+            className="md:hidden mx-auto max-w-[1200px] mt-2 bg-card/95 backdrop-blur-md rounded-2xl border border-border/40 shadow-lg px-5 pb-4 pt-2 overflow-hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
