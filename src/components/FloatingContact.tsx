@@ -31,7 +31,7 @@ export function FloatingContact() {
                 <Button
                   asChild
                   size="lg"
-                  className="min-w-[280px] gradient-primary rounded-full h-14 text-base font-semibold shadow-2xl shadow-primary/30 hover:shadow-xl hover:shadow-primary/35"
+                  className="min-w-[260px] max-w-[calc(100vw-2rem)] sm:min-w-[280px] gradient-primary rounded-full h-14 text-base font-semibold shadow-2xl shadow-primary/30 hover:shadow-xl hover:shadow-primary/35"
                 >
                   <a href="#contact" onClick={() => setOpen(false)}>
                     Бесплатный пробный урок

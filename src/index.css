@@ -107,13 +107,21 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'DM Sans', 'DM Sans Fallback', system-ui, sans-serif;
+    overflow-x: hidden;
   }
 
-  html {
-    scroll-behavior: smooth;
+  /* Tap highlight: subtle on touch devices */
+  a,
+  button {
+    -webkit-tap-highlight-color: hsl(217 91% 60% / 0.12);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -197,6 +205,22 @@
 
   .safe-bottom {
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  /* iOS Safari: 100vh includes address bar, 100dvh = dynamic viewport height */
+  .min-h-screen-ios {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* Prevent horizontal overscroll/bounce on mobile */
+  .overflow-x-clip-mobile {
+    overflow-x: clip;
+  }
+
+  /* Smooth momentum scroll on iOS */
+  .scroll-touch {
+    -webkit-overflow-scrolling: touch;
   }
 
   .btn-glow {

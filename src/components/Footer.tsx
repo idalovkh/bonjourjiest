@@ -92,7 +92,7 @@ export function Footer() {
 <li key={link.label}>
                 <a
                   href={link.href}
-                  className="block py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 touch-manipulation -my-2.5"
+                  className="block py-2.5 min-h-[44px] flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 touch-manipulation -my-2.5"
                 >
                   {link.label}
                 </a>
@@ -109,13 +109,13 @@ export function Footer() {
             </h4>
             <ul className="space-y-3.5">
               <li>
-                <a href="tel:+79067742949" className="flex items-center gap-2.5 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
+                <a href="tel:+79067742949" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
                   <Phone size={15} className="shrink-0 text-primary" />
                   +7 906 774-29-49
                 </a>
               </li>
               <li>
-                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
+                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
                   <Mail size={15} className="shrink-0 text-primary" />
                   support@desharschool.ru
                 </a>
@@ -133,7 +133,7 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Deshar School. Все права защищены.</p>
-          <Link to="/privacy" className="py-2 hover:text-foreground transition-colors touch-manipulation inline-block -my-2">
+          <Link to="/privacy" className="py-2 min-h-[44px] inline-flex items-center hover:text-foreground transition-colors touch-manipulation -my-2">
             Политика конфиденциальности
           </Link>
         </div>

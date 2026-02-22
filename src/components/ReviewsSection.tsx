@@ -34,7 +34,7 @@ const ReviewCard = memo(function ReviewCard({
   return (
     <div
       data-suppress-hover-during-scroll
-      className={`shrink-0 w-[320px] sm:w-[380px] bg-card rounded-2xl border border-border/40 p-8 relative can-hover:hover:border-primary/20 can-hover:hover:shadow-lg can-hover:hover:-translate-y-1 transition-[transform,box-shadow,border-color] duration-300 h-full ${className}`}
+      className={`shrink-0 w-[280px] max-w-[calc(100vw-2rem)] sm:w-[380px] bg-card rounded-2xl border border-border/40 p-8 relative can-hover:hover:border-primary/20 can-hover:hover:shadow-lg can-hover:hover:-translate-y-1 transition-[transform,box-shadow,border-color] duration-300 h-full ${className}`}
     >
       <Quote size={28} className="text-primary/10 absolute top-6 right-6" />
       <div className="flex gap-1 mb-4">

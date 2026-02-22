@@ -27,7 +27,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen min-h-screen-ios overflow-x-clip bg-background">
       <Navbar />
       <main className="relative">
         <HeroSection />

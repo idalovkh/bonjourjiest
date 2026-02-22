@@ -12,7 +12,7 @@
         console.log('[boot]', n, Date.now());
       } catch (e) {}
       function show(msgText) {
-        var style = 'padding:20px;font:14px system-ui,sans-serif;white-space:pre-wrap;background:#fef2f2;color:#b91c1c;min-height:100vh;box-sizing:border-box';
+        var style = 'padding:20px;font:14px system-ui,sans-serif;white-space:pre-wrap;background:#fef2f2;color:#b91c1c;min-height:100vh;min-height:100dvh;box-sizing:border-box';
         var el = document.createElement('pre');
         el.style.cssText = style;
         el.textContent = msgText;
@@ -59,6 +59,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#e8ecf4" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <!-- SVG fallback for Safari < 14 (no WebP). WebP preferred when supported. -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.webp" type="image/webp" sizes="32x32" />

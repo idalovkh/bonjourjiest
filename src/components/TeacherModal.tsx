@@ -51,7 +51,7 @@ export const TeacherModal = memo(function TeacherModal({ teacher, onClose }: Tea
             role="dialog"
             aria-modal="true"
             aria-labelledby="teacher-modal-title"
-            className="relative flex max-h-[90vh] max-w-md w-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-2xl"
+            className="relative flex max-h-[90vh] max-h-[90dvh] max-w-md w-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-2xl"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
@@ -61,12 +61,12 @@ export const TeacherModal = memo(function TeacherModal({ teacher, onClose }: Tea
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
-              className="absolute top-3 right-3 z-10 min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors touch-manipulation"
+              className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-3 z-10 min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors touch-manipulation"
               aria-label="Закрыть"
             >
               <X size={16} />
             </button>
-            <div className="relative aspect-[3/4] max-h-[50vh] min-h-0 w-full shrink-0 overflow-hidden bg-muted/30">
+            <div className="relative aspect-[3/4] max-h-[50vh] max-h-[50dvh] min-h-0 w-full shrink-0 overflow-hidden bg-muted/30">
               <img
                 src={teacher.photo}
                 alt={teacher.name}
@@ -76,7 +76,7 @@ export const TeacherModal = memo(function TeacherModal({ teacher, onClose }: Tea
                 className="absolute inset-0 size-full scale-[1.2] object-cover object-center"
               />
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto p-6">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-6 [-webkit-overflow-scrolling:touch]">
               <h3 id="teacher-modal-title" className="font-display text-xl font-bold text-foreground">{teacher.name}</h3>
               {teacher.role && (
                 <p className="text-sm font-semibold text-primary mb-2">{teacher.role}</p>

@@ -34,12 +34,20 @@ export function useScrollY() {
 
 /**
  * Lock body scroll (e.g. when modals/menus are open).
+ * On iOS, overflow: hidden + overscrollBehavior prevents bounce.
  */
 export function useBodyScrollLock(locked: boolean) {
   useEffect(() => {
-    document.body.style.overflow = locked ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (locked) {
+      const prev = document.body.style.overflow;
+      const prevOverscroll = document.body.style.overscrollBehavior;
+      document.body.style.overflow = "hidden";
+      document.body.style.overscrollBehavior = "none";
+      return () => {
+        document.body.style.overflow = prev;
+        document.body.style.overscrollBehavior = prevOverscroll;
+      };
+    }
+    return undefined;
   }, [locked]);
 }

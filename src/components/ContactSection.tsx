@@ -178,7 +178,7 @@ export function ContactSection() {
                         Записаться бесплатно
                         <ArrowRight size={18} className="ml-2" />
                       </Button>
-                      <p className="text-[11px] text-center text-muted-foreground">
+                      <p className="text-xs text-center text-muted-foreground">
                         Нажимая кнопку, вы соглашаетесь с{" "}
                         <Link to="/privacy" className="underline hover:text-foreground transition-colors">
                           политикой конфиденциальности

@@ -30,7 +30,7 @@ export function HeroSection() {
   const transition = reducedMotion ? instantTransition : undefined;
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
+    <section ref={sectionRef} className="relative min-h-screen min-h-screen-ios flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
       {/* Background: static on mobile or reduced-motion to avoid scroll jank */}
       {isMobile || reducedMotion ? (
         <div className="absolute inset-0 -z-10">{bgDecorations(true)}</div>
