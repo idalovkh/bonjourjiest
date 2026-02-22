@@ -6,17 +6,39 @@
     (function(){
       var isDev = location.hostname === 'localhost' || location.search.includes('debug=1');
       window.__earlyErrors = [];
+      function show(msgText) {
+        var style = 'padding:20px;font:14px system-ui,sans-serif;white-space:pre-wrap;background:#fef2f2;color:#b91c1c;min-height:100vh;box-sizing:border-box';
+        var el = document.createElement('pre');
+        el.style.cssText = style;
+        el.textContent = msgText;
+        function insert() {
+          if (document.body) {
+            document.body.innerHTML = '';
+            document.body.appendChild(el);
+          }
+        }
+        if (document.body) insert();
+        else document.addEventListener('DOMContentLoaded', insert);
+      }
+      var shown = false;
+      function onError(e) {
+        window.__earlyErrors.push({type:'error', message: e.message, filename: e.filename, lineno: e.lineno});
+        if (shown) return;
+        shown = true;
+        if (isDev) show('ERROR: ' + e.message + '\n' + (e.filename || '') + ':' + (e.lineno || ''));
+        else show('Ошибка загрузки. Обновите страницу или откройте с ?debug=1 для диагностики.');
+      }
+      function onRejection(e) {
+        window.__earlyErrors.push({type:'rejection', reason: String(e.reason)});
+        if (shown) return;
+        shown = true;
+        if (isDev) show('UNHANDLED REJECTION: ' + String(e.reason));
+        else show('Ошибка загрузки. Обновите страницу или откройте с ?debug=1 для диагностики.');
+      }
+      window.addEventListener('error', onError);
+      window.addEventListener('unhandledrejection', onRejection);
       if (!isDev) return;
       var msg = window.__earlyErrors;
-      function show(msgText) {
-        if (document.body) document.body.innerHTML = '<pre style="padding:20px;font:12px monospace;white-space:pre-wrap">' + msgText + '</pre>';
-      }
-      window.addEventListener('error', function(e) {
-        msg.push({type:'error', message: e.message, filename: e.filename, lineno: e.lineno});
-      });
-      window.addEventListener('unhandledrejection', function(e) {
-        msg.push({type:'rejection', reason: String(e.reason)});
-      });
       document.addEventListener('DOMContentLoaded', function() {
         if (msg.length > 0) { show('Captured: ' + JSON.stringify(msg, null, 2)); return; }
         setTimeout(function() {
