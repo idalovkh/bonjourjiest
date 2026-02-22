@@ -36,7 +36,7 @@ const features = [
   },
   {
     icon: Zap,
-    title: "Первый урок бесплатый",
+    title: "Первый урок бесплатный",
     desc: "Попробуй формат обучения без обязательств",
     iconBg: "bg-gradient-to-br from-violet-500 to-purple-500",
     span: "sm:col-span-2 lg:col-span-1",

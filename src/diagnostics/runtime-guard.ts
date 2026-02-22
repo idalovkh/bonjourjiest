@@ -1,7 +1,15 @@
+type ErrorCategory = "chunk_load" | "network" | "script_load" | "script" | "promise" | "unknown";
+
 type ErrorPayload = {
   title: string;
   message: string;
   stack?: string;
+  category?: ErrorCategory;
+  userAgent?: string;
+  url?: string;
+  timestamp?: string;
+  src?: string;
+  reasonType?: string;
 };
 
 let installed = false;
@@ -102,8 +110,33 @@ function isChunkLoadError(message: string): boolean {
   return (
     /loading chunk .* failed/i.test(message) ||
     /chunkloaderror/i.test(message) ||
-    /failed to fetch dynamically imported module/i.test(message)
+    /failed to fetch dynamically imported module/i.test(message) ||
+    /importing a module script failed/i.test(message) ||
+    /error loading dynamically imported module/i.test(message) ||
+    /failed to fetch/i.test(message) ||
+    /load failed/i.test(message) ||
+    /resource load failed/i.test(message) ||
+    /network request failed/i.test(message)
   );
+}
+
+function isResizeObserverLoop(message: string): boolean {
+  return /ResizeObserver loop/i.test(message) || /ResizeObserver loop limit exceeded/i.test(message);
+}
+
+function categorizeError(message: string): ErrorCategory {
+  if (isChunkLoadError(message)) return "chunk_load";
+  if (/network|fetch|request failed|cors|connection/i.test(message)) return "network";
+  if (/script|syntax|parsing|module/i.test(message)) return "script";
+  return "unknown";
+}
+
+function enrichPayload(payload: ErrorPayload): ErrorPayload {
+  if (typeof navigator !== "undefined") payload.userAgent = navigator.userAgent;
+  if (typeof location !== "undefined") payload.url = location.href;
+  payload.timestamp = new Date().toISOString();
+  payload.category = categorizeError(payload.message);
+  return payload;
 }
 
 function tryChunkReload(): boolean {
@@ -136,8 +169,29 @@ function toStringReason(reason: unknown): { message: string; stack?: string } {
   }
 }
 
+function formatOverlay(payload: ErrorPayload): string {
+  const parts = [
+    `[${payload.category ?? "unknown"}] ${payload.title}`,
+    payload.message,
+    payload.stack ?? "",
+    payload.src ? `\nScript src: ${payload.src}` : "",
+    payload.reasonType ? `\nReason type: ${payload.reasonType}` : "",
+    payload.userAgent ? `\nUA: ${payload.userAgent}` : "",
+    payload.url ? `\nURL: ${payload.url}` : "",
+    payload.timestamp ? `\nTime: ${payload.timestamp}` : "",
+  ];
+  return parts.filter(Boolean).join("\n");
+}
+
 function report(payload: ErrorPayload) {
-  console.error(`[runtime] ${payload.title}: ${payload.message}`, payload.stack ?? "");
+  if (isResizeObserverLoop(payload.message)) {
+    console.warn("[runtime] ResizeObserver loop (non-fatal)", payload.message);
+    return;
+  }
+
+  enrichPayload(payload);
+  console.error(`[runtime] [${payload.category}] ${payload.title}: ${payload.message}`, payload.stack ?? "");
+
   if (!import.meta.env.PROD) return;
   if (typeof document === "undefined") return;
   if (shown) return;
@@ -151,7 +205,7 @@ function report(payload: ErrorPayload) {
   ensureFallbackCard();
   if (isDebugMode()) {
     const overlay = ensureOverlay();
-    overlay.textContent = `${payload.title}\n${payload.message}${payload.stack ? `\n\n${payload.stack}` : ""}`;
+    overlay.textContent = formatOverlay(payload);
   }
 }
 
@@ -159,11 +213,14 @@ export function installRuntimeGuard() {
   if (installed || typeof window === "undefined") return;
   installed = true;
 
+  // Global runtime errors
   window.addEventListener("error", (event) => {
+    const isScriptLoad = event.target instanceof HTMLScriptElement;
     report({
-      title: "Runtime error",
-      message: event.message || "Unknown script error",
+      title: isScriptLoad ? "Script load error" : "Runtime error",
+      message: event.message || (isScriptLoad && event.target?.src ? `Failed to load: ${event.target.src}` : "Unknown script error"),
       stack: event.error instanceof Error ? event.error.stack : undefined,
+      src: isScriptLoad ? event.target?.src : undefined,
     });
   });
 
@@ -173,6 +230,7 @@ export function installRuntimeGuard() {
       title: "Unhandled promise rejection",
       message,
       stack,
+      reasonType: typeof event.reason,
     });
   });
 }

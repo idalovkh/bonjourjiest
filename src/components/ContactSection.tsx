@@ -40,7 +40,7 @@ export function ContactSection() {
     const parsed = leadSchema.safeParse({ name, contact });
     if (!parsed.success) {
       toast({
-        title: "Ошибка ",
+        title: "Ошибка",
         description: parsed.error.errors[0].message,
         variant: "destructive",
       });
