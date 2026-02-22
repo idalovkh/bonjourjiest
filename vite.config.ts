@@ -5,7 +5,12 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 // https://vitejs.dev/config/
+const buildTs = Date.now();
+
 export default defineConfig({
+  define: {
+    __BUILD_TS__: JSON.stringify(buildTs),
+  },
   plugins: [
     react(),
     imagetools({
@@ -25,7 +30,14 @@ export default defineConfig({
     }),
   ],
   build: {
+    target: ["es2020", "safari14"],
     chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        // Injects build timestamp for cache/debug verification
+        banner: `/* build: ${Date.now()} */`,
+      },
+    },
   },
   server: {
     host: "::",
