@@ -246,12 +246,6 @@
     @apply py-14 sm:py-20 lg:py-28 xl:py-32;
   }
 
-  /* Below-fold sections: let browser skip painting until near viewport (Safari 15.4+) */
-  section.section-padding {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 400px;
-  }
-
   .safe-bottom {
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
