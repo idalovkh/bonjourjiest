@@ -9,7 +9,9 @@
   "overrides": {
     "undici": "^6.23.0",
     "esbuild": "^0.25.0",
-    "tar": "^7.5.7"
+    "tar": "^7.5.7",
+    "eslint": "^9.16.0",
+    "minimatch": "^10.2.1"
   },
   "scripts": {
     "dev": "vite",
@@ -79,7 +81,7 @@
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.1.0",
     "dotenv": "^16.4.5",
-    "eslint": "^10.0.1",
+    "eslint": "^9.16.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "express": "^4.21.0",
