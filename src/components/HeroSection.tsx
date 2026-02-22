@@ -6,11 +6,11 @@ import emblem from "@/assets/emblem.webp";
 import { useIsMobile, useHasHover } from "@/hooks/use-mobile";
 import { fadeIn, fadeInDelayed, fadeInLate, fadeInMore, instantTransition, scaleIn } from "@/lib/transitions";
 
-/** Lighter blur on mobile to reduce iOS Safari GPU load */
+/** Lighter blur on mobile to reduce iOS Safari GPU load. Mobile uses minimal blur (40/30) for perf. */
 const bgDecorations = (lightBlur = false) => (
   <>
-    <div className={`absolute top-0 right-0 w-[60%] h-[70%] rounded-full bg-accent/60 ${lightBlur ? "blur-[80px]" : "blur-[160px]"}`} />
-    <div className={`absolute bottom-0 left-0 w-[40%] h-[50%] rounded-full bg-secondary/5 ${lightBlur ? "blur-[60px]" : "blur-[120px]"}`} />
+    <div className={`absolute top-0 right-0 w-[60%] h-[70%] rounded-full bg-accent/60 ${lightBlur ? "blur-[40px]" : "blur-[160px]"}`} />
+    <div className={`absolute bottom-0 left-0 w-[40%] h-[50%] rounded-full bg-secondary/5 ${lightBlur ? "blur-[30px]" : "blur-[120px]"}`} />
     <div className="absolute top-1/3 left-1/4 w-3 h-3 rounded-full bg-primary/20 animate-pulse" />
     <div className="absolute top-1/2 right-1/3 w-2 h-2 rounded-full bg-secondary/30 animate-pulse delay-700" />
     <div className="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-primary/10 animate-pulse delay-1000" />
@@ -113,7 +113,7 @@ export function HeroSection() {
             transition={transition ?? scaleIn}
           >
             <div className="relative">
-              <div className="absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
+              <div className="hero-emblem-glow absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
               {!hasHover || isMobile || reducedMotion ? (
                 <img
                   src={emblem}

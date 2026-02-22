@@ -166,6 +166,24 @@
     }
   }
 
+  /* iOS Safari: backdrop-blur is very expensive and causes scroll jank.
+     Disable in navbar on touch devices, use solid background instead. */
+  @media (hover: none) {
+    .main-header > nav,
+    .main-header > div {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      background-color: hsl(var(--card) / 0.98) !important;
+    }
+    .animate-pulse {
+      animation: none;
+    }
+    .hero-emblem-glow {
+      filter: none;
+      opacity: 0.5;
+    }
+  }
+
   .card-elevated {
     @apply bg-card rounded-2xl border border-border/60;
     box-shadow: 0 1px 3px hsl(230 25% 14% / 0.04), 0 8px 24px hsl(230 25% 14% / 0.04);

@@ -28,7 +28,7 @@ export function Navbar() {
   useBodyScrollLock(mobileOpen);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+    <header className="main-header fixed top-0 left-0 right-0 z-50 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <nav
         className={`mx-auto max-w-[1200px] flex items-center justify-between min-h-14 h-14 px-4 sm:px-6 rounded-full transition-all duration-300 ${
           scrolled

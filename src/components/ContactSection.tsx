@@ -86,8 +86,8 @@ export function ContactSection() {
     <section id="contact" className="relative section-padding overflow-hidden">
       {/* Background decorations — lighter blur on mobile to reduce iOS Safari GPU load */}
       <div className="absolute inset-0 -z-10">
-        <div className={`absolute top-0 left-1/4 w-[50%] h-[60%] rounded-full bg-primary/5 ${isMobile ? "blur-[60px]" : "blur-[120px]"}`} />
-        <div className={`absolute bottom-0 right-1/4 w-[40%] h-[50%] rounded-full bg-secondary/5 ${isMobile ? "blur-[50px]" : "blur-[100px]"}`} />
+        <div className={`absolute top-0 left-1/4 w-[50%] h-[60%] rounded-full bg-primary/5 ${isMobile ? "blur-[30px]" : "blur-[120px]"}`} />
+        <div className={`absolute bottom-0 right-1/4 w-[40%] h-[50%] rounded-full bg-secondary/5 ${isMobile ? "blur-[25px]" : "blur-[100px]"}`} />
       </div>
 
       <div className="container mx-auto">
