@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useBodyScrollLock } from "@/hooks/use-scroll";
@@ -16,7 +16,7 @@ interface TeacherModalProps {
   onClose: () => void;
 }
 
-export function TeacherModal({ teacher, onClose }: TeacherModalProps) {
+export const TeacherModal = memo(function TeacherModal({ teacher, onClose }: TeacherModalProps) {
   useBodyScrollLock(!!teacher);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -96,4 +96,4 @@ export function TeacherModal({ teacher, onClose }: TeacherModalProps) {
       )}
     </AnimatePresence>
   );
-}
+});

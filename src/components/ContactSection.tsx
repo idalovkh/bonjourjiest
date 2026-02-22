@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { CheckCircle, ArrowRight, Gift, Clock, UserCheck } from "lucide-react";
 import { z } from "zod";
 
@@ -20,6 +21,7 @@ const perks = [
 ];
 
 export function ContactSection() {
+  const isMobile = useIsMobile();
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -82,10 +84,10 @@ export function ContactSection() {
 
   return (
     <section id="contact" className="relative section-padding overflow-hidden">
-      {/* Background decorations */}
+      {/* Background decorations — lighter blur on mobile to reduce iOS Safari GPU load */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-[50%] h-[60%] rounded-full bg-primary/5 blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[40%] h-[50%] rounded-full bg-secondary/5 blur-[100px]" />
+        <div className={`absolute top-0 left-1/4 w-[50%] h-[60%] rounded-full bg-primary/5 ${isMobile ? "blur-[60px]" : "blur-[120px]"}`} />
+        <div className={`absolute bottom-0 right-1/4 w-[40%] h-[50%] rounded-full bg-secondary/5 ${isMobile ? "blur-[50px]" : "blur-[100px]"}`} />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

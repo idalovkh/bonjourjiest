@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { sectionTransition } from "@/lib/transitions";
 import { Star, Quote } from "lucide-react";
 
 const reviews = [
@@ -21,7 +22,7 @@ const reviews = [
   },
 ];
 
-function ReviewCard({
+const ReviewCard = memo(function ReviewCard({
   name,
   text,
   className = "",
@@ -45,7 +46,7 @@ function ReviewCard({
       <p className="text-base font-semibold text-foreground">{name}</p>
     </div>
   );
-}
+});
 
 export function ReviewsSection() {
   const duplicatedReviews = [...reviews, ...reviews];
@@ -84,7 +85,7 @@ export function ReviewsSection() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.1, margin: "-20px" }}
-        transition={{ duration: 0.6 }}
+        transition={sectionTransition}
       >
         <div className="relative">
           <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-muted/40 to-transparent z-10 pointer-events-none" />

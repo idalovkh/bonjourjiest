@@ -195,10 +195,13 @@
     @apply py-14 sm:py-20 lg:py-28 xl:py-32;
   }
 
-  /* Skips paint/layout for off-screen sections — significant GPU win on mobile */
-  .cv-section {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 600px;
+  /* Skips paint/layout for off-screen sections — GPU win on mobile.
+     Only apply where supported; Safari < 15.4 can misrender content-visibility. */
+  @supports (content-visibility: auto) {
+    .cv-section {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 600px;
+    }
   }
 
   .safe-bottom {

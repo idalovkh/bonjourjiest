@@ -1,54 +1,25 @@
-import { useEffect, lazy, Suspense } from "react";
-import { Navbar } from "@/components/Navbar";
+import { useEffect } from "react";
+import { AboutSection } from "@/components/AboutSection";
+import { ContactSection } from "@/components/ContactSection";
+import { FAQSection } from "@/components/FAQSection";
+import { FloatingContact } from "@/components/FloatingContact";
+import { Footer } from "@/components/Footer";
 import { HeroSection } from "@/components/HeroSection";
+import { LazySection } from "@/components/LazySection";
+import { Navbar } from "@/components/Navbar";
+import { PricingSection } from "@/components/PricingSection";
+import { ReviewsSection } from "@/components/ReviewsSection";
+import { TeachersSection } from "@/components/TeachersSection";
 import { TrustMarquee } from "@/components/TrustMarquee";
 import { WaveDivider } from "@/components/Decorations";
-import { LazySection } from "@/components/LazySection";
-
-const AboutSection = lazy(() => import("@/components/AboutSection").then((m) => ({ default: m.AboutSection })));
-const TeachersSection = lazy(() => import("@/components/TeachersSection").then((m) => ({ default: m.TeachersSection })));
-const PricingSection = lazy(() => import("@/components/PricingSection").then((m) => ({ default: m.PricingSection })));
-const ReviewsSection = lazy(() => import("@/components/ReviewsSection").then((m) => ({ default: m.ReviewsSection })));
-const FAQSection = lazy(() => import("@/components/FAQSection").then((m) => ({ default: m.FAQSection })));
-const ContactSection = lazy(() => import("@/components/ContactSection").then((m) => ({ default: m.ContactSection })));
-const Footer = lazy(() => import("@/components/Footer").then((m) => ({ default: m.Footer })));
-const FloatingContact = lazy(() => import("@/components/FloatingContact").then((m) => ({ default: m.FloatingContact })));
 
 const SECTION_FALLBACK = <div className="section-padding min-h-[120px]" aria-hidden="true" />;
 
 const PAGE_TITLE = "Deshar School — Английский с нуля за 4 месяца";
 
-const prefetchAll = () => {
-  import("@/components/AboutSection").catch(() => {});
-  import("@/components/TeachersSection").catch(() => {});
-  import("@/components/PricingSection").catch(() => {});
-  import("@/components/ReviewsSection").catch(() => {});
-  import("@/components/FAQSection").catch(() => {});
-  import("@/components/ContactSection").catch(() => {});
-  import("@/components/Footer").catch(() => {});
-  import("@/components/FloatingContact").catch(() => {});
-};
-
 const Index = () => {
   useEffect(() => {
     document.title = PAGE_TITLE;
-    // Safari-safe idle prefetch with fallback
-    const win = window as Window & {
-      requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number;
-      cancelIdleCallback?: (id: number) => void;
-    };
-
-    if (typeof win.requestIdleCallback === "function") {
-      const id = win.requestIdleCallback(prefetchAll, { timeout: 3000 });
-      return () => {
-        if (typeof win.cancelIdleCallback === "function") {
-          win.cancelIdleCallback(id);
-        }
-      };
-    }
-    // Fallback: prefetch after short delay on browsers without requestIdleCallback
-    const t = setTimeout(prefetchAll, 2000);
-    return () => clearTimeout(t);
   }, []);
 
   return (
@@ -59,56 +30,42 @@ const Index = () => {
         <TrustMarquee />
 
         <LazySection fallback={SECTION_FALLBACK}>
-          <Suspense fallback={SECTION_FALLBACK}>
-            <AboutSection />
-          </Suspense>
+          <AboutSection />
         </LazySection>
         <WaveDivider className="[&_path]:fill-muted/40" />
 
         <LazySection fallback={SECTION_FALLBACK}>
-          <Suspense fallback={SECTION_FALLBACK}>
-            <TeachersSection />
-          </Suspense>
+          <TeachersSection />
         </LazySection>
         <WaveDivider flip className="[&_path]:fill-muted/40" />
 
         <LazySection fallback={SECTION_FALLBACK}>
-          <Suspense fallback={SECTION_FALLBACK}>
-            <PricingSection />
-          </Suspense>
+          <PricingSection />
         </LazySection>
         <WaveDivider />
 
         <LazySection fallback={SECTION_FALLBACK}>
-          <Suspense fallback={SECTION_FALLBACK}>
-            <ReviewsSection />
-          </Suspense>
+          <ReviewsSection />
         </LazySection>
         <WaveDivider flip className="[&_path]:fill-muted/40" />
 
         <LazySection fallback={SECTION_FALLBACK}>
-          <Suspense fallback={SECTION_FALLBACK}>
-            <FAQSection />
-          </Suspense>
+          <FAQSection />
         </LazySection>
         <WaveDivider />
 
         <LazySection fallback={SECTION_FALLBACK}>
-          <Suspense fallback={SECTION_FALLBACK}>
-            <ContactSection />
-          </Suspense>
+          <ContactSection />
         </LazySection>
       </main>
 
       <LazySection fallback={null} rootMargin="600px">
-        <Suspense fallback={null}>
-          <Footer />
-        </Suspense>
+        <Footer />
       </LazySection>
 
-      <Suspense fallback={null}>
+      <LazySection fallback={null} rootMargin="400px">
         <FloatingContact />
-      </Suspense>
+      </LazySection>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import emblem from "@/assets/emblem.webp";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { fadeIn, fadeInDelayed, fadeInLate, fadeInMore, instantTransition, scaleIn } from "@/lib/transitions";
 
 /** Lighter blur on mobile to reduce iOS Safari GPU load */
 const bgDecorations = (lightBlur = false) => (
@@ -15,8 +16,6 @@ const bgDecorations = (lightBlur = false) => (
     <div className="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-primary/10 animate-pulse delay-1000" />
   </>
 );
-
-const instantTransition = { duration: 0 };
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -46,7 +45,7 @@ export function HeroSection() {
               className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-foreground leading-[1.1] mb-5 sm:mb-6 tracking-tight"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={transition ?? { duration: 0.5, delay: 0.1 }}
+              transition={transition ?? fadeIn}
             >
               Научим тебя говорить по-английски{" "}
               <span className="gradient-text">с нуля</span>
@@ -56,7 +55,7 @@ export function HeroSection() {
               className="text-xl sm:text-2xl text-muted-foreground mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={transition ?? { duration: 0.5, delay: 0.2 }}
+              transition={transition ?? fadeInDelayed}
             >
               Английский станет для тебя таким же понятным, как и русский
             </motion.p>
@@ -65,7 +64,7 @@ export function HeroSection() {
               className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-4 mb-8 sm:mb-10"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={transition ?? { duration: 0.5, delay: 0.3 }}
+              transition={transition ?? fadeInMore}
             >
               <Button
                 asChild
@@ -91,7 +90,7 @@ export function HeroSection() {
               className="flex flex-col sm:flex-row justify-center lg:justify-start gap-2 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={transition ?? { duration: 0.5, delay: 0.5 }}
+              transition={transition ?? fadeInLate}
             >
               {[
                 "Работаем c 2016 года",
@@ -110,7 +109,7 @@ export function HeroSection() {
             className="order-1 lg:order-2 flex justify-center items-center"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={transition ?? { duration: 0.7, delay: 0.2 }}
+            transition={transition ?? scaleIn}
           >
             <div className="relative">
               <div className="absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
