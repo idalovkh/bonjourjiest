@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import { imagetools } from "vite-imagetools";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,6 +25,7 @@ export default defineConfig({
         if (filePath.includes("logo.webp")) {
           return new URLSearchParams("w=280&format=webp");
         }
+        
         return new URLSearchParams();
       },
     }),
@@ -34,8 +35,15 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        // Injects build timestamp for cache/debug verification
-        banner: `/* build: ${Date.now()} */`,
+        banner: `/* build: ${buildTs} */`,
+        manualChunks: (id) => {
+          if (id.includes("node_modules")) {
+            if (id.includes("framer-motion")) return "framer-motion";
+            if (id.includes("react-dom") || id.includes("react/")) return "react-vendor";
+            if (id.includes("@radix-ui")) return "radix";
+            if (id.includes("lucide-react")) return "lucide";
+          }
+        },
       },
     },
   },
@@ -48,7 +56,7 @@ export default defineConfig({
     // Локально /api/* проксируется на прод (Vercel); на деплое прокси не используется
     proxy: {
       "/api": {
-        target: process.env.VITE_API_ORIGIN ?? "https://deshar-school-landing.vercel.app",
+        target: process.env.VITE_API_ORIGIN ?? "https://desharschool.ru",
         changeOrigin: true,
       },
     },

@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { Request, Response } from "express";
 import nodemailer from "nodemailer";
 
 const NAME_MAX = 100;
@@ -68,7 +68,7 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: Request, res: Response) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
 
   if (req.method !== "POST") {
