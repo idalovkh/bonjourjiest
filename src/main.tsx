@@ -4,10 +4,8 @@ import App from "./App.tsx";
 import "./index.css";
 import { installRuntimeGuard } from "./diagnostics/runtime-guard";
 
-// Only in dev or when ?debug=1 — reduces prod bundle work
-if (import.meta.env.DEV || new URLSearchParams(location.search).get("debug") === "1") {
-  installRuntimeGuard();
-}
+// Always: catches ChunkLoadError and triggers reload in prod; full overlay only with ?debug=1
+installRuntimeGuard();
 
 // Build version for cache/debug verification (only when ?debug=1)
 if (typeof __BUILD_TS__ !== "undefined" && new URLSearchParams(location.search).get("debug") === "1") {

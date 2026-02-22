@@ -6,6 +6,11 @@
     (function(){
       var isDev = location.hostname === 'localhost' || location.search.includes('debug=1');
       window.__earlyErrors = [];
+      try {
+        var n = (parseInt(sessionStorage.getItem('bootCount') || '0', 10) + 1);
+        sessionStorage.setItem('bootCount', String(n));
+        console.log('[boot]', n, Date.now());
+      } catch (e) {}
       function show(msgText) {
         var style = 'padding:20px;font:14px system-ui,sans-serif;white-space:pre-wrap;background:#fef2f2;color:#b91c1c;min-height:100vh;box-sizing:border-box';
         var el = document.createElement('pre');
