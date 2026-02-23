@@ -51,17 +51,28 @@ export function ContactSection() {
     setSubmitted(true);
     toast({ title: "Заявка отправлена!", description: "Мы свяжемся с вами в ближайшее время." });
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    const fallbackError = "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.";
     fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: parsed.data.name, contact: parsed.data.contact }),
+      signal: controller.signal,
     })
       .then((res) => {
         if (res.ok) return;
-        return res.json().then((data: { error?: string; detail?: string }) => {
+        return res.text().then((text) => {
+          let data: { error?: string; detail?: string } = {};
+          try {
+            data = JSON.parse(text) as { error?: string; detail?: string };
+          } catch {
+            // Ответ не JSON (502, HTML и т.п.)
+          }
           if (mountedRef.current) {
             setSubmitted(false);
-            const description = data?.detail ?? data?.error ?? "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.";
+            const description = data?.detail ?? data?.error ?? fallbackError;
             toast({
               title: "Ошибка отправки",
               description,
@@ -79,7 +90,8 @@ export function ContactSection() {
             variant: "destructive",
           });
         }
-      });
+      })
+      .finally(() => clearTimeout(timeoutId));
   };
 
   return (

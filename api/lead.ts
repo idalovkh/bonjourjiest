@@ -92,13 +92,17 @@ export default async function handler(req: Request, res: Response) {
       await sendEmail(name, contact);
     } catch (e) {
       // Письмо опционально: не ломаем ответ, заявка уже в Telegram
-      console.error("[lead] SMTP error:", e instanceof Error ? e.message : e);
+      const msg = process.env.NODE_ENV === "production" ? "(delivery failed)" : (e instanceof Error ? e.message : String(e));
+      console.error("[lead] SMTP error:", msg);
     }
     return res.status(200).json({ success: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     const payload: { error: string; detail?: string } = { error: "Не удалось отправить заявку. Попробуйте позже." };
-    if (process.env.DEBUG_LEAD) payload.detail = message;
+    // detail только в dev, на проде не раскрываем внутренние ошибки
+    if (process.env.DEBUG_LEAD && process.env.NODE_ENV !== "production") {
+      payload.detail = message;
+    }
     return res.status(500).json(payload);
   }
 }
