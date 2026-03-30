@@ -16,6 +16,7 @@ function validate(name: string, contact: string): { ok: true } | { ok: false; st
   return { ok: true };
 }
 
+
 async function sendTelegram(text: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;

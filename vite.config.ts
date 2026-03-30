@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { imagetools } from "vite-imagetools";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // https://vitejs.dev/config/
 const buildTs = Date.now();
@@ -39,6 +39,7 @@ export default defineConfig({
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
             if (id.includes("framer-motion")) return "framer-motion";
+            if (id.includes("embla-carousel")) return "embla";
             if (id.includes("react-dom") || id.includes("react/")) return "react-vendor";
             if (id.includes("@radix-ui")) return "radix";
             if (id.includes("lucide-react")) return "lucide";

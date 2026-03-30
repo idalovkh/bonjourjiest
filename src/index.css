@@ -1,4 +1,5 @@
 /* Third-party font requests removed from critical path. */
+/* cspell:ignore minimises FOUT */
 /* Fallback fonts sized to approximate DM Sans / Plus Jakarta Sans — minimises FOUT layout shift */
 @font-face {
   font-family: 'DM Sans Fallback';
@@ -110,6 +111,7 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
@@ -166,13 +168,14 @@
     }
   }
 
+  /* cspell:ignore jank */
   /* iOS Safari: backdrop-blur is very expensive and causes scroll jank.
      Disable in navbar on touch devices, use solid background instead. */
   @media (hover: none) {
     .main-header > nav,
     .main-header > div {
-      backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
       background-color: hsl(var(--card) / 0.98) !important;
     }
     .animate-pulse {
@@ -256,11 +259,6 @@
     min-height: 100dvh;
   }
 
-  /* Smooth momentum scroll on iOS */
-  .scroll-touch {
-    -webkit-overflow-scrolling: touch;
-  }
-
   .btn-glow {
     position: relative;
     overflow: hidden;
@@ -281,5 +279,10 @@
   .btn-glow:hover::after {
     width: 300px;
     height: 300px;
+  }
+
+  /* Teacher card 3D tilt container: perspective only (tilt applied via JS) */
+  .teacher-card-perspective {
+    perspective: 800px;
   }
 }
