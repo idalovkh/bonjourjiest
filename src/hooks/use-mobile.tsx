@@ -36,7 +36,6 @@ export function useIsMobile() {
   return isMobile;
 }
 
-/** True when primary input can hover (desktop). False on touch-only devices (e.g. iPhone). Defaults to false to avoid animated content flash on first paint on mobile. */
 export function useHasHover() {
   const [hasHover, setHasHover] = React.useState(false);
 
