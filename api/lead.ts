@@ -1,11 +1,25 @@
 import type { Request, Response } from "express";
 import nodemailer from "nodemailer";
+import { fetch as undiciFetch, ProxyAgent, type Dispatcher } from "undici";
+import { SocksProxyAgent } from "socks-proxy-agent";
 
 const NAME_MAX = 100;
 const CONTACT_MAX = 200;
 
 function trim(s: unknown): string {
   return typeof s === "string" ? s.trim() : "";
+}
+
+/** Only Telegram `fetch` uses this: `http(s)://user:pass@host:port` or `socks5://...` from `TELEGRAM_PROXY_URL`. */
+function getTelegramDispatcher(): Dispatcher | undefined {
+  const raw = trim(process.env.TELEGRAM_PROXY_URL);
+  if (!raw.length) return undefined;
+
+  const lower = raw.toLowerCase();
+  if (lower.startsWith("socks5://") || lower.startsWith("socks4://") || lower.startsWith("socks://")) {
+    return new SocksProxyAgent(raw) as Dispatcher;
+  }
+  return new ProxyAgent(raw);
 }
 
 function validate(name: string, contact: string): { ok: true } | { ok: false; status: number; message: string } {
@@ -22,10 +36,12 @@ async function sendTelegram(text: string): Promise<void> {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) throw new Error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set");
 
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const dispatcher = getTelegramDispatcher();
+  const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+    ...(dispatcher ? { dispatcher } : {}),
   });
   if (!res.ok) {
     const err = await res.text();
