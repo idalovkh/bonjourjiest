@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import nodemailer from "nodemailer";
-import { fetch as undiciFetch, ProxyAgent, FormData, File, type Dispatcher } from "undici";
+import { fetch as undiciFetch, ProxyAgent, FormData, type Dispatcher } from "undici";
 import { SocksProxyAgent } from "socks-proxy-agent";
 
 const NAME_MAX = 100;
@@ -130,20 +130,8 @@ function buildQuizCsv(params: {
   return `\uFEFF${rows.join("\n")}`;
 }
 
-function buildQuizFilename(name: string, contact: string): string {
-  const sanitize = (value: string): string =>
-    value
-      .trim()
-      .toLowerCase()
-      .replaceAll(/\s+/g, "-")
-      .replaceAll(/[\\/:*?"<>|]/g, "")
-      .replaceAll(/[^a-z0-9._-]/g, "")
-      .replaceAll(/-+/g, "-")
-      .replaceAll(/^-|-$/g, "") || "unknown";
-
-  const namePart = sanitize(name);
-  const contactPart = sanitize(contact).replaceAll(/^@+/, "");
-  return `${namePart}-${contactPart}-quiz.csv`;
+function buildQuizFilename(): string {
+  return "quiz-report.csv";
 }
 
 function buildQuizDocumentCaption(params: {
@@ -190,7 +178,8 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
   const form = new FormData();
   form.set("chat_id", chatId);
   form.set("caption", caption);
-  form.set("document", new File([content], filename, { type: mimeType }));
+  const fileBlob = new Blob([content], { type: mimeType });
+  form.append("document", fileBlob, filename);
 
   const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendDocument`, {
     method: "POST",
@@ -289,18 +278,16 @@ export default async function handler(req: Request, res: Response) {
             totalText: quizTotalText,
             level: quizLevel,
           }),
-          buildQuizFilename(name, contact),
+          buildQuizFilename(),
           reportCsv,
           "text/csv; charset=utf-8"
         );
       } catch (docError) {
         // Не роняем заявку, если вложение не прикрепилось: отправляем текст как fallback.
-        let reason = "(document delivery failed)";
-        if (process.env.NODE_ENV !== "production") {
-          reason = docError instanceof Error ? docError.message : String(docError);
-        }
+        const reason = docError instanceof Error ? docError.message : String(docError);
+        const shortReason = reason.slice(0, 280);
         console.error("[lead] Telegram document error:", reason);
-        await sendTelegram(`${telegramText}\n\n⚠️ Файл отчета не прикрепился.`);
+        await sendTelegram(`${telegramText}\n\n⚠️ Файл отчета не прикрепился.\nПричина: ${escapeHtml(shortReason)}`);
       }
     } else {
       await sendTelegram(telegramText);

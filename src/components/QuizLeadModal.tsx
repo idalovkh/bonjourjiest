@@ -245,9 +245,9 @@ export function QuizLeadModal() {
         <Button
           variant="ghost"
           size="lg"
-          className="rounded-full text-base sm:text-lg px-8 sm:px-10 min-h-[48px] h-14 text-muted-foreground hover:text-foreground touch-manipulation"
+          className="rounded-full text-base sm:text-lg px-8 sm:px-10 min-h-[48px] h-14 border border-primary/40 bg-background/80 text-foreground hover:bg-primary/10 hover:border-primary/60 touch-manipulation"
         >
-          Пройти мини-квиз
+          УЗНАТЬ СВОЙ УРОВЕНЬ
         </Button>
       </DialogTrigger>
 

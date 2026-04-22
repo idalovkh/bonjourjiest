@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import emblem from "@/assets/emblem.webp";
 import { useIsMobile, useHasHover } from "@/hooks/use-mobile";
@@ -75,7 +74,6 @@ export function HeroSection() {
               >
                 <a href="#contact">
                   Бесплатный пробный урок
-                  <ArrowRight size={20} className="ml-2" />
                 </a>
               </Button>
               <QuizLeadModal />
