@@ -137,12 +137,29 @@ function buildQuizFilename(name: string, contact: string): string {
       .toLowerCase()
       .replaceAll(/\s+/g, "-")
       .replaceAll(/[\\/:*?"<>|]/g, "")
+      .replaceAll(/[^a-z0-9._-]/g, "")
       .replaceAll(/-+/g, "-")
       .replaceAll(/^-|-$/g, "") || "unknown";
 
   const namePart = sanitize(name);
   const contactPart = sanitize(contact).replaceAll(/^@+/, "");
-  return `@${namePart}-${contactPart}-quiz.csv`;
+  return `${namePart}-${contactPart}-quiz.csv`;
+}
+
+function buildQuizDocumentCaption(params: {
+  name: string;
+  contact: string;
+  scoreText: string | number;
+  totalText: string | number;
+  level: string;
+}): string {
+  return [
+    "Мини-квиз",
+    `Имя: ${params.name}`,
+    `Контакт: ${params.contact}`,
+    `📊 Результат: ${params.scoreText}/${params.totalText}`,
+    `Уровень: ${params.level || "—"}`,
+  ].join("\n");
 }
 
 
@@ -173,7 +190,6 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
   const form = new FormData();
   form.set("chat_id", chatId);
   form.set("caption", caption);
-  form.set("parse_mode", "HTML");
   form.set("document", new File([content], filename, { type: mimeType }));
 
   const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendDocument`, {
@@ -264,12 +280,28 @@ export default async function handler(req: Request, res: Response) {
         level: quizLevel,
         details: quizDetails,
       });
-      await sendTelegramDocument(
-        telegramText,
-        buildQuizFilename(name, contact),
-        reportCsv,
-        "text/csv; charset=utf-8"
-      );
+      try {
+        await sendTelegramDocument(
+          buildQuizDocumentCaption({
+            name,
+            contact,
+            scoreText: quizScoreText,
+            totalText: quizTotalText,
+            level: quizLevel,
+          }),
+          buildQuizFilename(name, contact),
+          reportCsv,
+          "text/csv; charset=utf-8"
+        );
+      } catch (docError) {
+        // Не роняем заявку, если вложение не прикрепилось: отправляем текст как fallback.
+        let reason = "(document delivery failed)";
+        if (process.env.NODE_ENV !== "production") {
+          reason = docError instanceof Error ? docError.message : String(docError);
+        }
+        console.error("[lead] Telegram document error:", reason);
+        await sendTelegram(`${telegramText}\n\n⚠️ Файл отчета не прикрепился.`);
+      }
     } else {
       await sendTelegram(telegramText);
     }
