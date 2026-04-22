@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AchievementAction } from "./AchievementAction";
+import { getLevelDescription, getPersonalRecommendations } from "./data";
 import type { NextLevelTarget, QuizResult } from "./model";
 
 interface ResultsScreenProps {
@@ -10,7 +11,6 @@ interface ResultsScreenProps {
   total: number;
   accuracy: number;
   nextLevelTarget: NextLevelTarget | null;
-  tipText: string;
   name: string;
   contact: string;
   sending: boolean;
@@ -25,7 +25,6 @@ export function ResultsScreen({
   total,
   accuracy,
   nextLevelTarget,
-  tipText,
   name,
   contact,
   sending,
@@ -34,15 +33,17 @@ export function ResultsScreen({
   onRestart,
   onSubmit,
 }: ResultsScreenProps) {
+  const levelDescription = getLevelDescription(result.level);
+  const recommendations = getPersonalRecommendations(result.level, result.wrongTopics, nextLevelTarget?.level ?? null);
+
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-primary/20 bg-card/80 p-4 sm:p-5 shadow-sm text-center">
-        <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="mb-4 flex items-start">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={18} className="text-primary" />
             <p className="text-lg font-semibold">Результаты</p>
           </div>
-          <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{accuracy}%</span>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -68,8 +69,17 @@ export function ResultsScreen({
         </div>
 
         <div className="mt-4 rounded-xl border border-border/60 bg-background/70 p-4 text-left">
+          <p className="text-xl font-semibold text-foreground">{levelDescription.title}</p>
+          <p className="mt-2 text-base sm:text-lg leading-relaxed">{levelDescription.description}</p>
+        </div>
+
+        <div className="mt-4 rounded-xl border border-border/60 bg-background/70 p-4 text-left">
           <p className="text-xs text-muted-foreground uppercase tracking-wide">Персональные рекомендации по ошибкам</p>
-          <p className="mt-2 text-base sm:text-lg leading-relaxed">{tipText}</p>
+          <ul className="mt-2 space-y-2 pl-5 text-base sm:text-lg leading-relaxed list-disc">
+            {recommendations.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
         </div>
 
         {result.wrongTopics.length > 0 && (

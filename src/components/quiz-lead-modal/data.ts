@@ -56,6 +56,72 @@ export function getTip(level: string): string {
   }
 }
 
+export function getLevelDescription(level: string): { title: string; description: string } {
+  switch (level) {
+    case "Pre-A1":
+      return {
+        title: "Pre-A1 (0-3)",
+        description:
+          "Ты только начинаешь путь в английском. Пока комфортнее всего с отдельными словами, базовыми конструкциями и очень простыми фразами.",
+      };
+    case "A1":
+      return {
+        title: "A1 (4-7)",
+        description:
+          "Ты понимаешь и строишь простые фразы на знакомые темы: о себе, семье, работе и повседневных ситуациях. Для уверенности нужно расширять базовую грамматику и словарь.",
+      };
+    case "A2":
+      return {
+        title: "A2 (8-12)",
+        description:
+          "Ты уже можешь говорить о прошлом и настоящем, объясниться в простых ситуациях и поддержать базовый разговор. В целом тебя понимают, даже если пока есть ошибки.",
+      };
+    case "B1":
+      return {
+        title: "B1 (13-16)",
+        description:
+          "У тебя уже рабочий разговорный уровень. Ты способен обсуждать знакомые темы, описывать опыт и планы, а также понимать основную мысль живой речи и текстов.",
+      };
+    case "B2":
+      return {
+        title: "B2 (17-19)",
+        description:
+          "Ты уверенно общаешься на большинство бытовых и рабочих тем, понимаешь сложные тексты и можешь аргументировать свою точку зрения. Речь уже достаточно гибкая и естественная.",
+      };
+    default:
+      return {
+        title: "B2+ (20-21)",
+        description:
+          "Очень сильный результат. Ты свободно используешь сложные конструкции, хорошо понимаешь контекст и можешь говорить почти без заметных ограничений в обычном общении.",
+      };
+  }
+}
+
+export function getPersonalRecommendations(
+  level: string,
+  wrongTopics: string[],
+  nextLevel: string | null,
+): string[] {
+  const priorityTopics = wrongTopics.slice(0, 3);
+  const focusText = priorityTopics.length > 0
+    ? priorityTopics.join(", ")
+    : "ключевые темы текущего уровня";
+  const recommendations: string[] = [
+    `Твой главный фокус сейчас: ${focusText}.`,
+    "Сначала закрепи правила, затем отработай их на коротких устных примерах и мини-диалогах.",
+  ];
+
+  if (nextLevel) {
+    recommendations.push(`Чтобы быстрее перейти на уровень ${nextLevel}, добавь регулярную практику с разбором ошибок и повторением слабых тем.`);
+  } else if (level === "B2+") {
+    recommendations.push("Чтобы расти дальше к C1, добавь сложные тексты, активную лексику и разговорную практику на абстрактные темы.");
+  } else {
+    recommendations.push("Чтобы расти быстрее, совмещай грамматику, аудирование и разговорную практику минимум 3-4 раза в неделю.");
+  }
+
+  return recommendations;
+}
+
 export function shuffleArray<T>(items: T[]): T[] {
   const next = [...items];
   for (let i = next.length - 1; i > 0; i -= 1) {

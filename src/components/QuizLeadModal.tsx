@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import logo from "@/assets/logo.webp";
-import { formSchema, getLevel, getTip, QUESTIONS, shuffleArray } from "@/components/quiz-lead-modal/data";
+import { formSchema, getLevel, QUESTIONS, shuffleArray } from "@/components/quiz-lead-modal/data";
 import { IntroScreen } from "@/components/quiz-lead-modal/IntroScreen";
 import type { OptionId } from "@/components/quiz-lead-modal/model";
 import { QuestionScreen } from "@/components/quiz-lead-modal/QuestionScreen";
@@ -299,7 +299,6 @@ export function QuizLeadModal() {
                     total={total}
                     accuracy={accuracy}
                     nextLevelTarget={nextLevelTarget}
-                    tipText={getTip(result.level)}
                     name={name}
                     contact={contact}
                     sending={sending}

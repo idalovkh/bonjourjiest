@@ -31,9 +31,8 @@ export function QuestionScreen({
   return (
     <div className="space-y-5 rounded-2xl border border-border/60 bg-background/90 p-4 sm:p-5">
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <div className="flex items-center text-sm text-muted-foreground">
           <span>Вопрос {step + 1} из {total}</span>
-          <span>{progressPercent}%</span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-muted">
           <div
