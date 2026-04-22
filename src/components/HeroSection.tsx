@@ -5,6 +5,7 @@ import { useRef } from "react";
 import emblem from "@/assets/emblem.webp";
 import { useIsMobile, useHasHover } from "@/hooks/use-mobile";
 import { fadeIn, fadeInDelayed, fadeInLate, fadeInMore, instantTransition, scaleIn } from "@/lib/transitions";
+import { QuizLeadModal } from "@/components/QuizLeadModal";
 
 /** Desktop: blur. Mobile (lightBlur): no blur, CSS gradient via hero-bg-no-blur — reduces Safari GPU load. */
 const bgDecorations = (lightBlur = false) => (
@@ -77,14 +78,7 @@ export function HeroSection() {
                   <ArrowRight size={20} className="ml-2" />
                 </a>
               </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="lg"
-                className="rounded-full text-base sm:text-lg px-8 sm:px-10 min-h-[48px] h-14 text-muted-foreground hover:text-foreground touch-manipulation"
-              >
-                <a href="#pricing">Узнать цены</a>
-              </Button>
+              <QuizLeadModal />
             </motion.div>
 
             <motion.div

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import nodemailer from "nodemailer";
-import { fetch as undiciFetch, ProxyAgent, type Dispatcher } from "undici";
+import { fetch as undiciFetch, ProxyAgent, FormData, File, type Dispatcher } from "undici";
 import { SocksProxyAgent } from "socks-proxy-agent";
 
 const NAME_MAX = 100;
@@ -17,7 +17,7 @@ function getTelegramDispatcher(): Dispatcher | undefined {
 
   const lower = raw.toLowerCase();
   if (lower.startsWith("socks5://") || lower.startsWith("socks4://") || lower.startsWith("socks://")) {
-    return new SocksProxyAgent(raw) as Dispatcher;
+    return new SocksProxyAgent(raw) as unknown as Dispatcher;
   }
   return new ProxyAgent(raw);
 }
@@ -28,6 +28,119 @@ function validate(name: string, contact: string): { ok: true } | { ok: false; st
   if (!contact.length) return { ok: false, status: 400, message: "Введите контакт" };
   if (contact.length > CONTACT_MAX) return { ok: false, status: 400, message: "Контакт слишком длинный" };
   return { ok: true };
+}
+
+function toNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string" && value.trim().length) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
+
+function toStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.map((v) => trim(v)).filter(Boolean);
+}
+
+interface QuizDetail {
+  id: number;
+  topic: string;
+  question: string;
+  selected: string;
+  correct: string;
+  isCorrect: boolean;
+}
+
+function toQuizDetails(value: unknown): QuizDetail[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const record = item as Record<string, unknown>;
+      const id = toNumber(record.id);
+      if (id === null) return null;
+      return {
+        id,
+        topic: trim(record.topic),
+        question: trim(record.question),
+        selected: trim(record.selected),
+        correct: trim(record.correct),
+        isCorrect: record.isCorrect === true,
+      } satisfies QuizDetail;
+    })
+    .filter((item): item is QuizDetail => item !== null);
+}
+
+function escapeCsvCell(value: string | number): string {
+  const normalized = String(value).replaceAll("\"", "\"\"");
+  return `"${normalized}"`;
+}
+
+function buildQuizCsv(params: {
+  name: string;
+  contact: string;
+  source: string;
+  scoreText: string | number;
+  totalText: string | number;
+  level: string;
+  weakTopics: string[];
+  details: QuizDetail[];
+}): string {
+  const rows: string[] = [];
+  rows.push(
+    [
+      "Дата",
+      "Имя",
+      "Контакт",
+      "Источник",
+      "Баллы",
+      "Всего вопросов",
+      "Уровень",
+      "Темы на повторение",
+      "№ вопроса",
+      "Тема",
+      "Вопрос",
+      "Ответ пользователя",
+      "Правильный ответ",
+      "Статус",
+    ]
+      .map(escapeCsvCell)
+      .join(",")
+  );
+
+  const createdAt = new Date().toISOString();
+  const weakTopicsText = params.weakTopics.length ? params.weakTopics.join("; ") : "нет";
+  const details = params.details.length > 0
+    ? params.details
+    : [{ id: 0, topic: "—", question: "Детали ответов не переданы", selected: "—", correct: "—", isCorrect: false }];
+
+  for (const detail of details) {
+    rows.push(
+      [
+        createdAt,
+        params.name,
+        params.contact,
+        params.source,
+        params.scoreText,
+        params.totalText,
+        params.level || "—",
+        weakTopicsText,
+        detail.id || "—",
+        detail.topic || "—",
+        detail.question || "—",
+        detail.selected || "—",
+        detail.correct || "—",
+        detail.isCorrect ? "OK" : "X",
+      ]
+        .map(escapeCsvCell)
+        .join(",")
+    );
+  }
+
+  return `\uFEFF${rows.join("\n")}`;
 }
 
 
@@ -49,6 +162,29 @@ async function sendTelegram(text: string): Promise<void> {
   }
 }
 
+async function sendTelegramDocument(caption: string, filename: string, content: string, mimeType = "text/plain; charset=utf-8"): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) throw new Error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set");
+
+  const dispatcher = getTelegramDispatcher();
+  const form = new FormData();
+  form.set("chat_id", chatId);
+  form.set("caption", caption);
+  form.set("document", new File([content], filename, { type: mimeType }));
+
+  const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendDocument`, {
+    method: "POST",
+    body: form,
+    ...(dispatcher ? { dispatcher } : {}),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Telegram API (document): ${res.status} ${err}`);
+  }
+}
+
 /** Sends email if SMTP/MAIL env vars are set; no-op otherwise. */
 async function sendEmail(name: string, contact: string): Promise<void> {
   const host = process.env.SMTP_HOST;
@@ -62,7 +198,7 @@ async function sendEmail(name: string, contact: string): Promise<void> {
     return; // SMTP not configured — skip email
   }
 
-  const portNum = port ? parseInt(port, 10) : 587;
+  const portNum = port ? Number.parseInt(port, 10) : 587;
   const transporter = nodemailer.createTransport({
     host,
     port: portNum,
@@ -79,10 +215,10 @@ async function sendEmail(name: string, contact: string): Promise<void> {
 
 function escapeHtml(s: string): string {
   return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;");
 }
 
 export default async function handler(req: Request, res: Response) {
@@ -96,6 +232,12 @@ export default async function handler(req: Request, res: Response) {
   const body = (req.body ?? {}) as Record<string, unknown>;
   const name = trim(body.name);
   const contact = trim(body.contact);
+  const source = trim(body.source) || "lead";
+  const quizLevel = trim(body.quizLevel);
+  const quizScore = toNumber(body.quizScore);
+  const quizTotal = toNumber(body.quizTotal);
+  const weakTopics = toStringArray(body.weakTopics);
+  const quizDetails = toQuizDetails(body.quizDetails);
 
   const validation = validate(name, contact);
   if (validation.ok === false) {
@@ -103,13 +245,41 @@ export default async function handler(req: Request, res: Response) {
   }
 
   try {
-    const telegramText = `🆕 <b>Заявка на пробный урок</b>\n\n👤 Имя: ${escapeHtml(name)}\n📱 Контакт: ${escapeHtml(contact)}`;
+    const quizScoreText = quizScore ?? "—";
+    const quizTotalText = quizTotal ?? "—";
+    const quizLevelText = escapeHtml(quizLevel || "—");
+    const weakTopicsText = escapeHtml(weakTopics.length > 0 ? weakTopics.join(", ") : "нет");
+    const quizPart = source === "quiz"
+      ? `\n\n🧠 <b>Мини-квиз</b>\n📊 Результат: ${quizScoreText}/${quizTotalText}\n🏷 Уровень: ${quizLevelText}\n📚 Темы на повторение: ${weakTopicsText}`
+      : "";
+    const telegramText = `🆕 <b>Заявка с лендинга</b>\n\n👤 Имя: ${escapeHtml(name)}\n📱 Контакт: ${escapeHtml(contact)}\n🔖 Источник: ${escapeHtml(source)}${quizPart}`;
     await sendTelegram(telegramText);
+    if (source === "quiz") {
+      const reportCsv = buildQuizCsv({
+        name,
+        contact,
+        source,
+        scoreText: quizScoreText,
+        totalText: quizTotalText,
+        level: quizLevel,
+        weakTopics,
+        details: quizDetails,
+      });
+      await sendTelegramDocument(
+        `Квиз-отчет (Excel): ${name}`,
+        `quiz-result-${Date.now()}.csv`,
+        reportCsv,
+        "text/csv; charset=utf-8"
+      );
+    }
     try {
       await sendEmail(name, contact);
     } catch (e) {
       // Письмо опционально: не ломаем ответ, заявка уже в Telegram
-      const msg = process.env.NODE_ENV === "production" ? "(delivery failed)" : (e instanceof Error ? e.message : String(e));
+      let msg = "(delivery failed)";
+      if (process.env.NODE_ENV !== "production") {
+        msg = e instanceof Error ? e.message : String(e);
+      }
       console.error("[lead] SMTP error:", msg);
     }
     return res.status(200).json({ success: true });

@@ -12,12 +12,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -29,7 +29,7 @@ jobs:
         run: npm run build
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: landing-dist
           path: dist
@@ -45,10 +45,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           name: landing-dist
           path: ./dist
@@ -91,8 +91,8 @@ jobs:
             set -euo pipefail
 
             if ! command -v node >/dev/null 2>&1; then
-              echo \"Node not found. Installing Node 20...\"
-              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              echo \"Node not found. Installing Node 22...\"
+              curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
               sudo apt-get update -y
               sudo apt-get install -y nodejs
             fi
