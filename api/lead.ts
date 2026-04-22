@@ -39,11 +39,6 @@ function toNumber(value: unknown): number | null {
   return null;
 }
 
-function toStringArray(value: unknown): string[] {
-  if (!Array.isArray(value)) return [];
-  return value.map((v) => trim(v)).filter(Boolean);
-}
-
 interface QuizDetail {
   id: number;
   topic: string;
@@ -229,7 +224,6 @@ export default async function handler(req: Request, res: Response) {
   const quizLevel = trim(body.quizLevel);
   const quizScore = toNumber(body.quizScore);
   const quizTotal = toNumber(body.quizTotal);
-  const weakTopics = toStringArray(body.weakTopics);
   const quizDetails = toQuizDetails(body.quizDetails);
 
   const validation = validate(name, contact);
@@ -241,9 +235,8 @@ export default async function handler(req: Request, res: Response) {
     const quizScoreText = quizScore ?? "—";
     const quizTotalText = quizTotal ?? "—";
     const quizLevelText = escapeHtml(quizLevel || "—");
-    const weakTopicsText = escapeHtml(weakTopics.length > 0 ? weakTopics.join(", ") : "нет");
     const quizPart = source === "quiz"
-      ? `\n\n🧠 <b>Мини-квиз</b>\n📊 Результат: ${quizScoreText}/${quizTotalText}\n🏷 Уровень: ${quizLevelText}\n📚 Темы на повторение: ${weakTopicsText}`
+      ? `\n\n🧠 <b>Мини-квиз</b>\n📊 Результат: ${quizScoreText}/${quizTotalText}\n🏷 Уровень: ${quizLevelText}`
       : "";
     const telegramText = `🆕 <b>Заявка с лендинга</b>\n\n👤 Имя: ${escapeHtml(name)}\n📱 Контакт: ${escapeHtml(contact)}\n🔖 Источник: ${escapeHtml(source)}${quizPart}`;
     if (source === "quiz") {
