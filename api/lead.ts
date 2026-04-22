@@ -130,6 +130,21 @@ function buildQuizCsv(params: {
   return `\uFEFF${rows.join("\n")}`;
 }
 
+function buildQuizFilename(name: string, contact: string): string {
+  const sanitize = (value: string): string =>
+    value
+      .trim()
+      .toLowerCase()
+      .replaceAll(/\s+/g, "-")
+      .replaceAll(/[\\/:*?"<>|]/g, "")
+      .replaceAll(/-+/g, "-")
+      .replaceAll(/^-|-$/g, "") || "unknown";
+
+  const namePart = sanitize(name);
+  const contactPart = sanitize(contact).replaceAll(/^@+/, "");
+  return `@${namePart}-${contactPart}-quiz.csv`;
+}
+
 
 async function sendTelegram(text: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -251,7 +266,7 @@ export default async function handler(req: Request, res: Response) {
       });
       await sendTelegramDocument(
         telegramText,
-        `quiz-result-${Date.now()}.csv`,
+        buildQuizFilename(name, contact),
         reportCsv,
         "text/csv; charset=utf-8"
       );
