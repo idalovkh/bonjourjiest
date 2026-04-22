@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -13,79 +9,35 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import logo from "@/assets/logo.webp";
+import { formSchema, getLevel, getTip, QUESTIONS, shuffleArray } from "@/components/quiz-lead-modal/data";
+import { IntroScreen } from "@/components/quiz-lead-modal/IntroScreen";
+import type { OptionId } from "@/components/quiz-lead-modal/model";
+import { QuestionScreen } from "@/components/quiz-lead-modal/QuestionScreen";
+import { ResultsScreen } from "@/components/quiz-lead-modal/ResultsScreen";
 
-type OptionId = "a" | "b" | "c";
+const QUIZ_PROGRESS_STORAGE_KEY = "quiz-progress-v1";
 
-interface Question {
-  id: number;
-  text: string;
-  topic: string;
-  options: { id: OptionId; text: string }[];
-  correct: OptionId;
+interface QuizProgressSnapshot {
+  started: boolean;
+  step: number;
+  attemptSeed: number;
+  answers: Record<number, OptionId>;
+  name: string;
+  contact: string;
 }
 
-const QUESTIONS: Question[] = [
-  { id: 1, text: "She ___ to the gym every day.", topic: "Present Simple", options: [{ id: "a", text: "go" }, { id: "b", text: "goes" }, { id: "c", text: "going" }], correct: "b" },
-  { id: 2, text: "They ___ dinner right now.", topic: "Present Continuous", options: [{ id: "a", text: "have" }, { id: "b", text: "are having" }, { id: "c", text: "having" }], correct: "b" },
-  { id: 3, text: "I ___ my keys yesterday.", topic: "Past Simple", options: [{ id: "a", text: "lose" }, { id: "b", text: "lost" }, { id: "c", text: "have lost" }], correct: "b" },
-  { id: 4, text: "She ___ already finished her homework.", topic: "Present Perfect", options: [{ id: "a", text: "did" }, { id: "b", text: "has" }, { id: "c", text: "have" }], correct: "b" },
-  { id: 5, text: "We ___ in this city since 2010.", topic: "Present Perfect", options: [{ id: "a", text: "live" }, { id: "b", text: "lived" }, { id: "c", text: "have lived" }], correct: "c" },
-  { id: 6, text: "If I ___ rich, I would travel the world.", topic: "Second Conditional", options: [{ id: "a", text: "am" }, { id: "b", text: "was" }, { id: "c", text: "would be" }], correct: "c" },
-  { id: 7, text: "He ___ to London next week.", topic: "Future (plans)", options: [{ id: "a", text: "goes" }, { id: "b", text: "is going" }, { id: "c", text: "go" }], correct: "b" },
-  { id: 8, text: "There isn’t ___ milk in the fridge.", topic: "Quantifiers", options: [{ id: "a", text: "some" }, { id: "b", text: "any" }, { id: "c", text: "a" }], correct: "b" },
-  { id: 9, text: "I have ___ friends in this city.", topic: "Countable nouns", options: [{ id: "a", text: "much" }, { id: "b", text: "many" }, { id: "c", text: "little" }], correct: "b" },
-  { id: 10, text: "There is ___ water left.", topic: "Uncountable nouns", options: [{ id: "a", text: "few" }, { id: "b", text: "little" }, { id: "c", text: "many" }], correct: "b" },
-  { id: 11, text: "He ___ play the piano when he was a child.", topic: "Past ability", options: [{ id: "a", text: "can" }, { id: "b", text: "could" }, { id: "c", text: "must" }], correct: "b" },
-  { id: 12, text: "You ___ wear a seatbelt. It’s the law.", topic: "Obligation", options: [{ id: "a", text: "can" }, { id: "b", text: "must" }, { id: "c", text: "may" }], correct: "b" },
-  { id: 13, text: "She asked me where I ___.", topic: "Reported Speech", options: [{ id: "a", text: "live" }, { id: "b", text: "lived" }, { id: "c", text: "am living" }], correct: "b" },
-  { id: 14, text: "He ___ go to the party if he finishes work.", topic: "Possibility", options: [{ id: "a", text: "might" }, { id: "b", text: "must" }, { id: "c", text: "should" }], correct: "a" },
-  { id: 15, text: "If it rains, we ___.", topic: "First Conditional", options: [{ id: "a", text: "stay" }, { id: "b", text: "will stay" }, { id: "c", text: "stayed" }], correct: "b" },
-  { id: 16, text: "If I had more money, I ___ a car.", topic: "Second Conditional", options: [{ id: "a", text: "buy" }, { id: "b", text: "would buy" }, { id: "c", text: "will buy" }], correct: "b" },
-  { id: 17, text: "I saw ___ interesting film yesterday.", topic: "Articles", options: [{ id: "a", text: "a" }, { id: "b", text: "an" }, { id: "c", text: "the" }], correct: "b" },
-  { id: 18, text: "___ sun rises in the east.", topic: "Articles", options: [{ id: "a", text: "A" }, { id: "b", text: "The" }, { id: "c", text: "—" }], correct: "b" },
-  { id: 19, text: "He ___ me that he was tired.", topic: "Tell vs Say", options: [{ id: "a", text: "said" }, { id: "b", text: "told" }, { id: "c", text: "spoke" }], correct: "b" },
-  { id: 20, text: "Please ___ at the board.", topic: "Look vs See", options: [{ id: "a", text: "see" }, { id: "b", text: "watch" }, { id: "c", text: "look" }], correct: "c" },
-  { id: 21, text: "I’m not interested ___ politics.", topic: "Prepositions", options: [{ id: "a", text: "on" }, { id: "b", text: "in" }, { id: "c", text: "at" }], correct: "b" },
-];
-
-const formSchema = z.object({
-  name: z.string().trim().min(1, "Введите имя").max(100),
-  contact: z.string().trim().min(1, "Введите контакт").max(200),
-});
-
-function getLevel(score: number): string {
-  if (score <= 3) return "Pre-A1";
-  if (score <= 7) return "A1";
-  if (score <= 12) return "A2";
-  if (score <= 16) return "B1";
-  if (score <= 19) return "B2";
-  return "B2+";
-}
-
-function getTip(level: string): string {
-  switch (level) {
-    case "Pre-A1":
-      return "Начните с базы: to be, простые конструкции и короткие фразы.";
-    case "A1":
-      return "Закрепите Present Simple/Continuous, формы глаголов и артикли.";
-    case "A2":
-      return "Прокачайте Present Perfect, предлоги и much/many/few/little.";
-    case "B1":
-      return "Сфокусируйтесь на conditionals, reported speech и точности лексики.";
-    case "B2":
-      return "Усильте естественность речи: устойчивые выражения и сочетаемость слов.";
-    default:
-      return "Отличный уровень. Следующий шаг - движение к C1 через живую практику.";
+function normalizeAnswers(raw: unknown): Record<number, OptionId> {
+  if (!raw || typeof raw !== "object") return {};
+  const entries = Object.entries(raw as Record<string, unknown>);
+  const normalized: Record<number, OptionId> = {};
+  for (const [key, value] of entries) {
+    const id = Number.parseInt(key, 10);
+    if (!Number.isInteger(id)) continue;
+    if (value === "a" || value === "b" || value === "c") {
+      normalized[id] = value;
+    }
   }
-}
-
-function shuffleArray<T>(items: T[]): T[] {
-  const next = [...items];
-  for (let i = next.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [next[i], next[j]] = [next[j], next[i]];
-  }
-  return next;
+  return normalized;
 }
 
 export function QuizLeadModal() {
@@ -98,6 +50,7 @@ export function QuizLeadModal() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [sending, setSending] = useState(false);
+  const [progressHydrated, setProgressHydrated] = useState(false);
   const randomizedQuestions = useMemo(() => {
     const bump = attemptSeed % 3;
     return QUESTIONS.map((q) => {
@@ -138,6 +91,44 @@ export function QuizLeadModal() {
     : "";
 
   useEffect(() => {
+    if (globalThis.window === undefined) return;
+    try {
+      const raw = globalThis.localStorage.getItem(QUIZ_PROGRESS_STORAGE_KEY);
+      if (!raw) {
+        setProgressHydrated(true);
+        return;
+      }
+      const parsed = JSON.parse(raw) as Partial<QuizProgressSnapshot>;
+      const nextStep = typeof parsed.step === "number" ? Math.max(0, Math.min(QUESTIONS.length, Math.trunc(parsed.step))) : 0;
+      const nextAttemptSeed = typeof parsed.attemptSeed === "number" ? Math.max(0, Math.trunc(parsed.attemptSeed)) : 0;
+      setStarted(parsed.started === true);
+      setStep(nextStep);
+      setAttemptSeed(nextAttemptSeed);
+      setAnswers(normalizeAnswers(parsed.answers));
+      setName(typeof parsed.name === "string" ? parsed.name.slice(0, 100) : "");
+      setContact(typeof parsed.contact === "string" ? parsed.contact.slice(0, 200) : "");
+      if (parsed.started === true) setOpen(true);
+    } catch {
+      globalThis.localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
+    } finally {
+      setProgressHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!progressHydrated || globalThis.window === undefined) return;
+    const snapshot: QuizProgressSnapshot = {
+      started,
+      step,
+      attemptSeed,
+      answers,
+      name,
+      contact,
+    };
+    globalThis.localStorage.setItem(QUIZ_PROGRESS_STORAGE_KEY, JSON.stringify(snapshot));
+  }, [progressHydrated, started, step, attemptSeed, answers, name, contact]);
+
+  useEffect(() => {
     const storageKey = "quiz-popup-shown-v1";
     if (globalThis.window === undefined) return;
     if (globalThis.localStorage.getItem(storageKey) === "1") return;
@@ -164,6 +155,9 @@ export function QuizLeadModal() {
     setSending(false);
     setAttemptSeed((prev) => prev + 1);
     setStarted(false);
+    if (globalThis.window !== undefined) {
+      globalThis.localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
+    }
   };
 
   const handleStartQuiz = () => {
@@ -223,6 +217,9 @@ export function QuizLeadModal() {
         title: "Результат отправлен",
         description: "Менеджер уже увидел ваш уровень и свяжется с вами.",
       });
+      if (globalThis.window !== undefined) {
+        globalThis.localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
+      }
       setOpen(false);
       handleRestart();
     } catch (error) {
@@ -237,6 +234,14 @@ export function QuizLeadModal() {
   };
 
   const progressPercent = Math.round(((step + 1) / total) * 100);
+  const accuracy = Math.round((result.score / total) * 100);
+  const nextLevelTarget =
+    result.score <= 3 ? { level: "A1", score: 4 }
+      : result.score <= 7 ? { level: "A2", score: 8 }
+      : result.score <= 12 ? { level: "B1", score: 13 }
+      : result.score <= 16 ? { level: "B2", score: 17 }
+      : result.score <= 19 ? { level: "B2+", score: 20 }
+      : null;
 
   return (
     <Dialog
@@ -272,175 +277,54 @@ export function QuizLeadModal() {
                 <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">Deshar School</span>
               </div>
             </div>
-            <div className="mt-3 space-y-2 text-center">
-              <p className="mx-auto inline-flex rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-                Бесплатная диагностика уровня
-              </p>
-              <DialogTitle className="text-xl sm:text-2xl">Узнай свой уровень английского за 3 минуты</DialogTitle>
-              <p className="text-sm sm:text-base text-muted-foreground">
-                21 вопрос, мгновенный результат и персональная рекомендация по обучению.
-              </p>
-            </div>
+            {!started && (
+              <div className="mt-3 space-y-2 text-center">
+                <p className="mx-auto inline-flex items-center rounded-md border border-border/60 bg-transparent px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  Экспресс-диагностика уровня
+                </p>
+                <DialogTitle className="text-2xl sm:text-3xl">Определи свой уровень английского за 3 минуты</DialogTitle>
+                <p className="text-base sm:text-lg text-muted-foreground">
+                  21 вопрос, моментальный результат и персональные рекомендации по обучению.
+                </p>
+              </div>
+            )}
           </DialogHeader>
 
           <div className="relative mt-6 sm:mt-7">
             {started ? (
               completed ? (
                 <div className="space-y-6">
-                  <div className="rounded-2xl border border-primary/20 bg-card/80 p-4 sm:p-5 shadow-sm text-center">
-                    <div className="mb-4 flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 size={18} className="text-primary" />
-                        <p className="font-semibold">Результат теста</p>
-                      </div>
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                        {Math.round((result.score / total) * 100)}%
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center flex h-full flex-col items-center justify-center">
-                        <p className="text-xs text-muted-foreground">Баллы</p>
-                        <p className="text-lg font-semibold text-foreground">{result.score}/{total}</p>
-                      </div>
-                      <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center flex h-full flex-col items-center justify-center">
-                        <p className="text-xs text-muted-foreground">Уровень</p>
-                        <p className="text-lg font-semibold text-foreground">{result.level}</p>
-                      </div>
-                    </div>
-
-                    <p className="mt-4 text-sm">{getTip(result.level)}</p>
-
-                    {result.wrongTopics.length > 0 && (
-                      <div className="mt-4 space-y-2">
-                        <p className="text-xs uppercase tracking-wide text-muted-foreground">Зоны роста</p>
-                        <div className="flex flex-wrap justify-center gap-2">
-                          {result.wrongTopics.map((topic) => (
-                            <span
-                              key={topic}
-                              className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-foreground"
-                            >
-                              {topic}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <form onSubmit={handleSendResult} className="space-y-4 rounded-2xl border border-border/60 bg-background/90 p-4 sm:p-5">
-                    <p className="text-sm font-medium">
-                      Оставь контакт и получи разбор результата + план обучения, который быстрее приведет к уверенному разговорному английскому.
-                    </p>
-                    <div>
-                      <Label htmlFor="quiz-name">Как к тебе обращаться?</Label>
-                      <Input
-                        id="quiz-name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Ваше имя"
-                        maxLength={100}
-                        className="mt-2 rounded-xl"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="quiz-contact">Куда отправить разбор?</Label>
-                      <Input
-                        id="quiz-contact"
-                        value={contact}
-                        onChange={(e) => setContact(e.target.value)}
-                        placeholder="@username в Telegram или +7..."
-                        maxLength={200}
-                        className="mt-2 rounded-xl"
-                      />
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      <Button type="submit" disabled={sending} className="gradient-primary rounded-full px-6">
-                        {sending ? "Отправляем..." : "Получить разбор и план"}
-                      </Button>
-                      <Button type="button" variant="outline" onClick={handleRestart} disabled={sending} className="rounded-full">
-                        Пройти тест еще раз
-                      </Button>
-                    </div>
-                  </form>
+                  <ResultsScreen
+                    result={result}
+                    total={total}
+                    accuracy={accuracy}
+                    nextLevelTarget={nextLevelTarget}
+                    tipText={getTip(result.level)}
+                    name={name}
+                    contact={contact}
+                    sending={sending}
+                    onNameChange={setName}
+                    onContactChange={setContact}
+                    onRestart={handleRestart}
+                    onSubmit={handleSendResult}
+                  />
                 </div>
               ) : (
-                <div className="space-y-5 rounded-2xl border border-border/60 bg-background/90 p-4 sm:p-5">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>
-                        Вопрос {step + 1} из {total}
-                      </span>
-                      <span>{progressPercent}%</span>
-                    </div>
-                    <div className="h-2 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all"
-                        style={{ width: `${progressPercent}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-primary/20 bg-primary/[0.04] p-4">
-                  <p className="mb-1 text-sm font-medium text-primary">Тема: {current.topic}</p>
-                    <p className="text-lg font-semibold text-foreground">{questionPreview}</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    {current.options.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => setAnswers((prev) => ({ ...prev, [current.id]: option.id }))}
-                        className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
-                          answers[current.id] === option.id
-                            ? "border-primary bg-primary/10 text-foreground"
-                            : "border-border/70 bg-card/70 hover:bg-muted/70"
-                        }`}
-                      >
-                        <span className="mr-2 font-medium">{option.id})</span>
-                        <span>{option.text}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3">
-                    <Button type="button" variant="outline" onClick={() => setStep((prev) => Math.max(0, prev - 1))} disabled={step === 0} className="rounded-full">
-                      Назад
-                    </Button>
-                    <Button type="button" onClick={handleNext} disabled={!canNext} className="gradient-primary rounded-full px-6">
-                      {step === total - 1 ? "Получить результат" : "Следующий вопрос"}
-                      <ArrowRight size={16} className="ml-2" />
-                    </Button>
-                  </div>
-                </div>
+                <QuestionScreen
+                  step={step}
+                  total={total}
+                  progressPercent={progressPercent}
+                  current={current}
+                  questionPreview={questionPreview}
+                  selected={answers[current.id]}
+                  canNext={canNext}
+                  onSelect={(id) => setAnswers((prev) => ({ ...prev, [current.id]: id }))}
+                  onBack={() => setStep((prev) => Math.max(0, prev - 1))}
+                  onNext={handleNext}
+                />
               )
             ) : (
-              <div className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
-                    <p className="text-xs text-muted-foreground">Длительность</p>
-                    <p className="text-sm font-semibold text-foreground">~3 минуты</p>
-                  </div>
-                  <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
-                    <p className="text-xs text-muted-foreground">Вопросов</p>
-                    <p className="text-sm font-semibold text-foreground">21</p>
-                  </div>
-                  <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
-                    <p className="text-xs text-muted-foreground">Результат</p>
-                    <p className="text-sm font-semibold text-foreground">Сразу после теста</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap justify-center gap-3">
-                  <Button type="button" onClick={handleStartQuiz} className="gradient-primary rounded-full px-7 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35">
-                    Пройти тест и узнать уровень
-                    <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                  <Button type="button" variant="outline" onClick={() => setOpen(false)} className="rounded-full px-6">
-                    Не сейчас
-                  </Button>
-                </div>
-              </div>
+              <IntroScreen onStart={handleStartQuiz} onClose={() => setOpen(false)} />
             )}
           </div>
         </div>

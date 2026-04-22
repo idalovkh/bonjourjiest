@@ -1,0 +1,129 @@
+import { CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AchievementAction } from "./AchievementAction";
+import type { NextLevelTarget, QuizResult } from "./model";
+
+interface ResultsScreenProps {
+  result: QuizResult;
+  total: number;
+  accuracy: number;
+  nextLevelTarget: NextLevelTarget | null;
+  tipText: string;
+  name: string;
+  contact: string;
+  sending: boolean;
+  onNameChange: (value: string) => void;
+  onContactChange: (value: string) => void;
+  onRestart: () => void;
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+export function ResultsScreen({
+  result,
+  total,
+  accuracy,
+  nextLevelTarget,
+  tipText,
+  name,
+  contact,
+  sending,
+  onNameChange,
+  onContactChange,
+  onRestart,
+  onSubmit,
+}: ResultsScreenProps) {
+  return (
+    <div className="space-y-6">
+      <div className="rounded-2xl border border-primary/20 bg-card/80 p-4 sm:p-5 shadow-sm text-center">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 size={18} className="text-primary" />
+            <p className="text-lg font-semibold">Результаты</p>
+          </div>
+          <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{accuracy}%</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center flex h-full flex-col items-center justify-center">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">Правильные ответы</p>
+            <p className="text-2xl font-bold text-foreground">{result.score}/{total}</p>
+          </div>
+          <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center flex h-full flex-col items-center justify-center">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">Точность</p>
+            <p className="text-2xl font-bold text-foreground">{accuracy}%</p>
+          </div>
+        </div>
+
+        <div className="mt-3 rounded-xl border border-border/60 bg-background/70 p-4 text-left">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">Текущий уровень</p>
+          <p className="mt-1 text-3xl font-bold text-foreground">{result.level}</p>
+          {nextLevelTarget && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              До уровня {nextLevelTarget.level} осталось {Math.max(0, nextLevelTarget.score - result.score)} правильных ответов.
+            </p>
+          )}
+          <AchievementAction result={result} total={total} accuracy={accuracy} />
+        </div>
+
+        <div className="mt-4 rounded-xl border border-border/60 bg-background/70 p-4 text-left">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">Персональные рекомендации по ошибкам</p>
+          <p className="mt-2 text-base sm:text-lg leading-relaxed">{tipText}</p>
+        </div>
+
+        {result.wrongTopics.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Темы, в которых были ошибки</p>
+            <div className="flex flex-wrap gap-2">
+              {result.wrongTopics.map((topic) => (
+                <span
+                  key={topic}
+                  className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-foreground"
+                >
+                  {topic}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-border/60 bg-background/90 p-4 sm:p-5">
+        <p className="text-base sm:text-lg font-medium leading-relaxed">
+          Если ты хочешь повысить свой уровень и научиться говорить по-английски, оставь контакт и получи персональный разбор с планом обучения.
+        </p>
+        <div>
+          <Label htmlFor="quiz-name">Как к тебе обращаться</Label>
+          <Input
+            id="quiz-name"
+            value={name}
+            onChange={(e) => onNameChange(e.target.value)}
+            placeholder="Ваше имя"
+            maxLength={100}
+            className="mt-2 rounded-xl"
+          />
+        </div>
+        <div>
+          <Label htmlFor="quiz-contact">Куда отправить разбор</Label>
+          <Input
+            id="quiz-contact"
+            value={contact}
+            onChange={(e) => onContactChange(e.target.value)}
+            placeholder="@username в Telegram или +7..."
+            maxLength={200}
+            className="mt-2 rounded-xl"
+          />
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <Button type="submit" disabled={sending} className="gradient-primary rounded-full px-7 text-base sm:text-lg">
+            {sending ? "Отправляем..." : "Получить персональный разбор"}
+          </Button>
+          <Button type="button" variant="outline" onClick={onRestart} disabled={sending} className="rounded-full text-base sm:text-lg">
+            Пройти тест еще раз
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
