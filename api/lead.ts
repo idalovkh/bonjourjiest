@@ -86,20 +86,26 @@ function buildQuizCsv(params: {
   scoreText: string | number;
   totalText: string | number;
   level: string;
-  weakTopics: string[];
   details: QuizDetail[];
 }): string {
   const rows: string[] = [];
+
+  const createdAt = new Date().toISOString();
+  const details = params.details.length > 0
+    ? params.details
+    : [{ id: 0, topic: "—", question: "Детали ответов не переданы", selected: "—", correct: "—", isCorrect: false }];
+
+  rows.push([escapeCsvCell("Параметр"), escapeCsvCell("Значение")].join(","));
+  rows.push([escapeCsvCell("Дата"), escapeCsvCell(createdAt)].join(","));
+  rows.push([escapeCsvCell("Имя"), escapeCsvCell(params.name)].join(","));
+  rows.push([escapeCsvCell("Контакт"), escapeCsvCell(params.contact)].join(","));
+  rows.push([escapeCsvCell("Источник"), escapeCsvCell(params.source)].join(","));
+  rows.push([escapeCsvCell("Баллы"), escapeCsvCell(params.scoreText)].join(","));
+  rows.push([escapeCsvCell("Всего вопросов"), escapeCsvCell(params.totalText)].join(","));
+  rows.push([escapeCsvCell("Уровень"), escapeCsvCell(params.level || "—")].join(","));
+  rows.push("");
   rows.push(
     [
-      "Дата",
-      "Имя",
-      "Контакт",
-      "Источник",
-      "Баллы",
-      "Всего вопросов",
-      "Уровень",
-      "Темы на повторение",
       "№ вопроса",
       "Тема",
       "Вопрос",
@@ -111,23 +117,9 @@ function buildQuizCsv(params: {
       .join(",")
   );
 
-  const createdAt = new Date().toISOString();
-  const weakTopicsText = params.weakTopics.length ? params.weakTopics.join("; ") : "нет";
-  const details = params.details.length > 0
-    ? params.details
-    : [{ id: 0, topic: "—", question: "Детали ответов не переданы", selected: "—", correct: "—", isCorrect: false }];
-
   for (const detail of details) {
     rows.push(
       [
-        createdAt,
-        params.name,
-        params.contact,
-        params.source,
-        params.scoreText,
-        params.totalText,
-        params.level || "—",
-        weakTopicsText,
         detail.id || "—",
         detail.topic || "—",
         detail.question || "—",
@@ -171,6 +163,7 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
   const form = new FormData();
   form.set("chat_id", chatId);
   form.set("caption", caption);
+  form.set("parse_mode", "HTML");
   form.set("document", new File([content], filename, { type: mimeType }));
 
   const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendDocument`, {
@@ -253,7 +246,6 @@ export default async function handler(req: Request, res: Response) {
       ? `\n\n🧠 <b>Мини-квиз</b>\n📊 Результат: ${quizScoreText}/${quizTotalText}\n🏷 Уровень: ${quizLevelText}\n📚 Темы на повторение: ${weakTopicsText}`
       : "";
     const telegramText = `🆕 <b>Заявка с лендинга</b>\n\n👤 Имя: ${escapeHtml(name)}\n📱 Контакт: ${escapeHtml(contact)}\n🔖 Источник: ${escapeHtml(source)}${quizPart}`;
-    await sendTelegram(telegramText);
     if (source === "quiz") {
       const reportCsv = buildQuizCsv({
         name,
@@ -262,15 +254,16 @@ export default async function handler(req: Request, res: Response) {
         scoreText: quizScoreText,
         totalText: quizTotalText,
         level: quizLevel,
-        weakTopics,
         details: quizDetails,
       });
       await sendTelegramDocument(
-        `Квиз-отчет (Excel): ${name}`,
+        telegramText,
         `quiz-result-${Date.now()}.csv`,
         reportCsv,
         "text/csv; charset=utf-8"
       );
+    } else {
+      await sendTelegram(telegramText);
     }
     try {
       await sendEmail(name, contact);
