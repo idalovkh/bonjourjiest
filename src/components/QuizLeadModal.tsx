@@ -98,10 +98,17 @@ export function QuizLeadModal() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [sending, setSending] = useState(false);
-  const randomizedQuestions = useMemo(
-    () => QUESTIONS.map((q) => ({ ...q, options: shuffleArray(q.options) })),
-    [attemptSeed]
-  );
+  const randomizedQuestions = useMemo(() => {
+    const bump = attemptSeed % 3;
+    return QUESTIONS.map((q) => {
+      const options = shuffleArray(q.options);
+      for (let i = 0; i < bump; i += 1) {
+        const first = options.shift();
+        if (first) options.push(first);
+      }
+      return { ...q, options };
+    });
+  }, [attemptSeed]);
   const current = randomizedQuestions[step];
   const total = randomizedQuestions.length;
   const completed = step >= total;
@@ -252,7 +259,7 @@ export function QuizLeadModal() {
       </DialogTrigger>
 
       <DialogContent className="max-w-2xl max-h-[90dvh] overflow-y-auto border-primary/20 bg-gradient-to-br from-background via-background to-secondary/10 p-0">
-        <div className="relative overflow-hidden rounded-lg p-6 sm:p-7">
+        <div className="relative overflow-hidden rounded-lg p-6 sm:p-7 min-h-[320px] sm:min-h-[380px]">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
             <div className="absolute -bottom-20 -left-16 h-52 w-52 rounded-full bg-secondary/20 blur-3xl" />
@@ -266,11 +273,17 @@ export function QuizLeadModal() {
               </div>
             </div>
             <div className="mt-3 space-y-2 text-center">
+              <p className="mx-auto inline-flex rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                Бесплатная диагностика уровня
+              </p>
               <DialogTitle className="text-xl sm:text-2xl">Узнай свой уровень английского за 3 минуты</DialogTitle>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                21 вопрос, мгновенный результат и персональная рекомендация по обучению.
+              </p>
             </div>
           </DialogHeader>
 
-          <div className="relative mt-5">
+          <div className="relative mt-6 sm:mt-7">
             {started ? (
               completed ? (
                 <div className="space-y-6">
@@ -404,12 +417,26 @@ export function QuizLeadModal() {
               )
             ) : (
               <div className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
+                    <p className="text-xs text-muted-foreground">Длительность</p>
+                    <p className="text-sm font-semibold text-foreground">~3 минуты</p>
+                  </div>
+                  <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
+                    <p className="text-xs text-muted-foreground">Вопросов</p>
+                    <p className="text-sm font-semibold text-foreground">21</p>
+                  </div>
+                  <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
+                    <p className="text-xs text-muted-foreground">Результат</p>
+                    <p className="text-sm font-semibold text-foreground">Сразу после теста</p>
+                  </div>
+                </div>
                 <div className="flex flex-wrap justify-center gap-3">
-                  <Button type="button" onClick={handleStartQuiz} className="gradient-primary rounded-full px-6">
+                  <Button type="button" onClick={handleStartQuiz} className="gradient-primary rounded-full px-7 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35">
                     Пройти тест и узнать уровень
                     <ArrowRight size={16} className="ml-2" />
                   </Button>
-                  <Button type="button" variant="outline" onClick={() => setOpen(false)} className="rounded-full">
+                  <Button type="button" variant="outline" onClick={() => setOpen(false)} className="rounded-full px-6">
                     Не сейчас
                   </Button>
                 </div>
