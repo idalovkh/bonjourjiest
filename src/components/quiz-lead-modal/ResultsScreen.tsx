@@ -128,7 +128,7 @@ export function ResultsScreen({
         </div>
         <div className="flex flex-wrap gap-3">
           <Button type="submit" disabled={sending} className="gradient-primary rounded-full px-7 text-base sm:text-lg">
-            {sending ? "Отправляем..." : "Получить персональный разбор"}
+            {sending ? "Отправляем..." : "Получить бесплатный урок"}
           </Button>
           <Button type="button" variant="outline" onClick={onRestart} disabled={sending} className="rounded-full text-base sm:text-lg">
             Пройти тест еще раз
