@@ -101,10 +101,11 @@ export function ResultsScreen({
 
       <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-border/60 bg-background/90 p-4 sm:p-5">
         <p className="text-base sm:text-lg font-medium leading-relaxed">
-          Если ты хочешь повысить свой уровень и научиться говорить по-английски, оставь контакт и получи персональный разбор с планом обучения.
+          Если ты хочешь повысить свой уровень и научиться говорить по-английски, я могу в этом помочь.
+          Оставь заявку, и мы свяжемся. Первый урок бесплатный.
         </p>
         <div>
-          <Label htmlFor="quiz-name">Как к тебе обращаться</Label>
+          <Label htmlFor="quiz-name">Твое имя</Label>
           <Input
             id="quiz-name"
             value={name}
@@ -115,7 +116,7 @@ export function ResultsScreen({
           />
         </div>
         <div>
-          <Label htmlFor="quiz-contact">Куда отправить разбор</Label>
+          <Label htmlFor="quiz-contact">Как с тобой связаться</Label>
           <Input
             id="quiz-contact"
             value={contact}
