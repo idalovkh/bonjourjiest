@@ -118,10 +118,6 @@ export function HeroSection() {
               transition={shouldFloatEmblem ? { duration: 4, repeat: Infinity, ease: "easeInOut" } : undefined}
             >
               <div className="hero-emblem-glow absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
-              <span
-                aria-hidden="true"
-                className="fi fis fi-us pointer-events-none absolute left-1/2 top-1/2 z-0 !h-56 !w-[18.667rem] -translate-x-1/2 -translate-y-1/2 opacity-40 saturate-75 brightness-110 sm:!h-80 sm:!w-[26.667rem] lg:!h-[22rem] lg:!w-[29.333rem]"
-              />
               <img
                 src={emblem}
                 alt="Deshar School — эмблема"
