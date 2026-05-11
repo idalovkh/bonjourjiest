@@ -138,10 +138,11 @@ function getLanguageLabel(landing: string): string {
   const normalized = landing.trim().toUpperCase();
   if (normalized === "FR") return "🇫🇷 Французский";
   if (normalized === "EN" || normalized === "EN-US" || normalized === "US") return "🇺🇸 Английский (US)";
-  return "—";
+  return "🇺🇸 Английский (US)";
 }
 
 function buildTelegramLeadText(params: {
+  isQuiz: boolean;
   languageLabel: string;
   name: string;
   contact: string;
@@ -149,16 +150,21 @@ function buildTelegramLeadText(params: {
   totalText: string | number;
   level: string;
 }): string {
-  const hasQuizResult = params.scoreText !== "—" && params.totalText !== "—";
+  const hasQuizResult = params.isQuiz && params.scoreText !== "—" && params.totalText !== "—";
   const resultText = hasQuizResult ? `${params.scoreText}/${params.totalText}` : "—";
+  const quizLines = params.isQuiz
+    ? [
+      `Результат: ${escapeHtml(resultText)}`,
+      `Уровень: ${escapeHtml(params.level || "—")}`,
+    ]
+    : [];
 
   return [
     "🆕 <b>Заявка с сайта</b>",
     `Язык: ${escapeHtml(params.languageLabel)}`,
     `Имя: ${escapeHtml(params.name)}`,
     `Контакт: ${escapeHtml(params.contact)}`,
-    `Результат: ${escapeHtml(resultText)}`,
-    `Уровень: ${escapeHtml(params.level || "—")}`,
+    ...quizLines,
   ].join("\n");
 }
 
@@ -270,6 +276,7 @@ export default async function handler(req: Request, res: Response) {
     const quizTotalText: string | number = isQuiz ? (quizTotal ?? "—") : "—";
     const quizLevelText = isQuiz ? (quizLevel || "—") : "—";
     const telegramText = buildTelegramLeadText({
+      isQuiz,
       languageLabel: getLanguageLabel(landing),
       name,
       contact,
