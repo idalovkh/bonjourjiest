@@ -136,7 +136,8 @@ function buildQuizFilename(): string {
 
 function getLanguageLabel(landing: string): string {
   const normalized = landing.trim().toUpperCase();
-  if (normalized === "FR") return "🇫🇷 Французский";
+  if (normalized === "FR" || normalized === "FRENCH") return "🇫🇷 Французский";
+  if (normalized === "ES" || normalized === "SPANISH") return "🇪🇸 Испанский";
   if (normalized === "EN" || normalized === "EN-US" || normalized === "US") return "🇺🇸 Английский (US)";
   return "🇺🇸 Английский (US)";
 }

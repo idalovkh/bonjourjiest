@@ -28,6 +28,7 @@ export function HeroSection() {
   });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const transition = reducedMotion ? instantTransition : undefined;
+  const shouldFloatEmblem = hasHover && !isMobile && !reducedMotion;
 
   return (
     <section ref={sectionRef} className="relative min-h-screen min-h-screen-ios flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
@@ -39,7 +40,7 @@ export function HeroSection() {
       )}
 
       <div className="container mx-auto">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center lg:items-start">
           {/* Left — text content */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <motion.h1
@@ -48,7 +49,10 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={transition ?? fadeIn}
             >
-              Научим тебя говорить по-английски{" "}
+              Научим тебя говорить
+              <br />
+              по-английски
+              <br />
               <span className="gradient-text">с нуля</span>
             </motion.h1>
 
@@ -99,41 +103,35 @@ export function HeroSection() {
 
           {/* Right — emblem (no float animation on touch devices / mobile; reduces CPU load) */}
           <motion.div
-            className="order-1 lg:order-2 flex justify-center items-center"
+            className="order-1 lg:order-2 flex justify-center items-start"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={transition ?? scaleIn}
           >
-            <div className="relative">
+            <motion.div
+              className="relative"
+              animate={shouldFloatEmblem ? {
+                y: [0, -14, 0],
+                x: [0, 6, 0, -6, 0],
+                rotate: [0, 2, 0, -2, 0],
+              } : undefined}
+              transition={shouldFloatEmblem ? { duration: 4, repeat: Infinity, ease: "easeInOut" } : undefined}
+            >
               <div className="hero-emblem-glow absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
-              {!hasHover || isMobile || reducedMotion ? (
-                <img
-                  src={emblem}
-                  alt="Deshar School — эмблема"
-                  className="relative w-56 sm:w-80 lg:w-[22rem] hero-emblem-shadow"
-                  width={352}
-                  height={352}
-                  fetchPriority="high"
-                  decoding="async"
-                />
-              ) : (
-                <motion.img
-                  src={emblem}
-                  alt="Deshar School — эмблема"
-                  className="relative w-56 sm:w-80 lg:w-[22rem] hero-emblem-shadow"
-                  width={352}
-                  height={352}
-                  fetchPriority="high"
-                  decoding="async"
-                  animate={{
-                    y: [0, -14, 0],
-                    x: [0, 6, 0, -6, 0],
-                    rotate: [0, 2, 0, -2, 0],
-                  }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
-              )}
-            </div>
+              <span
+                aria-hidden="true"
+                className="fi fis fi-us pointer-events-none absolute left-1/2 top-1/2 z-0 !h-56 !w-[18.667rem] -translate-x-1/2 -translate-y-1/2 opacity-40 saturate-75 brightness-110 sm:!h-80 sm:!w-[26.667rem] lg:!h-[22rem] lg:!w-[29.333rem]"
+              />
+              <img
+                src={emblem}
+                alt="Deshar School — эмблема"
+                className="relative z-10 w-56 sm:w-80 lg:w-[22rem] hero-emblem-shadow"
+                width={352}
+                height={352}
+                fetchPriority="high"
+                decoding="async"
+              />
+            </motion.div>
           </motion.div>
         </div>
       </div>
