@@ -2,6 +2,7 @@ import { memo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useBodyScrollLock } from "@/hooks/use-scroll";
+import { teacherModalPhotoImgClassName } from "@/lib/teacher-photo";
 
 interface Teacher {
   name: string;
@@ -9,6 +10,8 @@ interface Teacher {
   photo: string;
   facts: string[];
   bio: string;
+  /** Present when opened from TeachersSection — used for per-photo crop tuning. */
+  photoKey?: string;
 }
 
 interface TeacherModalProps {
@@ -73,7 +76,7 @@ export const TeacherModal = memo(function TeacherModal({ teacher, onClose }: Tea
                 width={400}
                 height={533}
                 decoding="async"
-                className="absolute inset-0 size-full scale-[1.2] object-cover object-center"
+                className={`absolute inset-0 size-full object-cover ${teacherModalPhotoImgClassName(teacher.photoKey ?? "")}`}
               />
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-6 [-webkit-overflow-scrolling:touch]">

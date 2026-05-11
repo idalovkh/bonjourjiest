@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { TeacherModal } from "@/components/TeacherModal";
+import { teacherCardPhotoImgClassName } from "@/lib/teacher-photo";
 
 const photoLoaders: Record<string, () => Promise<string>> = {
   zubair: () => import("@/assets/teachers/zubair.webp").then((m) => m.default),
@@ -23,6 +24,8 @@ const photoLoaders: Record<string, () => Promise<string>> = {
   oleg: () => import("@/assets/teachers/oleg.webp").then((m) => m.default),
   gais: () => import("@/assets/teachers/gais.webp").then((m) => m.default),
   zuli: () => import("@/assets/teachers/zuli.webp").then((m) => m.default),
+  erik: () => import("@/assets/teachers/erik.webp").then((m) => m.default),
+  angelina: () => import("@/assets/teachers/angelina.webp").then((m) => m.default),
 };
 
 const teacherConfigs = [
@@ -86,6 +89,18 @@ const teacherConfigs = [
     photoKey: "zuli",
     facts: ["Аттестована TESOL", "Медицинский английский", "Обучает с 2019 года", "Мастер Dungeon and Dragons"],
     bio: "Аттестована TESOL, специализируется на медицинском английском. Обучает с 2019 года. Мастер Dungeon and Dragons.",
+  },
+  {
+    name: "Эрик",
+    photoKey: "erik",
+    facts: ["Американец — Native Speaker", "Штат Мичиган", "Говорит по-русски", "Фанат футбола"],
+    bio: "Носитель английского языка из США, штат Мичиган. Свободно говорит по-русски, помогает ученикам с живой речью и произношением. Увлекается футболом.",
+  },
+  {
+    name: "Ангелина",
+    photoKey: "angelina",
+    facts: ["Дипломированный лингвист", "Английский, испанский, немецкий", "Профессиональный переводчик", "Фотограф"],
+    bio: "Дипломированный лингвист, владеет английским, испанским и немецким. Работает профессиональным переводчиком. В свободное время занимается фотографией.",
   },
 ];
 
@@ -189,7 +204,7 @@ export function TeachersSection() {
                           height={400}
                           loading="lazy"
                           decoding="async"
-                          className="absolute inset-0 size-full scale-105 object-cover object-center"
+                          className={`absolute inset-0 size-full object-cover ${teacherCardPhotoImgClassName(t.photoKey)}`}
                         />
                       ) : (
                         <div className="absolute inset-0 bg-muted/50 animate-pulse" />

@@ -263,68 +263,70 @@ export function QuizLeadModal() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl max-h-[90dvh] overflow-y-auto border-primary/20 bg-gradient-to-br from-background via-background to-secondary/10 p-0">
-        <div className="relative overflow-hidden rounded-lg p-6 sm:p-7 min-h-[320px] sm:min-h-[380px]">
-          <div className="pointer-events-none absolute inset-0">
+      <DialogContent className="gap-0 flex max-h-[calc(100dvh-2.5rem)] w-[calc(100%-1.5rem)] max-w-2xl flex-col min-h-0 overflow-hidden rounded-xl border-primary/20 bg-gradient-to-br from-background via-background to-secondary/10 p-0 left-4 right-4 top-6 translate-x-0 translate-y-0 sm:left-[50%] sm:right-auto sm:top-[50%] sm:w-full sm:translate-x-[-50%] sm:translate-y-[-50%] sm:max-h-[90dvh] sm:rounded-lg">
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg">
             <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
             <div className="absolute -bottom-20 -left-16 h-52 w-52 rounded-full bg-secondary/20 blur-3xl" />
           </div>
 
-          <DialogHeader className="relative">
-            <div className="flex justify-center">
-              <div className="shrink-0 flex items-center gap-2.5">
-                <img src={logo} alt="Deshar School" className="h-7 w-auto" width={140} height={36} decoding="async" />
-                <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">Deshar School</span>
-              </div>
-            </div>
-            {!started && (
-              <div className="mt-3 space-y-2 text-center">
-                <p className="mx-auto inline-flex items-center rounded-md border border-border/60 bg-transparent px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                  Экспресс-диагностика уровня
-                </p>
-                <DialogTitle className="text-2xl sm:text-3xl">Определи свой уровень английского за 3 минуты</DialogTitle>
-                <p className="text-base sm:text-lg text-muted-foreground">
-                  21 вопрос, моментальный результат и персональные рекомендации по обучению.
-                </p>
-              </div>
-            )}
-          </DialogHeader>
-
-          <div className="relative mt-6 sm:mt-7">
-            {started ? (
-              completed ? (
-                <div className="space-y-6">
-                  <ResultsScreen
-                    result={result}
-                    total={total}
-                    accuracy={accuracy}
-                    nextLevelTarget={nextLevelTarget}
-                    name={name}
-                    contact={contact}
-                    sending={sending}
-                    onNameChange={setName}
-                    onContactChange={setContact}
-                    onRestart={handleRestart}
-                    onSubmit={handleSendResult}
-                  />
+          <div className="relative z-[1] flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-6 sm:p-7 sm:min-h-[380px]">
+            <DialogHeader className="relative">
+              <div className="flex justify-center">
+                <div className="shrink-0 flex items-center gap-2.5">
+                  <img src={logo} alt="Deshar School" className="h-7 w-auto" width={140} height={36} decoding="async" />
+                  <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">Deshar School</span>
                 </div>
+              </div>
+              {!started && (
+                <div className="mt-3 space-y-2 text-center">
+                  <p className="mx-auto inline-flex items-center rounded-md border border-border/60 bg-transparent px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                    Экспресс-диагностика уровня
+                  </p>
+                  <DialogTitle className="text-2xl sm:text-3xl">Определи свой уровень английского за 3 минуты</DialogTitle>
+                  <p className="text-base sm:text-lg text-muted-foreground">
+                    21 вопрос, моментальный результат и персональные рекомендации по обучению.
+                  </p>
+                </div>
+              )}
+            </DialogHeader>
+
+            <div className="relative mt-6 sm:mt-7">
+              {started ? (
+                completed ? (
+                  <div className="space-y-6">
+                    <ResultsScreen
+                      result={result}
+                      total={total}
+                      accuracy={accuracy}
+                      nextLevelTarget={nextLevelTarget}
+                      name={name}
+                      contact={contact}
+                      sending={sending}
+                      onNameChange={setName}
+                      onContactChange={setContact}
+                      onRestart={handleRestart}
+                      onSubmit={handleSendResult}
+                    />
+                  </div>
+                ) : (
+                  <QuestionScreen
+                    step={step}
+                    total={total}
+                    progressPercent={progressPercent}
+                    current={current}
+                    questionPreview={questionPreview}
+                    selected={answers[current.id]}
+                    canNext={canNext}
+                    onSelect={(id) => setAnswers((prev) => ({ ...prev, [current.id]: id }))}
+                    onBack={() => setStep((prev) => Math.max(0, prev - 1))}
+                    onNext={handleNext}
+                  />
+                )
               ) : (
-                <QuestionScreen
-                  step={step}
-                  total={total}
-                  progressPercent={progressPercent}
-                  current={current}
-                  questionPreview={questionPreview}
-                  selected={answers[current.id]}
-                  canNext={canNext}
-                  onSelect={(id) => setAnswers((prev) => ({ ...prev, [current.id]: id }))}
-                  onBack={() => setStep((prev) => Math.max(0, prev - 1))}
-                  onNext={handleNext}
-                />
-              )
-            ) : (
-              <IntroScreen onStart={handleStartQuiz} onClose={() => setOpen(false)} />
-            )}
+                <IntroScreen onStart={handleStartQuiz} onClose={() => setOpen(false)} />
+              )}
+            </div>
           </div>
         </div>
       </DialogContent>
