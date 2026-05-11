@@ -160,7 +160,7 @@ function buildTelegramLeadText(params: {
     : [];
 
   return [
-    "🆕 <b>Заявка с сайта</b>",
+    "🆕 Заявка с сайта",
     `Язык: ${escapeHtml(params.languageLabel)}`,
     `Имя: ${escapeHtml(params.name)}`,
     `Контакт: ${escapeHtml(params.contact)}`,
