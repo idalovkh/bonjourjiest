@@ -188,6 +188,7 @@ export function QuizLeadModal() {
           name: parsed.data.name,
           contact: parsed.data.contact,
           source: "quiz",
+          landing: "EN",
           quizScore: result.score,
           quizLevel: result.level,
           quizTotal: total,

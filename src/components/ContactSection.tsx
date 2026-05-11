@@ -58,7 +58,12 @@ export function ContactSection() {
     fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: parsed.data.name, contact: parsed.data.contact }),
+      body: JSON.stringify({
+        name: parsed.data.name,
+        contact: parsed.data.contact,
+        source: "lead",
+        landing: "EN",
+      }),
       signal: controller.signal,
     })
       .then((res) => {

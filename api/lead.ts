@@ -134,19 +134,31 @@ function buildQuizFilename(): string {
   return "quiz-report.csv";
 }
 
-function buildQuizDocumentCaption(params: {
+function getLanguageLabel(landing: string): string {
+  const normalized = landing.trim().toUpperCase();
+  if (normalized === "FR") return "🇫🇷 Французский";
+  if (normalized === "EN" || normalized === "EN-US" || normalized === "US") return "🇺🇸 Английский (US)";
+  return "—";
+}
+
+function buildTelegramLeadText(params: {
+  languageLabel: string;
   name: string;
   contact: string;
   scoreText: string | number;
   totalText: string | number;
   level: string;
 }): string {
+  const hasQuizResult = params.scoreText !== "—" && params.totalText !== "—";
+  const resultText = hasQuizResult ? `${params.scoreText}/${params.totalText}` : "—";
+
   return [
-    "Мини-квиз",
-    `Имя: ${params.name}`,
-    `Контакт: ${params.contact}`,
-    `📊 Результат: ${params.scoreText}/${params.totalText}`,
-    `Уровень: ${params.level || "—"}`,
+    "🆕 <b>Заявка с сайта</b>",
+    `Язык: ${escapeHtml(params.languageLabel)}`,
+    `Имя: ${escapeHtml(params.name)}`,
+    `Контакт: ${escapeHtml(params.contact)}`,
+    `Результат: ${escapeHtml(resultText)}`,
+    `Уровень: ${escapeHtml(params.level || "—")}`,
   ].join("\n");
 }
 
@@ -241,6 +253,7 @@ export default async function handler(req: Request, res: Response) {
   const name = trim(body.name);
   const contact = trim(body.contact);
   const source = trim(body.source) || "lead";
+  const landing = trim(body.landing);
   const quizLevel = trim(body.quizLevel);
   const quizScore = toNumber(body.quizScore);
   const quizTotal = toNumber(body.quizTotal);
@@ -252,13 +265,19 @@ export default async function handler(req: Request, res: Response) {
   }
 
   try {
-    const quizScoreText = quizScore ?? "—";
-    const quizTotalText = quizTotal ?? "—";
-    const quizLevelText = escapeHtml(quizLevel || "—");
-    const quizPart = source === "quiz"
-      ? `\n\n🧠 <b>Мини-квиз</b>\n📊 Результат: ${quizScoreText}/${quizTotalText}\n🏷 Уровень: ${quizLevelText}`
-      : "";
-    const telegramText = `🆕 <b>Заявка с лендинга</b>\n\n👤 Имя: ${escapeHtml(name)}\n📱 Контакт: ${escapeHtml(contact)}\n🔖 Источник: ${escapeHtml(source)}${quizPart}`;
+    const isQuiz = source === "quiz";
+    const quizScoreText: string | number = isQuiz ? (quizScore ?? "—") : "—";
+    const quizTotalText: string | number = isQuiz ? (quizTotal ?? "—") : "—";
+    const quizLevelText = isQuiz ? (quizLevel || "—") : "—";
+    const telegramText = buildTelegramLeadText({
+      languageLabel: getLanguageLabel(landing),
+      name,
+      contact,
+      scoreText: quizScoreText,
+      totalText: quizTotalText,
+      level: quizLevelText,
+    });
+
     if (source === "quiz") {
       const reportCsv = buildQuizCsv({
         name,
@@ -271,13 +290,7 @@ export default async function handler(req: Request, res: Response) {
       });
       try {
         await sendTelegramDocument(
-          buildQuizDocumentCaption({
-            name,
-            contact,
-            scoreText: quizScoreText,
-            totalText: quizTotalText,
-            level: quizLevel,
-          }),
+          telegramText,
           buildQuizFilename(),
           reportCsv,
           "text/csv; charset=utf-8"
