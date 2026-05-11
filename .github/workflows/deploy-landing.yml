@@ -89,9 +89,12 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
             set -euo pipefail
-
-            if ! command -v node >/dev/null 2>&1; then
-              echo \"Node not found. Installing Node 22...\"
+            NODE_MAJOR=0
+            if command -v node >/dev/null 2>&1; then
+              NODE_MAJOR=$(node -p \"process.versions.node.split(\\\".\\\")[0]\")
+            fi
+            if [ \"${NODE_MAJOR}\" -lt 22 ]; then
+              echo \"Node ${NODE_MAJOR} detected. Installing Node 22...\"
               curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
               sudo apt-get update -y
               sudo apt-get install -y nodejs
@@ -148,6 +151,8 @@ jobs:
           ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
             set -euo pipefail
             cd /var/www/deshar-school
+            rm -rf node_modules
+            npm cache clean --force
             npm ci
             pm2 restart deshar-api || pm2 start ecosystem.config.cjs
           '"
