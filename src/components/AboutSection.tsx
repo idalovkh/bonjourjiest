@@ -30,7 +30,7 @@ const features = [
     icon: ShieldCheck,
     title: "Cambridge аттестация",
     desc: "Учителя с международными сертификатами",
-    iconBg: "bg-gradient-to-br from-secondary to-[hsl(var(--secondary)/0.82)]",
+    iconBg: "bg-gradient-to-br from-secondary to-[hsl(var(--primary)/0.85)]",
     span: "lg:col-span-1",
     tall: false,
   },
