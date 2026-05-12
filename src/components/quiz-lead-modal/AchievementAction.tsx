@@ -112,7 +112,10 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
   const brandGap = 18;
   const brandRowWidth = logoBoxWidth + brandGap + brandTextWidth;
   const brandRowStartX = centerX - brandRowWidth / 2;
+  ctx.save();
+  ctx.filter = "brightness(0) saturate(100%) invert(14%) sepia(62%) saturate(2950%) hue-rotate(330deg) brightness(92%) contrast(108%)";
   drawImageContain(logoImage, brandRowStartX, 128, logoBoxWidth, 56);
+  ctx.restore();
   ctx.fillText(brandText, brandRowStartX + logoBoxWidth + brandGap, 171);
 
   ctx.beginPath();

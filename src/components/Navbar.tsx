@@ -41,7 +41,7 @@ export function Navbar() {
         }`}
       >
         <Link to="/" className="flex items-center gap-2.5">
-          <img src={logo} alt="Deshar School" className="h-7 w-auto" width={140} height={36} decoding="async" fetchPriority="high" />
+          <img src={logo} alt="Deshar School" className="h-7 w-auto rounded-xl ny-owl-tint" width={140} height={36} decoding="async" fetchPriority="high" />
           <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">
             Deshar School
           </span>

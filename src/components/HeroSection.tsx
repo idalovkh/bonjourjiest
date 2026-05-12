@@ -31,7 +31,9 @@ export function HeroSection() {
   const shouldFloatEmblem = hasHover && !isMobile && !reducedMotion;
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen min-h-screen-ios flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
+    <section ref={sectionRef} className="relative isolate min-h-screen min-h-screen-ios flex items-center pt-24 pb-16 overflow-hidden safe-bottom">
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(96%_72%_at_14%_12%,hsl(var(--primary)/0.22)_0%,transparent_56%),radial-gradient(84%_58%_at_88%_18%,hsl(var(--secondary)/0.24)_0%,transparent_58%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--accent)/0.7)_52%,hsl(var(--background))_100%)]" />
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:linear-gradient(hsl(var(--foreground)/0.08)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.08)_1px,transparent_1px)] [background-size:24px_24px]" />
       {/* Background: static on mobile or reduced-motion to avoid scroll jank */}
       {isMobile || reducedMotion ? (
         <div className="absolute inset-0 -z-10">{bgDecorations(true)}</div>
@@ -39,7 +41,7 @@ export function HeroSection() {
         <motion.div className="absolute inset-0 -z-10" style={{ y: bgY }}>{bgDecorations(false)}</motion.div>
       )}
 
-      <div className="container mx-auto">
+      <div className="container relative z-20 mx-auto">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center lg:items-start">
           {/* Left — text content */}
           <div className="text-center lg:text-left order-2 lg:order-1">
@@ -121,7 +123,7 @@ export function HeroSection() {
               <img
                 src={emblem}
                 alt="Deshar School — эмблема"
-                className="relative z-10 w-56 sm:w-80 lg:w-[22rem] hero-emblem-shadow"
+                className="relative z-10 w-56 sm:w-80 lg:w-[22rem] rounded-3xl hero-emblem-shadow ny-owl-tint"
                 width={352}
                 height={352}
                 fetchPriority="high"
