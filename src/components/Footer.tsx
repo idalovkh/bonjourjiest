@@ -109,18 +109,18 @@ export function Footer() {
             </h4>
             <ul className="space-y-3.5">
               <li>
-                <a href="tel:+79067742949" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2">
+                <a href="tel:+79067742949" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
                   <Phone size={15} className="shrink-0 text-primary" />
                   +7 906 774-29-49
                 </a>
               </li>
               <li>
-                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 break-all sm:break-normal">
+                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
                   <Mail size={15} className="shrink-0 text-primary" />
                   support@desharschool.ru
                 </a>
               </li>
-              <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+              <li className="flex items-center gap-2.5 text-sm text-muted-foreground whitespace-nowrap">
                 <Clock size={15} className="shrink-0 text-primary" />
                 Пн–Пт, 10:00–20:00
               </li>

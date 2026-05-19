@@ -119,7 +119,9 @@ export function HeroSection() {
               } : undefined}
               transition={shouldFloatEmblem ? { duration: 4, repeat: Infinity, ease: "easeInOut" } : undefined}
             >
-              <div className="hero-emblem-glow absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
+              {!isMobile && (
+                <div className="hero-emblem-glow absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-primary/15 via-transparent to-secondary/10 blur-3xl" />
+              )}
               <img
                 src={emblem}
                 alt="Deshar School — эмблема"
