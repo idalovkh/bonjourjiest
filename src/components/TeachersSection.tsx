@@ -172,11 +172,11 @@ export function TeachersSection() {
               {teacherConfigs.map((t) => {
                 const photo = photos[t.photoKey];
                 return (
-                <CarouselItem key={t.name} className="pl-3 basis-[260px] sm:basis-[280px]">
+                <CarouselItem key={t.name} className="pl-3 basis-full sm:basis-[280px]">
                   <article
                     aria-labelledby={`teacher-name-${t.photoKey}`}
                     data-suppress-hover-during-scroll
-                    className={`bg-card rounded-2xl border border-border/40 overflow-hidden can-hover:hover:border-primary/20 can-hover:hover:shadow-lg transition-[transform,box-shadow,border-color] duration-300 group h-full flex flex-col ${hasHover ? "teacher-card-perspective" : ""}`}
+                    className={`w-full max-w-[280px] mx-auto sm:max-w-none bg-card rounded-2xl border border-border/40 overflow-hidden can-hover:hover:border-primary/20 can-hover:hover:shadow-lg transition-[transform,box-shadow,border-color] duration-300 group h-full flex flex-col ${hasHover ? "teacher-card-perspective" : ""}`}
                     onMouseMove={
                       hasHover
                         ? (e) => {
