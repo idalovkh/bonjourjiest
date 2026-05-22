@@ -1,5 +1,4 @@
 /* Third-party font requests removed from critical path. */
-/* cspell:ignore minimises FOUT */
 /* Fallback fonts sized to approximate DM Sans / Plus Jakarta Sans — minimises FOUT layout shift */
 @font-face {
   font-family: 'DM Sans Fallback';
