@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -51,6 +51,8 @@ export function QuizLeadModal() {
   const [contact, setContact] = useState("");
   const [sending, setSending] = useState(false);
   const [progressHydrated, setProgressHydrated] = useState(false);
+  const quizCompletionTrackedRef = useRef(false);
+  const quizLeadSubmittedRef = useRef(false);
   const randomizedQuestions = useMemo(() => {
     const bump = attemptSeed % 3;
     return QUESTIONS.map((q) => {
@@ -155,6 +157,8 @@ export function QuizLeadModal() {
     setSending(false);
     setAttemptSeed((prev) => prev + 1);
     setStarted(false);
+    quizCompletionTrackedRef.current = false;
+    quizLeadSubmittedRef.current = false;
     if (globalThis.window !== undefined) {
       globalThis.localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
     }
@@ -165,6 +169,35 @@ export function QuizLeadModal() {
     setAnswers({});
     setAttemptSeed((prev) => prev + 1);
     setStarted(true);
+    quizCompletionTrackedRef.current = false;
+    quizLeadSubmittedRef.current = false;
+  };
+
+  const trackQuizCompleteNoLead = () => {
+    if (quizCompletionTrackedRef.current || quizLeadSubmittedRef.current) return;
+    quizCompletionTrackedRef.current = true;
+
+    const payload = JSON.stringify({
+      source: "quiz_complete_no_lead",
+      landing: "EN",
+      quizScore: result.score,
+      quizTotal: total,
+    });
+
+    if (globalThis.navigator?.sendBeacon) {
+      const blob = new Blob([payload], { type: "application/json" });
+      globalThis.navigator.sendBeacon("/api/quiz/complete-no-lead", blob);
+      return;
+    }
+
+    void fetch("/api/quiz/complete-no-lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+      keepalive: true,
+    }).catch(() => {
+      // Метрика best-effort: UI не должен зависеть от этого запроса.
+    });
   };
 
   const handleSendResult = async (e: React.FormEvent) => {
@@ -179,15 +212,16 @@ export function QuizLeadModal() {
       return;
     }
 
+    quizLeadSubmittedRef.current = true;
     setSending(true);
     try {
-      const response = await fetch("/api/lead", {
+      const response = await fetch("/api/lead/quiz-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: parsed.data.name,
           contact: parsed.data.contact,
-          source: "quiz",
+          source: "quiz_request",
           landing: "EN",
           quizScore: result.score,
           quizLevel: result.level,
@@ -250,6 +284,9 @@ export function QuizLeadModal() {
       onOpenChange={(nextOpen) => {
         setOpen(nextOpen);
         if (!nextOpen) {
+          if (completed) {
+            trackQuizCompleteNoLead();
+          }
           setStarted(false);
         }
       }}

@@ -69,6 +69,22 @@ function toQuizDetails(value: unknown): QuizDetail[] {
     .filter((item): item is QuizDetail => item !== null);
 }
 
+function normalizeLeadSource(raw: string): "lead_request" | "quiz_request" | "quiz_complete_no_lead" {
+  const normalized = raw.trim().toLowerCase();
+  if (normalized === "quiz" || normalized === "quiz_request") return "quiz_request";
+  if (normalized === "lead" || normalized === "lesson_request" || normalized === "lead_request") return "lead_request";
+  if (normalized === "quiz_complete_no_lead") return "quiz_complete_no_lead";
+  return "lead_request";
+}
+
+function detectLeadSource(req: Pick<Request, "path">, bodySource: unknown): "lead_request" | "quiz_request" | "quiz_complete_no_lead" {
+  const path = trim(req.path).toLowerCase();
+  if (path.endsWith("/api/quiz/complete-no-lead")) return "quiz_complete_no_lead";
+  if (path.endsWith("/api/lead/quiz-request")) return "quiz_request";
+  if (path.endsWith("/api/lead/request")) return "lead_request";
+  return normalizeLeadSource(trim(bodySource));
+}
+
 function escapeCsvCell(value: string | number): string {
   const normalized = String(value).replaceAll("\"", "\"\"");
   return `"${normalized}"`;
@@ -259,12 +275,24 @@ export default async function handler(req: Request, res: Response) {
   const body = (req.body ?? {}) as Record<string, unknown>;
   const name = trim(body.name);
   const contact = trim(body.contact);
-  const source = trim(body.source) || "lead";
+  const source = detectLeadSource(req, body.source);
   const landing = trim(body.landing);
   const quizLevel = trim(body.quizLevel);
   const quizScore = toNumber(body.quizScore);
   const quizTotal = toNumber(body.quizTotal);
   const quizDetails = toQuizDetails(body.quizDetails);
+
+  if (source === "quiz_complete_no_lead") {
+    console.info(
+      "[lead] quiz_complete_no_lead:",
+      JSON.stringify({
+        landing,
+        score: quizScore,
+        total: quizTotal,
+      })
+    );
+    return res.status(200).json({ success: true });
+  }
 
   const validation = validate(name, contact);
   if (validation.ok === false) {
@@ -272,7 +300,7 @@ export default async function handler(req: Request, res: Response) {
   }
 
   try {
-    const isQuiz = source === "quiz";
+    const isQuiz = source === "quiz_request";
     const quizScoreText: string | number = isQuiz ? (quizScore ?? "—") : "—";
     const quizTotalText: string | number = isQuiz ? (quizTotal ?? "—") : "—";
     const quizLevelText = isQuiz ? (quizLevel || "—") : "—";
@@ -286,7 +314,7 @@ export default async function handler(req: Request, res: Response) {
       level: quizLevelText,
     });
 
-    if (source === "quiz") {
+    if (source === "quiz_request") {
       const reportCsv = buildQuizCsv({
         name,
         contact,

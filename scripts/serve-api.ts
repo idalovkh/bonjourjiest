@@ -1,5 +1,5 @@
 /**
- * Локальный сервер API для тестирования /api/lead без Vercel.
+ * Локальный сервер API для тестирования лидов/квиза без Vercel.
  * Запуск: npm run dev:api или npm run dev:full.
  * Порт: API_PORT или первый свободный из 3001..3010.
  */
@@ -12,9 +12,18 @@ import handler from "../api/lead.ts";
 const app = express();
 app.use(express.json());
 
-app.all("/api/lead", (req, res) => {
-  void handler(req as never, res as never);
-});
+const leadApiRoutes = [
+  "/api/lead",
+  "/api/lead/request",
+  "/api/lead/quiz-request",
+  "/api/quiz/complete-no-lead",
+] as const;
+
+for (const route of leadApiRoutes) {
+  app.all(route, (req, res) => {
+    void handler(req as never, res as never);
+  });
+}
 
 const portMin = Number(process.env.API_PORT) || 3001;
 const portMax = portMin + 9;
@@ -27,7 +36,10 @@ function onListen() {
   } catch {
     // ignore
   }
-  console.log(`[api] Local API: http://localhost:${port}/api/lead`);
+  console.log(`[api] Local API routes on http://localhost:${port}:`);
+  for (const route of leadApiRoutes) {
+    console.log(`[api]   ${route}`);
+  }
   if (port !== 3001) {
     console.log(`[api] Порт ${port}. Для dev:full либо задай в .env: VITE_API_ORIGIN=http://localhost:${port}, либо освободи 3001: npx kill-port 3001`);
   }

@@ -55,13 +55,13 @@ export function ContactSection() {
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const fallbackError = "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.";
-    fetch("/api/lead", {
+    fetch("/api/lead/request", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: parsed.data.name,
         contact: parsed.data.contact,
-        source: "lead",
+        source: "lead_request",
         landing: "EN",
       }),
       signal: controller.signal,

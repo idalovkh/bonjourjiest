@@ -6,7 +6,7 @@ const plans = [
   {
     name: "Группа",
     subtitle: "Занятия в мини-группе",
-    price: "6 490",
+    price: "9 900",
     period: "/мес",
     features: [
       "Мини-группа до 7 человек",
