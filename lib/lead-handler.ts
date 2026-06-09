@@ -38,6 +38,12 @@ const CURRENT_LEVEL_LABELS: Record<string, string> = {
   advanced: "Продвинутый (C1+)",
 };
 
+function readEnv(name: string): string | undefined {
+  const raw = process.env[name];
+  if (!raw) return undefined;
+  return raw.trim().replace(/^["']|["']$/g, "");
+}
+
 interface LeadPreferences {
   studyFrequency: string;
   preferredTime: string;
@@ -270,8 +276,8 @@ function buildTelegramLeadText(params: {
 }
 
 function getTelegramConfig() {
-  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
-  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  const token = readEnv("TELEGRAM_BOT_TOKEN");
+  const chatId = readEnv("TELEGRAM_CHAT_ID");
   const missing: string[] = [];
   if (!token) missing.push("TELEGRAM_BOT_TOKEN");
   if (!chatId) missing.push("TELEGRAM_CHAT_ID");
@@ -290,8 +296,8 @@ function leadLog(level: "info" | "warn" | "error", event: string, data: Record<s
 }
 
 function telegramConfigStatus() {
-  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
-  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  const token = readEnv("TELEGRAM_BOT_TOKEN");
+  const chatId = readEnv("TELEGRAM_CHAT_ID");
   return {
     hasToken: Boolean(token),
     hasChatId: Boolean(chatId),
@@ -300,7 +306,8 @@ function telegramConfigStatus() {
 }
 
 function shouldExposeErrorDetail() {
-  return process.env.DEBUG_LEAD === "1" || process.env.DEBUG_LEAD === "true";
+  const debug = readEnv("DEBUG_LEAD");
+  return debug === "1" || debug === "true";
 }
 
 

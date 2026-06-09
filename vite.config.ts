@@ -48,10 +48,10 @@ export default defineConfig({
     hmr: {
       overlay: false,
     },
-    // Локально /api/* проксируется на прод (Vercel); на деплое прокси не используется
+    // Локально /api/* проксируется на прод API; на деплое Vercel обрабатывает /api сам
     proxy: {
       "/api": {
-        target: process.env.VITE_API_ORIGIN ?? "https://bonjourjiest.ru",
+        target: process.env.VITE_API_ORIGIN ?? "https://bonjourjiest.vercel.app",
         changeOrigin: true,
       },
     },
