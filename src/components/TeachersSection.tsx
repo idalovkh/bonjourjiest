@@ -45,8 +45,8 @@ export function TeachersSection() {
             <CarouselContent className="-ml-4">
               {teachers.map((teacher, i) => (
                 <CarouselItem key={i} className={carouselItemClassName}>
-                  <article className="h-full overflow-hidden rounded-3xl border border-border/60 bg-card">
-                    <div className="relative aspect-[4/5] bg-muted/70 border-b border-border/50">
+                  <article className="h-full overflow-hidden rounded-3xl border border-primary/25 bg-white shadow-sm">
+                    <div className="relative aspect-[4/5] bg-primary/10 border-b border-primary/15">
                       {teacher.photo ? (
                         <img
                           src={teacher.photo}
@@ -56,22 +56,22 @@ export function TeachersSection() {
                           decoding="async"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center text-muted-foreground/35">
+                        <div className="flex h-full w-full items-center justify-center text-primary/30">
                           <User size={56} strokeWidth={1.25} aria-hidden />
                         </div>
                       )}
                     </div>
 
-                    <div className="min-h-[5.5rem] p-5 sm:p-6">
+                    <div className="min-h-[5.5rem] bg-white p-5 sm:p-6">
                       {teacher.name ? (
-                        <h3 className="font-display text-lg font-bold text-foreground">{teacher.name}</h3>
+                        <h3 className="font-display text-lg font-bold text-primary">{teacher.name}</h3>
                       ) : (
-                        <div className="mb-2 h-5 w-32 rounded bg-muted/80" aria-hidden />
+                        <div className="mb-2 h-5 w-32 rounded bg-primary/15" aria-hidden />
                       )}
                       {teacher.role ? (
-                        <p className="mt-1 text-sm text-muted-foreground">{teacher.role}</p>
+                        <p className="mt-1 text-sm text-primary/70">{teacher.role}</p>
                       ) : (
-                        <div className="h-4 w-24 rounded bg-muted/60" aria-hidden />
+                        <div className="h-4 w-24 rounded bg-primary/10" aria-hidden />
                       )}
                     </div>
                   </article>
