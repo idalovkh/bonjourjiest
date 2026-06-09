@@ -65,13 +65,13 @@ function parseLeadPreferences(body: Record<string, unknown>): LeadPreferences {
 function buildPreferenceLines(preferences: LeadPreferences): string[] {
   const lines: string[] = [];
   if (preferences.studyFrequency) {
-    lines.push(`Частота: ${escapeHtml(STUDY_FREQUENCY_LABELS[preferences.studyFrequency])}`);
+    lines.push(`Частота: ${STUDY_FREQUENCY_LABELS[preferences.studyFrequency]}`);
   }
   if (preferences.preferredTime) {
-    lines.push(`Удобное время: ${escapeHtml(PREFERRED_TIME_LABELS[preferences.preferredTime])}`);
+    lines.push(`Удобное время: ${PREFERRED_TIME_LABELS[preferences.preferredTime]}`);
   }
   if (preferences.currentLevel) {
-    lines.push(`Уровень: ${escapeHtml(CURRENT_LEVEL_LABELS[preferences.currentLevel])}`);
+    lines.push(`Уровень: ${CURRENT_LEVEL_LABELS[preferences.currentLevel]}`);
   }
   return lines;
 }
@@ -251,8 +251,8 @@ function buildTelegramLeadText(params: {
   const resultText = hasQuizResult ? `${params.scoreText}/${params.totalText}` : "—";
   const quizLines = params.isQuiz
     ? [
-      `Результат: ${escapeHtml(resultText)}`,
-      `Уровень: ${escapeHtml(params.level || "—")}`,
+      `Результат: ${resultText}`,
+      `Уровень: ${params.level || "—"}`,
     ]
     : [];
   const preferenceLines = params.preferences
@@ -261,39 +261,88 @@ function buildTelegramLeadText(params: {
 
   return [
     "🆕 Заявка с сайта",
-    `Язык: ${escapeHtml(params.languageLabel)}`,
-    `Имя: ${escapeHtml(params.name)}`,
-    `Контакт: ${escapeHtml(params.contact)}`,
+    `Язык: ${params.languageLabel}`,
+    `Имя: ${params.name}`,
+    `Контакт: ${params.contact}`,
     ...quizLines,
     ...preferenceLines,
   ].join("\n");
 }
 
+function getTelegramConfig() {
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  const missing: string[] = [];
+  if (!token) missing.push("TELEGRAM_BOT_TOKEN");
+  if (!chatId) missing.push("TELEGRAM_CHAT_ID");
+  if (missing.length) {
+    leadLog("error", "telegram_config_missing", { missing });
+    throw new Error(`Missing env: ${missing.join(", ")}`);
+  }
+  return { token, chatId };
+}
+
+function leadLog(level: "info" | "warn" | "error", event: string, data: Record<string, unknown> = {}) {
+  const entry = JSON.stringify({ level, event, ts: new Date().toISOString(), ...data });
+  if (level === "error") console.error("[lead]", entry);
+  else if (level === "warn") console.warn("[lead]", entry);
+  else console.info("[lead]", entry);
+}
+
+function telegramConfigStatus() {
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  return {
+    hasToken: Boolean(token),
+    hasChatId: Boolean(chatId),
+    chatIdSuffix: chatId ? chatId.slice(-4) : null,
+  };
+}
+
+function shouldExposeErrorDetail() {
+  return process.env.DEBUG_LEAD === "1" || process.env.DEBUG_LEAD === "true";
+}
+
 
 async function sendTelegram(text: string): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) throw new Error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set");
+  const { token, chatId } = getTelegramConfig();
+
+  leadLog("info", "telegram_send_message_start", {
+    chatIdSuffix: chatId.slice(-4),
+    textLength: text.length,
+  });
 
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+    body: JSON.stringify({ chat_id: chatId, text }),
   });
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Telegram API: ${res.status} ${err}`);
+    leadLog("error", "telegram_send_message_failed", {
+      status: res.status,
+      chatIdSuffix: chatId.slice(-4),
+      response: err.slice(0, 500),
+    });
+    throw new Error(`Telegram sendMessage: ${res.status} ${err}`);
   }
+
+  leadLog("info", "telegram_send_message_ok", { chatIdSuffix: chatId.slice(-4) });
 }
 
 async function sendTelegramDocument(caption: string, filename: string, content: string, mimeType = "text/plain; charset=utf-8"): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) throw new Error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set");
+  const { token, chatId } = getTelegramConfig();
+
+  leadLog("info", "telegram_send_document_start", {
+    chatIdSuffix: chatId.slice(-4),
+    filename,
+    captionLength: caption.length,
+    contentLength: content.length,
+  });
 
   const form = new FormData();
   form.set("chat_id", chatId);
-  form.set("caption", toPlainTelegramText(caption));
+  form.set("caption", caption.slice(0, 1024));
   const fileBlob = new Blob([content], { type: mimeType });
   form.append("document", fileBlob, filename);
 
@@ -304,16 +353,16 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Telegram API (document): ${res.status} ${err}`);
+    leadLog("error", "telegram_send_document_failed", {
+      status: res.status,
+      chatIdSuffix: chatId.slice(-4),
+      filename,
+      response: err.slice(0, 500),
+    });
+    throw new Error(`Telegram sendDocument: ${res.status} ${err}`);
   }
-}
 
-function escapeHtml(s: string): string {
-  return s
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll("\"", "&quot;");
+  leadLog("info", "telegram_send_document_ok", { chatIdSuffix: chatId.slice(-4), filename });
 }
 
 function parseRequestBody(req: LeadRequest): Record<string, unknown> {
@@ -334,24 +383,34 @@ function parseRequestBody(req: LeadRequest): Record<string, unknown> {
   return {};
 }
 
-function toPlainTelegramText(text: string): string {
-  return text
-    .replaceAll("<br>", "\n")
-    .replaceAll("<br/>", "\n")
-    .replaceAll("<br />", "\n")
-    .replace(/<\/?[^>]+(>|$)/g, "");
-}
-
 export default async function handler(req: LeadRequest, res: LeadResponse) {
+  const requestPath = getRequestPath(req);
+
   try {
     res.setHeader("Content-Type", "application/json; charset=utf-8");
 
+    leadLog("info", "request_received", {
+      method: req.method,
+      path: requestPath,
+      telegram: telegramConfigStatus(),
+    });
+
     if (req.method !== "POST") {
       res.setHeader("Allow", "POST");
+      leadLog("warn", "method_not_allowed", { method: req.method, path: requestPath });
       return res.status(405).json({ error: "Method Not Allowed" });
     }
 
     const body = parseRequestBody(req);
+    const bodyKeys = Object.keys(body);
+
+    if (!bodyKeys.length) {
+      leadLog("warn", "empty_body", {
+        path: requestPath,
+        bodyType: typeof req.body,
+      });
+    }
+
     const name = trim(body.name);
     const contact = trim(body.contact);
     const source = detectLeadSource(req, body.source);
@@ -362,20 +421,36 @@ export default async function handler(req: LeadRequest, res: LeadResponse) {
     const quizDetails = toQuizDetails(body.quizDetails);
     const leadPreferences = parseLeadPreferences(body);
 
+    leadLog("info", "request_parsed", {
+      path: requestPath,
+      source,
+      landing,
+      hasName: Boolean(name),
+      hasContact: Boolean(contact),
+      nameLength: name.length,
+      contactLength: contact.length,
+      bodyKeys,
+      isQuiz: source === "quiz_request",
+      quizScore,
+      quizTotal,
+      quizLevel: quizLevel || null,
+      quizDetailsCount: quizDetails.length,
+      preferences: leadPreferences,
+    });
+
     if (source === "quiz_complete_no_lead") {
-      console.info(
-        "[lead] quiz_complete_no_lead:",
-        JSON.stringify({
-          landing,
-          score: quizScore,
-          total: quizTotal,
-        })
-      );
+      leadLog("info", "quiz_complete_no_lead_ok", { landing, quizScore, quizTotal });
       return res.status(200).json({ success: true });
     }
 
     const validation = validate(name, contact);
     if (validation.ok === false) {
+      leadLog("warn", "validation_failed", {
+        path: requestPath,
+        source,
+        status: validation.status,
+        message: validation.message,
+      });
       return res.status(validation.status).json({ error: validation.message });
     }
 
@@ -414,18 +489,29 @@ export default async function handler(req: LeadRequest, res: LeadResponse) {
       } catch (docError) {
         const reason = docError instanceof Error ? docError.message : String(docError);
         const shortReason = reason.slice(0, 280);
-        console.error("[lead] Telegram document error:", reason);
-        await sendTelegram(`${telegramText}\n\n⚠️ Файл отчета не прикрепился.\nПричина: ${escapeHtml(shortReason)}`);
+        leadLog("warn", "telegram_document_fallback_to_text", {
+          source,
+          reason: reason.slice(0, 500),
+        });
+        await sendTelegram(`${telegramText}\n\n⚠️ Файл отчета не прикрепился.\nПричина: ${shortReason}`);
       }
     } else {
       await sendTelegram(telegramText);
     }
+
+    leadLog("info", "lead_sent_ok", { path: requestPath, source });
     return res.status(200).json({ success: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error("[lead] handler error:", message);
+    const stack = err instanceof Error ? err.stack : undefined;
+    leadLog("error", "handler_failed", {
+      path: requestPath,
+      message,
+      stack: stack?.split("\n").slice(0, 5),
+      telegram: telegramConfigStatus(),
+    });
     const payload: { error: string; detail?: string } = { error: "Не удалось отправить заявку. Попробуйте позже." };
-    if (process.env.DEBUG_LEAD && process.env.NODE_ENV !== "production") {
+    if (shouldExposeErrorDetail()) {
       payload.detail = message;
     }
     if (!res.headersSent) {
