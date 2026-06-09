@@ -2,6 +2,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { Navbar } from "@/components/Navbar";
 import { SectionDivider } from "@/components/brand/SectionDivider";
 import { lazy, Suspense, useEffect, type ComponentType } from "react";
+import { brandPageTitle } from "@/lib/brand";
 import { lazyRetry } from "@/utils/lazy-retry";
 
 const lazyLoad = (importFn: () => Promise<{ default: ComponentType<unknown> }>) =>
@@ -18,17 +19,15 @@ const TeachersSection = lazyLoad(() => import("@/components/TeachersSection").th
 const TrustMarquee = lazyLoad(() => import("@/components/TrustMarquee").then((m) => ({ default: m.TrustMarquee })));
 
 const SECTION_FALLBACK = <div className="section-padding min-h-[200px]" aria-hidden />;
-const MARQUEE_FALLBACK = <div className="py-8 sm:py-10 border-y border-border/40 bg-muted/30 min-h-[3rem]" aria-hidden />;
-
-const PAGE_TITLE = "bonjour жи есть — Французский с нуля за 4 месяца";
+const MARQUEE_FALLBACK = <div className="py-8 sm:py-10 border-b border-border/40 bg-white min-h-[3rem]" aria-hidden />;
 
 const Index = () => {
   useEffect(() => {
-    document.title = PAGE_TITLE;
+    document.title = brandPageTitle();
   }, []);
 
   return (
-    <div className="relative min-h-screen min-h-screen-ios overflow-x-clip bg-background">
+    <div className="relative min-h-screen min-h-screen-ios overflow-x-clip bg-white">
       <Navbar />
       <main className="relative">
         <HeroSection />

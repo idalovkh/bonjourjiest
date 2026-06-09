@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 512px;
+        height: 512px;
+        background: #ffffff;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+      }
+
+      .mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 28px;
+        font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+        font-weight: 500;
+      }
+
+      .dash {
+        color: rgba(15, 23, 42, 0.25);
+        font-size: 64px;
+        line-height: 1;
+        user-select: none;
+      }
+
+      .brand {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1;
+      }
+
+      .bonjour {
+        color: hsl(350, 28%, 42%);
+        font-size: 88px;
+      }
+
+      .jiest {
+        color: hsl(220, 32%, 28%);
+        font-size: 68px;
+        margin-top: -6px;
+        margin-left: 0.55em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mark" aria-label="Bonjour жи есть">
+      <span class="dash">—</span>
+      <span class="brand">
+        <span class="bonjour">Bonjour</span>
+        <span class="jiest">жи есть</span>
+      </span>
+      <span class="dash">—</span>
+    </div>
+  </body>
+</html>

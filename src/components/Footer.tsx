@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import { Send, Phone, Mail, Clock } from "lucide-react";
+import { Mail, Clock } from "lucide-react";
+import { BrandMark } from "@/components/brand/BrandMark";
 import { BrandName } from "@/components/brand/BrandName";
+import { cn } from "@/lib/utils";
 
 const navColumns = [
   {
@@ -21,36 +23,18 @@ const navColumns = [
   },
 ];
 
-const socials = [
-  { icon: Send, href: "https://t.me/+79067742949", label: "Telegram" },
-];
-
-export function Footer() {
+export function Footer({ className }: { className?: string }) {
   return (
-    <footer className="bg-background border-t border-border" role="contentinfo">
+    <footer className={cn("bg-white border-t border-border", className)} role="contentinfo">
       <div className="container mx-auto py-10 sm:py-12 lg:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16">
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block mb-5">
-              <BrandName size="md" layout="stacked" />
+              <BrandMark size="md" layout="stacked" />
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Онлайн-школа французского языка. Аттестован DELF/DALF.
             </p>
-            <div className="flex items-center gap-3">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-muted hover:bg-muted/80 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 touch-manipulation"
-                  aria-label={s.label}
-                >
-                  <s.icon size={18} />
-                </a>
-              ))}
-            </div>
           </div>
 
           {navColumns.map((col) => (
@@ -78,12 +62,6 @@ export function Footer() {
               Контакты
             </h4>
             <ul className="space-y-3.5">
-              <li>
-                <a href="tel:+79067742949" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
-                  <Phone size={15} className="shrink-0 text-primary" />
-                  +7 906 774-29-49
-                </a>
-              </li>
               <li>
                 <a href="mailto:support@bonjourjiest.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
                   <Mail size={15} className="shrink-0 text-primary" />

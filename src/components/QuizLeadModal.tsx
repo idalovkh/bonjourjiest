@@ -14,7 +14,7 @@ import type { OptionId } from "@/components/quiz-lead-modal/model";
 import { QuestionScreen } from "@/components/quiz-lead-modal/QuestionScreen";
 import { ResultsScreen } from "@/components/quiz-lead-modal/ResultsScreen";
 import { LeadPreferencesModal } from "@/components/LeadPreferencesModal";
-import { BrandName } from "@/components/brand/BrandName";
+import { BrandMark } from "@/components/brand/BrandMark";
 import { EMPTY_LEAD_PREFERENCES, type LeadPreferences } from "@/lib/lead-preferences";
 
 const QUIZ_PROGRESS_STORAGE_KEY = "quiz-progress-v1";
@@ -329,7 +329,7 @@ export function QuizLeadModal() {
           <div className="relative z-[1] flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-6 sm:p-7 sm:min-h-[380px]">
             <DialogHeader className="relative">
               <div className="flex justify-center">
-                <BrandName size="sm" layout="stacked" />
+                <BrandMark size="sm" layout="stacked" className="justify-center" />
               </div>
               {!started && (
                 <div className="mt-3 space-y-2 text-center">

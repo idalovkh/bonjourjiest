@@ -1,7 +1,4 @@
 import type { Request, Response } from "express";
-import nodemailer from "nodemailer";
-import { fetch as undiciFetch, ProxyAgent, FormData, type Dispatcher } from "undici";
-import { SocksProxyAgent } from "socks-proxy-agent";
 
 const NAME_MAX = 100;
 const CONTACT_MAX = 200;
@@ -66,32 +63,6 @@ function buildPreferenceLines(preferences: LeadPreferences): string[] {
   return lines;
 }
 
-function buildPreferenceTextLines(preferences: LeadPreferences): string[] {
-  const lines: string[] = [];
-  if (preferences.studyFrequency) {
-    lines.push(`Частота: ${STUDY_FREQUENCY_LABELS[preferences.studyFrequency]}`);
-  }
-  if (preferences.preferredTime) {
-    lines.push(`Удобное время: ${PREFERRED_TIME_LABELS[preferences.preferredTime]}`);
-  }
-  if (preferences.currentLevel) {
-    lines.push(`Уровень: ${CURRENT_LEVEL_LABELS[preferences.currentLevel]}`);
-  }
-  return lines;
-}
-
-/** Only Telegram `fetch` uses this: `http(s)://user:pass@host:port` or `socks5://...` from `TELEGRAM_PROXY_URL`. */
-function getTelegramDispatcher(): Dispatcher | undefined {
-  const raw = trim(process.env.TELEGRAM_PROXY_URL);
-  if (!raw.length) return undefined;
-
-  const lower = raw.toLowerCase();
-  if (lower.startsWith("socks5://") || lower.startsWith("socks4://") || lower.startsWith("socks://")) {
-    return new SocksProxyAgent(raw) as unknown as Dispatcher;
-  }
-  return new ProxyAgent(raw);
-}
-
 function validate(name: string, contact: string): { ok: true } | { ok: false; status: number; message: string } {
   if (!name.length) return { ok: false, status: 400, message: "Введите имя" };
   if (name.length > NAME_MAX) return { ok: false, status: 400, message: "Имя слишком длинное" };
@@ -147,8 +118,33 @@ function normalizeLeadSource(raw: string): "lead_request" | "quiz_request" | "qu
   return "lead_request";
 }
 
-function detectLeadSource(req: Pick<Request, "path">, bodySource: unknown): "lead_request" | "quiz_request" | "quiz_complete_no_lead" {
-  const path = trim(req.path).toLowerCase();
+function getRequestPath(req: { path?: string; url?: string; headers?: Record<string, string | string[] | undefined> }): string {
+  const fromPath = trim(req.path);
+  if (fromPath.length && fromPath !== "/") return fromPath;
+
+  const fromUrl = trim(req.url?.split("?")[0] ?? "");
+  if (fromUrl.length) return fromUrl;
+
+  const original = req.headers?.["x-vercel-original-url"] ?? req.headers?.["x-forwarded-uri"];
+  if (typeof original === "string" && original.length) {
+    if (original.startsWith("http")) {
+      try {
+        return new URL(original).pathname;
+      } catch {
+        return original.split("?")[0] ?? "";
+      }
+    }
+    return original.split("?")[0] ?? "";
+  }
+
+  return "";
+}
+
+function detectLeadSource(
+  req: { path?: string; url?: string; headers?: Record<string, string | string[] | undefined> },
+  bodySource: unknown,
+): "lead_request" | "quiz_request" | "quiz_complete_no_lead" {
+  const path = getRequestPath(req).toLowerCase();
   if (path.endsWith("/api/quiz/complete-no-lead")) return "quiz_complete_no_lead";
   if (path.endsWith("/api/lead/quiz-request")) return "quiz_request";
   if (path.endsWith("/api/lead/request")) return "lead_request";
@@ -266,12 +262,10 @@ async function sendTelegram(text: string): Promise<void> {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) throw new Error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set");
 
-  const dispatcher = getTelegramDispatcher();
-  const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
-    ...(dispatcher ? { dispatcher } : {}),
   });
   if (!res.ok) {
     const err = await res.text();
@@ -284,64 +278,21 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) throw new Error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set");
 
-  const dispatcher = getTelegramDispatcher();
   const form = new FormData();
   form.set("chat_id", chatId);
   form.set("caption", caption);
   const fileBlob = new Blob([content], { type: mimeType });
   form.append("document", fileBlob, filename);
 
-  const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendDocument`, {
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendDocument`, {
     method: "POST",
     body: form,
-    ...(dispatcher ? { dispatcher } : {}),
   });
 
   if (!res.ok) {
     const err = await res.text();
     throw new Error(`Telegram API (document): ${res.status} ${err}`);
   }
-}
-
-/** Sends email if SMTP/MAIL env vars are set; no-op otherwise. */
-async function sendEmail(name: string, contact: string, preferences?: LeadPreferences): Promise<void> {
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const from = process.env.MAIL_FROM;
-  const to = process.env.MAIL_TO;
-
-  if (!host || !user || !pass || !from || !to) {
-    return; // SMTP not configured — skip email
-  }
-
-  const portNum = port ? Number.parseInt(port, 10) : 587;
-  const transporter = nodemailer.createTransport({
-    host,
-    port: portNum,
-    secure: portNum === 465,
-    auth: { user, pass },
-  });
-
-  const subject = `Заявка с лендинга: ${name}`;
-  const preferenceTextLines = preferences ? buildPreferenceTextLines(preferences) : [];
-  const text = [
-    "Новая заявка на пробный урок",
-    "",
-    `Имя: ${name}`,
-    `Контакт: ${contact}`,
-    ...preferenceTextLines,
-  ].join("\n");
-  const preferenceHtml = preferenceTextLines
-    .map((line) => {
-      const [label, ...rest] = line.split(": ");
-      return `<p><strong>${escapeHtml(label)}:</strong> ${escapeHtml(rest.join(": "))}</p>`;
-    })
-    .join("");
-  const html = `<p>Новая заявка на пробный урок</p><p><strong>Имя:</strong> ${escapeHtml(name)}</p><p><strong>Контакт:</strong> ${escapeHtml(contact)}</p>${preferenceHtml}`;
-
-  await transporter.sendMail({ from, to, subject, text, html });
 }
 
 function escapeHtml(s: string): string {
@@ -430,16 +381,6 @@ export default async function handler(req: Request, res: Response) {
       }
     } else {
       await sendTelegram(telegramText);
-    }
-    try {
-      await sendEmail(name, contact, leadPreferences);
-    } catch (e) {
-      // Письмо опционально: не ломаем ответ, заявка уже в Telegram
-      let msg = "(delivery failed)";
-      if (process.env.NODE_ENV !== "production") {
-        msg = e instanceof Error ? e.message : String(e);
-      }
-      console.error("[lead] SMTP error:", msg);
     }
     return res.status(200).json({ success: true });
   } catch (err) {

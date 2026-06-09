@@ -60,7 +60,7 @@ export function ReviewsSection() {
   }, []);
 
   return (
-    <section id="reviews" className="section-padding bg-background overflow-hidden">
+    <section id="reviews" className="section-padding bg-white overflow-hidden">
       <div className="container mx-auto">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
@@ -82,8 +82,8 @@ export function ReviewsSection() {
         transition={sectionTransition}
       >
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-muted/40 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-muted/40 to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
           <div className="overflow-hidden">
             <div ref={trackRef} className="flex gap-3 w-max animate-reviews-marquee motion-reduce:animate-none group-hover:[animation-play-state:paused]">
               {duplicatedReviews.map((r, i) => (

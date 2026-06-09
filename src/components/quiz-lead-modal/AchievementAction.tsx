@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { drawBrandNameOnCanvas, loadBrandFont } from "@/lib/brand";
+import { drawBrandMarkOnCanvas, loadBrandFont } from "@/lib/brand";
 import type { QuizResult } from "./model";
 
 interface AchievementActionProps {
@@ -75,7 +75,7 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  drawBrandNameOnCanvas(ctx, centerX, 165, 52, "stacked");
+  drawBrandMarkOnCanvas(ctx, centerX, 165, 52);
 
   ctx.beginPath();
   ctx.arc(centerX, 520, 165, 0, Math.PI * 2);

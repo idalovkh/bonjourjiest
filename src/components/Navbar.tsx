@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useScrollY, useBodyScrollLock } from "@/hooks/use-scroll";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { BrandName } from "@/components/brand/BrandName";
+import { BrandMark } from "@/components/brand/BrandMark";
 
 const navLinks = [
   { href: "#about", label: "О школе" },
@@ -41,7 +41,7 @@ export function Navbar() {
         }`}
       >
         <Link to="/" className="inline-flex shrink-0">
-          <BrandName size="xs" layout="stacked" />
+          <BrandMark size="xs" layout="stacked" />
         </Link>
 
         <div className="hidden md:flex items-center gap-7">

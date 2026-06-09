@@ -112,7 +112,7 @@ export function ResultsScreen({
             onChange={(e) => onNameChange(e.target.value)}
             placeholder="Ваше имя"
             maxLength={100}
-            className="mt-2 rounded-xl"
+            className="mt-2 rounded-xl bg-white"
           />
         </div>
         <div>
@@ -123,7 +123,7 @@ export function ResultsScreen({
             onChange={(e) => onContactChange(e.target.value)}
             placeholder="@username в Telegram или +7..."
             maxLength={200}
-            className="mt-2 rounded-xl"
+            className="mt-2 rounded-xl bg-white"
           />
         </div>
         <div className="flex flex-wrap gap-3">

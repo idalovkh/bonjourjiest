@@ -129,7 +129,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative section-padding bg-background overflow-hidden">
+    <section id="contact" className="relative section-padding bg-white overflow-hidden">
       <div className="container mx-auto">
         <div className="max-w-5xl mx-auto">
           <motion.div
@@ -187,7 +187,7 @@ export function ContactSection() {
                         placeholder="Твое имя"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="mt-2 rounded-xl h-14 text-base border-primary/20 focus:border-primary"
+                        className="mt-2 rounded-xl h-14 text-base bg-white border-primary/20 focus:border-primary"
                         maxLength={100}
                         disabled={isSubmitting}
                       />
@@ -202,7 +202,7 @@ export function ContactSection() {
                         placeholder="@username или +7 999 999-99-99"
                         value={contact}
                         onChange={(e) => setContact(e.target.value)}
-                        className="mt-2 rounded-xl h-14 text-base border-primary/20 focus:border-primary"
+                        className="mt-2 rounded-xl h-14 text-base bg-white border-primary/20 focus:border-primary"
                         maxLength={200}
                         disabled={isSubmitting}
                       />

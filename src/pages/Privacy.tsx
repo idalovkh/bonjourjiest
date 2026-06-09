@@ -1,14 +1,18 @@
 import { useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { useWhitePageBackground } from "@/hooks/use-white-page-background";
+import { brandPageTitle } from "@/lib/brand";
 
 const Privacy = () => {
+  useWhitePageBackground();
+
   useEffect(() => {
-    document.title = "Политика конфиденциальности — bonjour жи есть";
+    document.title = brandPageTitle("Политика конфиденциальности");
   }, []);
 
   return (
-    <div className="min-h-screen min-h-screen-ios bg-background">
+    <div className="min-h-screen min-h-screen-ios bg-white">
       <Navbar />
       <main className="container mx-auto py-16 sm:py-24 max-w-3xl">
         <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-foreground mb-6 sm:mb-8 tracking-tight">
@@ -18,7 +22,7 @@ const Privacy = () => {
         <div className="prose prose-lg text-muted-foreground space-y-6 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-8 [&_h2]:mb-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-1">
           <h2>1. Общие положения</h2>
           <p>
-            Настоящая политика обработки персональных данных составлена в&nbsp;соответствии с&nbsp;требованиями Федерального закона от&nbsp;27.07.2006. №&nbsp;152-ФЗ «О&nbsp;персональных данных» (далее&nbsp;— Закон о&nbsp;персональных данных) и&nbsp;определяет порядок обработки персональных данных и&nbsp;меры по&nbsp;обеспечению безопасности персональных данных, предпринимаемые ИП&nbsp;Байсаев Зубайр Исмаилович (далее&nbsp;— Оператор).
+            Настоящая политика обработки персональных данных составлена в&nbsp;соответствии с&nbsp;требованиями Федерального закона от&nbsp;27.07.2006. №&nbsp;152-ФЗ «О&nbsp;персональных данных» (далее&nbsp;— Закон о&nbsp;персональных данных) и&nbsp;определяет порядок обработки персональных данных и&nbsp;меры по&nbsp;обеспечению безопасности персональных данных, предпринимаемые администрацией сайта https://bonjourjiest.ru (далее&nbsp;— Оператор).
           </p>
           <p>
             1.1. Оператор ставит своей важнейшей целью и&nbsp;условием осуществления своей деятельности соблюдение прав и&nbsp;свобод человека и&nbsp;гражданина при обработке его персональных данных, в&nbsp;том числе защиты прав на&nbsp;неприкосновенность частной жизни, личную и&nbsp;семейную тайну.
@@ -135,7 +139,7 @@ const Privacy = () => {
           <p>12.3. Актуальная версия Политики в&nbsp;свободном доступе расположена в&nbsp;сети Интернет по&nbsp;адресу https://bonjourjiest.ru/privacy.</p>
         </div>
       </main>
-      <Footer />
+      <Footer className="bg-white" />
     </div>
   );
 };

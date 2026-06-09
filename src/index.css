@@ -113,9 +113,22 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-white text-foreground antialiased;
     font-family: 'DM Sans', 'DM Sans Fallback', system-ui, sans-serif;
     overflow-x: hidden;
+  }
+
+  html.page-white,
+  html.page-white body {
+    background-color: #ffffff;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+    box-shadow: 0 0 0 1000px #ffffff inset;
+    -webkit-text-fill-color: hsl(var(--foreground));
   }
 
   /* Tap highlight: subtle on touch devices */
@@ -157,6 +170,22 @@
 
   .bg-paper {
     background-color: hsl(var(--background));
+  }
+
+  .hero-illustration-bg {
+    background-image: url(/hero-background.png);
+    background-repeat: no-repeat;
+    background-color: hsl(var(--background));
+    background-size: cover;
+    background-position: center right;
+  }
+
+  .hero-illustration-bg-mobile {
+    background-image: url(/hero-background-mobile.png?v=2);
+    background-repeat: no-repeat;
+    background-color: hsl(var(--background));
+    background-size: cover;
+    background-position: right top;
   }
 
   .text-tricolor-white {

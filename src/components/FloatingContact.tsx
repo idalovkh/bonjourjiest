@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 export function FloatingContact() {
   const [open, setOpen] = useState(false);
   const scrollY = useScrollY();
-  const visible = scrollY > 400;
+  const heroScrollThreshold =
+    typeof window !== "undefined" ? Math.max(400, window.innerHeight * 0.92) : 400;
+  const visible = scrollY > heroScrollThreshold;
 
   return (
     <AnimatePresence>

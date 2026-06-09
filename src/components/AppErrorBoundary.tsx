@@ -27,7 +27,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
     if (!this.state.hasError) return this.props.children;
 
     return (
-      <main className="min-h-screen min-h-screen-ios bg-background text-foreground flex items-center justify-center p-6">
+      <main className="min-h-screen min-h-screen-ios bg-white text-foreground flex items-center justify-center p-6">
         <section className="max-w-md w-full rounded-2xl border border-border/60 bg-card p-6 text-center shadow-sm">
           <h1 className="font-display text-2xl font-bold mb-2">Something went wrong</h1>
           <p className="text-sm text-muted-foreground mb-5">

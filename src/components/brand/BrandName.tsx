@@ -6,6 +6,8 @@ type BrandNameProps = {
   layout?: "inline" | "stacked";
 };
 
+export type { BrandNameProps };
+
 const sizeClasses = {
   xs: "text-xs sm:text-sm",
   sm: "text-sm sm:text-base",

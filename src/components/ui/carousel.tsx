@@ -131,12 +131,17 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 );
 Carousel.displayName = "Carousel";
 
-const CarouselContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
+const CarouselContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { viewportClassName?: string }
+>(({ className, viewportClassName, ...props }, ref) => {
     const { carouselRef, orientation } = useCarousel();
 
     return (
-      <div ref={carouselRef} className="overflow-hidden [-webkit-overflow-scrolling:touch]">
+      <div
+        ref={carouselRef}
+        className={cn("overflow-hidden [-webkit-overflow-scrolling:touch]", viewportClassName)}
+      >
         <div
           ref={ref}
           className={cn("flex", orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col", className)}
@@ -221,4 +226,24 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
 );
 CarouselNext.displayName = "CarouselNext";
 
-export { type CarouselApi, Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext };
+const carouselBottomButtonClassName =
+  "static inset-auto h-10 w-10 translate-x-0 translate-y-0 rounded-full border-border/60 bg-card shadow-sm touch-manipulation";
+
+function CarouselControls({ className }: { className?: string }) {
+  return (
+    <div className={cn("mt-6 flex items-center justify-center gap-3", className)}>
+      <CarouselPrevious className={carouselBottomButtonClassName} />
+      <CarouselNext className={carouselBottomButtonClassName} />
+    </div>
+  );
+}
+
+export {
+  type CarouselApi,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselControls,
+};

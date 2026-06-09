@@ -25,7 +25,7 @@ import {
 } from "@/lib/lead-preferences";
 
 const selectTriggerClass =
-  "mt-1.5 rounded-xl h-11 text-sm sm:text-base border-primary/20 focus:ring-primary focus:ring-1";
+  "mt-1.5 rounded-xl h-11 text-sm sm:text-base bg-white border-primary/20 focus:ring-primary focus:ring-1";
 
 const selectContentClass = "z-[100]";
 
