@@ -22,7 +22,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 39 26% 95%;
     --foreground: 0 0% 6%;
 
     --card: 0 0% 100%;
@@ -31,35 +31,35 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 6%;
 
-    --primary: 345 68% 38%;
+    --primary: 220 32% 28%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 48 100% 55%;
-    --secondary-foreground: 0 0% 6%;
+    --secondary: 350 28% 42%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 96%;
+    --muted: 39 18% 91%;
     --muted-foreground: 0 0% 36%;
 
-    --accent: 0 0% 94%;
+    --accent: 39 16% 90%;
     --accent-foreground: 0 0% 6%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 86%;
-    --input: 0 0% 86%;
-    --ring: 345 68% 38%;
+    --border: 39 14% 86%;
+    --input: 39 14% 86%;
+    --ring: 220 32% 28%;
 
     --radius: 0.875rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 39 26% 95%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary: 220 32% 28%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 39 18% 91%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 345 68% 38%;
+    --sidebar-border: 39 14% 86%;
+    --sidebar-ring: 220 32% 28%;
   }
 
   .dark {
@@ -72,11 +72,11 @@
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 96%;
 
-    --primary: 345 70% 62%;
+    --primary: 220 28% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 48 100% 60%;
-    --secondary-foreground: 0 0% 6%;
+    --secondary: 350 24% 52%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 16%;
     --muted-foreground: 0 0% 70%;
@@ -89,15 +89,15 @@
 
     --border: 0 0% 22%;
     --input: 0 0% 22%;
-    --ring: 345 70% 62%;
+    --ring: 220 28% 45%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 345 70% 62%;
+    --sidebar-primary: 220 28% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 345 70% 62%;
+    --sidebar-ring: 220 28% 45%;
   }
 }
 
@@ -121,7 +121,7 @@
   /* Tap highlight: subtle on touch devices */
   a,
   button {
-    -webkit-tap-highlight-color: hsl(345 68% 38% / 0.24);
+    -webkit-tap-highlight-color: hsl(220 32% 28% / 0.16);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -138,16 +138,104 @@
 
 @layer utilities {
   .gradient-text {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(345, 68%, 38%), hsl(48, 100%, 55%));
+    color: hsl(var(--secondary));
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(345, 68%, 38%), hsl(0, 0%, 8%));
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 1px 3px hsl(var(--primary) / 0.12);
+  }
+
+  .gradient-primary:hover {
+    opacity: 0.9;
   }
 
   .gradient-card {
-    background: linear-gradient(145deg, hsl(0, 0%, 100%), hsl(0, 0%, 94%));
+    background: hsl(var(--card));
+  }
+
+  .bg-paper {
+    background-color: hsl(var(--background));
+  }
+
+  .text-tricolor-white {
+    color: #ffffff;
+    text-shadow:
+      1px 0 0 hsl(var(--primary)),
+      -1px 0 0 hsl(var(--primary)),
+      0 1px 0 hsl(var(--primary)),
+      0 -1px 0 hsl(var(--primary)),
+      1px 1px 0 hsl(var(--primary)),
+      -1px -1px 0 hsl(var(--primary)),
+      1px -1px 0 hsl(var(--primary)),
+      -1px 1px 0 hsl(var(--primary));
+  }
+
+  .tricolor-stripe {
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary)) 48.3333%,
+      #ffffff 48.3333%,
+      #ffffff 81.6667%,
+      hsl(var(--secondary)) 81.6667%,
+      hsl(var(--secondary)) 100%
+    );
+    box-shadow: inset 0 -1px 0 hsl(var(--border) / 0.35);
+  }
+
+  .tricolor-top {
+    background:
+      linear-gradient(
+        90deg,
+        hsl(var(--primary)) 0%,
+        hsl(var(--primary)) 48.3333%,
+        #ffffff 48.3333%,
+        #ffffff 81.6667%,
+        hsl(var(--secondary)) 81.6667%,
+        hsl(var(--secondary)) 100%
+      )
+      top / 100% 3px no-repeat,
+      hsl(0 0% 100% / 0.95);
+  }
+
+  .section-divider-rule {
+    @apply h-px w-full;
+    background: linear-gradient(
+      to right,
+      transparent,
+      hsl(var(--border) / 0.35),
+      hsl(var(--border) / 0.85),
+      hsl(var(--border) / 0.35),
+      transparent
+    );
+  }
+
+  .flag-tricolor-bg {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  .flag-tricolor-bg > span {
+    flex: 1 1 33.333%;
+  }
+
+  .flag-tricolor-bg > span:nth-child(1) {
+    flex: 1.45 1 0;
+    background-color: hsl(220 32% 28%);
+  }
+
+  .flag-tricolor-bg > span:nth-child(2) {
+    flex: 1 1 0;
+    background-color: #ffffff;
+  }
+
+  .flag-tricolor-bg > span:nth-child(3) {
+    flex: 0.55 1 0;
+    background-color: hsl(350 28% 42%);
   }
 
   .glass {
@@ -164,13 +252,6 @@
       --tw-backdrop-blur: none;
       background-color: hsl(var(--card) / 0.97) !important;
     }
-  }
-
-  .hero-emblem-shadow {
-    filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
-  }
-  .ny-owl-tint {
-    filter: brightness(0) saturate(100%) invert(14%) sepia(62%) saturate(2950%) hue-rotate(330deg) brightness(92%) contrast(108%);
   }
 
   .card-elevated {
@@ -218,32 +299,5 @@
   .min-h-screen-ios {
     min-height: 100vh;
     min-height: 100dvh;
-  }
-
-  .btn-glow {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-glow::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: radial-gradient(circle, hsl(0 0% 100% / 0.2) 0%, transparent 70%);
-    transform: translate(-50%, -50%);
-    transition: width 0.4s, height 0.4s;
-  }
-
-  .btn-glow:hover::after {
-    width: 300px;
-    height: 300px;
-  }
-
-  /* Teacher card 3D tilt container: perspective only (tilt applied via JS) */
-  .teacher-card-perspective {
-    perspective: 800px;
   }
 }

@@ -1,12 +1,21 @@
 import { useEffect, useRef } from "react";
 
 const trustItems = [
-  "American English",
-  "British English",
-  "IELTS",
-  "TOEFL",
-  "TESOL",
+  "Français standard",
+  "Français québécois",
+  "DELF",
+  "DALF",
+  "TCF",
 ];
+
+const trustItemBase =
+  "text-lg sm:text-xl font-bold tracking-wider uppercase select-none";
+
+const trustTextColors = [
+  "text-primary",
+  "text-tricolor-white",
+  "text-secondary",
+] as const;
 
 export function TrustMarquee() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -25,17 +34,14 @@ export function TrustMarquee() {
   }, []);
 
   return (
-    <section className="py-8 sm:py-10 overflow-hidden border-y border-border/40 bg-muted/30">
+    <section className="py-8 sm:py-10 overflow-hidden border-y border-border/60 bg-background">
       <div className="relative">
         <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
         <div ref={trackRef} className="flex items-center gap-12 whitespace-nowrap animate-trust-marquee motion-reduce:animate-none w-max">
           {[...trustItems, ...trustItems, ...trustItems, ...trustItems].map((item, i) => (
-            <span
-              key={`${item}-${i}`}
-              className="text-lg sm:text-xl font-bold tracking-wider text-muted-foreground/40 uppercase select-none"
-            >
+            <span key={`${item}-${i}`} className={`${trustItemBase} ${trustTextColors[i % 3]}`}>
               {item}
             </span>
           ))}

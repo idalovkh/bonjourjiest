@@ -23,6 +23,7 @@ export default {
       fontFamily: {
         sans: ["DM Sans", "system-ui", "sans-serif"],
         display: ["Plus Jakarta Sans", "DM Sans", "system-ui", "sans-serif"],
+        brand: ["Cormorant Garamond", "Georgia", "Times New Roman", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

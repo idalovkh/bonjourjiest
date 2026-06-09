@@ -36,7 +36,7 @@ export function QuestionScreen({
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-muted">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all"
+            className="h-full rounded-full bg-primary transition-all"
             style={{ width: `${progressPercent}%` }}
           />
         </div>

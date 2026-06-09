@@ -16,7 +16,7 @@ export function IntroScreen({ onStart, onClose }: IntroScreenProps) {
         </div>
         <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
           <p className="text-xs text-muted-foreground">Вопросов</p>
-          <p className="text-base sm:text-lg font-semibold text-foreground">21</p>
+          <p className="text-base sm:text-lg font-semibold text-foreground">10</p>
         </div>
         <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
           <p className="text-xs text-muted-foreground">Результат</p>
@@ -24,7 +24,7 @@ export function IntroScreen({ onStart, onClose }: IntroScreenProps) {
         </div>
       </div>
       <div className="flex flex-wrap justify-center gap-3">
-        <Button type="button" onClick={onStart} className="gradient-primary rounded-full px-7 text-base sm:text-lg shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35">
+        <Button type="button" onClick={onStart} className="gradient-primary rounded-full px-7 text-base sm:text-lg hover:opacity-90 transition-opacity">
           Начать диагностику
           <ArrowRight size={16} className="ml-2" />
         </Button>

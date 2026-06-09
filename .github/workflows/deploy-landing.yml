@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://desharschool.ru
+      url: https://bonjourjiest.ru
 
     steps:
       - name: Checkout code
@@ -179,7 +179,7 @@ jobs:
         run: |
           echo "✅ Landing deployment successful!"
           echo "Commit: ${{ github.sha }}"
-          echo "URL: https://desharschool.ru"
+          echo "URL: https://bonjourjiest.ru"
 
       - name: Send failure notification
         if: needs.deploy.result == 'failure'

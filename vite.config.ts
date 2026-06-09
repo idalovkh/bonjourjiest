@@ -19,12 +19,6 @@ export default defineConfig({
         if (filePath.includes("/assets/teachers/")) {
           return new URLSearchParams("w=600&format=webp");
         }
-        if (filePath.includes("emblem.webp")) {
-          return new URLSearchParams("w=720&format=webp");
-        }
-        if (filePath.includes("logo.webp")) {
-          return new URLSearchParams("w=280&format=webp");
-        }
         
         return new URLSearchParams();
       },
@@ -57,7 +51,7 @@ export default defineConfig({
     // Локально /api/* проксируется на прод (Vercel); на деплое прокси не используется
     proxy: {
       "/api": {
-        target: process.env.VITE_API_ORIGIN ?? "https://desharschool.ru",
+        target: process.env.VITE_API_ORIGIN ?? "https://bonjourjiest.ru",
         changeOrigin: true,
       },
     },

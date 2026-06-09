@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import logo from "@/assets/logo.webp";
+import { drawBrandNameOnCanvas, loadBrandFont } from "@/lib/brand";
 import type { QuizResult } from "./model";
 
 interface AchievementActionProps {
@@ -35,15 +35,6 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
     ctx.closePath();
   };
 
-  const drawImageContain = (image: HTMLImageElement, x: number, y: number, boxWidth: number, boxHeight: number) => {
-    const ratio = Math.min(boxWidth / image.width, boxHeight / image.height);
-    const drawWidth = image.width * ratio;
-    const drawHeight = image.height * ratio;
-    const offsetX = x + (boxWidth - drawWidth) / 2;
-    const offsetY = y + (boxHeight - drawHeight) / 2;
-    ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
-  };
-
   const drawWrappedText = (text: string, x: number, y: number, maxWidth: number, lineHeight: number, maxLines = 2) => {
     const words = text.split(" ");
     let line = "";
@@ -64,23 +55,18 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
     if (line.trim().length) ctx.fillText(line.trim(), x, cursorY);
   };
 
-  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
-  bgGradient.addColorStop(0, "#f8fbff");
-  bgGradient.addColorStop(1, "#eef4ff");
-  ctx.fillStyle = bgGradient;
+  await loadBrandFont(52, 500);
+
+  ctx.fillStyle = "#f5f0e8";
   ctx.fillRect(0, 0, width, height);
 
-  const accentTop = ctx.createRadialGradient(180, 160, 40, 180, 160, 380);
-  accentTop.addColorStop(0, "rgba(99,102,241,0.18)");
-  accentTop.addColorStop(1, "rgba(99,102,241,0)");
-  ctx.fillStyle = accentTop;
-  ctx.fillRect(0, 0, width, height);
-
-  const accentBottom = ctx.createRadialGradient(900, 1180, 60, 900, 1180, 420);
-  accentBottom.addColorStop(0, "rgba(6,182,212,0.14)");
-  accentBottom.addColorStop(1, "rgba(6,182,212,0)");
-  ctx.fillStyle = accentBottom;
-  ctx.fillRect(0, 0, width, height);
+  const stripeHeight = 16;
+  ctx.fillStyle = "#313d57";
+  ctx.fillRect(0, 0, width / 3, stripeHeight);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(width / 3, 0, width / 3, stripeHeight);
+  ctx.fillStyle = "#7a4d57";
+  ctx.fillRect((width / 3) * 2, 0, width / 3, stripeHeight);
 
   drawRoundedRect(58, 58, width - 116, height - 116, 46);
   ctx.fillStyle = "#ffffff";
@@ -89,52 +75,24 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  drawRoundedRect(112, 112, width - 224, 88, 24);
-  ctx.fillStyle = "#f8fafc";
-  ctx.fill();
-  ctx.strokeStyle = "rgba(15,23,42,0.1)";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  const logoImage = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error("Не удалось загрузить логотип"));
-    img.src = logo;
-  });
-
-  ctx.fillStyle = "#0f172a";
-  ctx.font = "700 44px Inter, system-ui, -apple-system, sans-serif";
-  const brandText = "Deshar School";
-  const brandTextWidth = ctx.measureText(brandText).width;
-  const logoBoxWidth = 170;
-  const brandGap = 18;
-  const brandRowWidth = logoBoxWidth + brandGap + brandTextWidth;
-  const brandRowStartX = centerX - brandRowWidth / 2;
-  ctx.save();
-  ctx.filter = "brightness(0) saturate(100%) invert(14%) sepia(62%) saturate(2950%) hue-rotate(330deg) brightness(92%) contrast(108%)";
-  drawImageContain(logoImage, brandRowStartX, 128, logoBoxWidth, 56);
-  ctx.restore();
-  ctx.fillText(brandText, brandRowStartX + logoBoxWidth + brandGap, 171);
+  drawBrandNameOnCanvas(ctx, centerX, 165, 52, "stacked");
 
   ctx.beginPath();
   ctx.arc(centerX, 520, 165, 0, Math.PI * 2);
   ctx.fillStyle = "#ffffff";
   ctx.fill();
   ctx.lineWidth = 8;
-  ctx.strokeStyle = "rgba(15,23,42,0.18)";
+  ctx.strokeStyle = "#313d57";
   ctx.stroke();
 
   ctx.fillStyle = "#334155";
   ctx.font = "700 46px Inter, system-ui, -apple-system, sans-serif";
-  ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("Мой уровень английского", centerX, 318);
+  ctx.fillText("Мой уровень французского", centerX, 318);
   ctx.fillStyle = "#64748b";
   ctx.font = "600 38px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillText("Level", centerX, 458);
-  ctx.fillStyle = "#0f172a";
+  ctx.fillStyle = "#7a4d57";
   ctx.font = "800 120px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillText(result.level, centerX, 540);
   ctx.textAlign = "start";
@@ -176,11 +134,12 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  ctx.fillStyle = "#475569";
+  ctx.fillStyle = "#313d57";
   ctx.font = "500 32px Inter, system-ui, -apple-system, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("desharschool.ru", centerX, 1050);
+  ctx.fillText("bonjourjiest.ru", centerX, 1050);
   ctx.font = "500 28px Inter, system-ui, -apple-system, sans-serif";
+  ctx.fillStyle = "#475569";
   drawWrappedText("Сможешь лучше? Проверь свой уровень за 3 минуты.", centerX, 1110, 760, 36, 2);
   ctx.textAlign = "start";
 

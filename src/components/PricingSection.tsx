@@ -6,8 +6,6 @@ const plans = [
   {
     name: "Группа",
     subtitle: "Занятия в мини-группе",
-    price: "9 900",
-    period: "/мес",
     features: [
       "Мини-группа до 7 человек",
       "Круглосуточный доступ к платформе",
@@ -20,8 +18,6 @@ const plans = [
   {
     name: "Индивидуально",
     subtitle: "Уроки 1 на 1 с учителем",
-    price: "13 600",
-    period: "/мес",
     features: [
       "Гибкое расписание",
       "Круглосуточный доступ к платформе",
@@ -32,15 +28,14 @@ const plans = [
     popular: true,
   },
   {
-    name: "Пробный урок",
-    subtitle: "Знакомство со школой",
-    price: "0",
-    period: "",
+    name: "Для детей",
+    subtitle: "С 6 лет в игровом формате",
     features: [
-      "Знакомство с преподавателем",
-      "Определение уровня",
-      "Подбор программы",
-      "Без обязательств",
+      "Уроки с учётом возраста ребёнка",
+      "Игровые методики и короткие задания",
+      "Мини-группы и индивидуально",
+      "Поддержка родителей",
+      "Сертифицированные преподаватели",
     ],
     popular: false,
   },
@@ -56,12 +51,12 @@ export function PricingSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
         >
-           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
-             Тарифы
-           </h2>
-           <p className="text-xl text-muted-foreground">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-4 tracking-tight">
+            Тарифы
+          </h2>
+          <p className="text-xl text-muted-foreground">
             Выбери удобный для себя формат
-           </p>
+          </p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto items-stretch">
@@ -69,9 +64,9 @@ export function PricingSection() {
             <motion.div
               key={p.name}
               data-suppress-hover-during-scroll
-              className={`relative rounded-2xl p-6 sm:p-8 lg:p-9 flex flex-col transition-[transform,box-shadow] duration-300 can-hover:hover:-translate-y-1 ${
+              className={`relative rounded-2xl p-6 sm:p-8 flex flex-col transition-[transform,box-shadow] duration-300 can-hover:hover:-translate-y-1 ${
                 p.popular
-                  ? "gradient-primary text-primary-foreground ring-2 ring-primary/20 shadow-xl shadow-primary/15 can-hover:hover:shadow-2xl can-hover:hover:shadow-primary/25"
+                  ? "card-elevated border-l-4 border-l-primary"
                   : "card-elevated"
               }`}
               initial={{ opacity: 0 }}
@@ -80,7 +75,7 @@ export function PricingSection() {
               transition={{ duration: 0.45, delay: i * 0.1, ease: "easeOut" }}
             >
               {p.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground text-xs font-semibold px-4 py-1 rounded-full flex items-center gap-1.5 shadow-md">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary/90 text-secondary-foreground text-xs font-semibold px-4 py-1 rounded-full flex items-center gap-1.5">
                   <Sparkles size={11} />
                   Популярный
                 </span>
@@ -88,20 +83,9 @@ export function PricingSection() {
 
               <div className="mb-7">
                 <h3 className="font-display font-bold text-xl">{p.name}</h3>
-                <p className={`text-base ${p.popular ? "text-primary-foreground/65" : "text-muted-foreground"}`}>
+                <p className="text-base mt-1 text-muted-foreground">
                   {p.subtitle}
                 </p>
-              </div>
-
-              <div className="mb-7">
-                <span className="text-4xl font-extrabold font-display">
-                  {p.price === "0" ? "Бесплатно" : `${p.price} ₽`}
-                </span>
-                {p.period && (
-                  <span className={`text-base ${p.popular ? "text-primary-foreground/65" : "text-muted-foreground"}`}>
-                    {p.period}
-                  </span>
-                )}
               </div>
 
               <ul className="space-y-3 mb-9 flex-1">
@@ -118,11 +102,7 @@ export function PricingSection() {
 
               <Button
                 asChild
-                className={`w-full rounded-full min-h-[48px] h-13 font-semibold text-base touch-manipulation ${
-                  p.popular
-                    ? "bg-white text-primary hover:bg-white/90"
-                    : "gradient-primary text-primary-foreground"
-                }`}
+                className="w-full rounded-full min-h-[48px] h-13 font-semibold text-base touch-manipulation gradient-primary text-primary-foreground hover:opacity-90 transition-opacity"
               >
                 <a href="#contact">Записаться</a>
               </Button>

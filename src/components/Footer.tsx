@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { Send, Youtube, Phone, Mail, Clock, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.webp";
+import { Send, Phone, Mail, Clock } from "lucide-react";
+import { BrandName } from "@/components/brand/BrandName";
 
 const navColumns = [
   {
@@ -17,53 +16,26 @@ const navColumns = [
     title: "Обучение",
     links: [
       { label: "Групповые занятия", href: "#pricing" },
-      { label: "Индивидуально", href: "#pricing" },
-      { label: "Пробный урок", href: "#contact" },
+      { label: "Для детей", href: "#pricing" },
     ],
   },
 ];
 
 const socials = [
   { icon: Send, href: "https://t.me/+79067742949", label: "Telegram" },
-  { icon: Youtube, href: "https://www.youtube.com/@desharschool", label: "YouTube" },
 ];
 
 export function Footer() {
   return (
-    <footer className="bg-background" role="contentinfo">
-      {/* CTA strip */}
-      <div className="border-y border-border">
-        <div className="container mx-auto py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-              Готов начать говорить на&nbsp;английском?
-            </h3>
-            <p className="text-muted-foreground mt-1 text-base">Запишись на бесплатный пробный урок</p>
-          </div>
-          <Button
-            asChild
-            size="lg"
-            className="rounded-full min-h-[48px] h-14 px-8 sm:px-10 text-base font-semibold gradient-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 shrink-0 w-full sm:w-auto touch-manipulation"
-          >
-            <a href="#contact">
-              Записаться бесплатно
-              <ArrowRight size={18} className="ml-2" />
-            </a>
-          </Button>
-        </div>
-      </div>
-
-      {/* Main footer content */}
+    <footer className="bg-background border-t border-border" role="contentinfo">
       <div className="container mx-auto py-10 sm:py-12 lg:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16">
-          {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2.5 mb-5">
-              <img src={logo} alt="Deshar School" className="h-9 w-auto rounded-xl ny-owl-tint" width={180} height={36} decoding="async" />
-              <span className="text-base font-bold text-foreground tracking-tight">Deshar School</span>
+            <Link to="/" className="inline-block mb-5">
+              <BrandName size="md" layout="stacked" />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-              Онлайн-школа английского языка. Аттестован Кембриджем. Работаем с&nbsp;2016&nbsp;года.
+              Онлайн-школа французского языка. Аттестован DELF/DALF.
             </p>
             <div className="flex items-center gap-3">
               {socials.map((s) => (
@@ -81,7 +53,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Nav columns */}
           {navColumns.map((col) => (
             <div key={col.title}>
               <h4 className="font-display font-bold text-sm uppercase tracking-wider text-muted-foreground/60 mb-4">
@@ -102,7 +73,6 @@ export function Footer() {
             </div>
           ))}
 
-          {/* Contact column */}
           <div>
             <h4 className="font-display font-bold text-sm uppercase tracking-wider text-muted-foreground/60 mb-4">
               Контакты
@@ -115,9 +85,9 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:support@desharschool.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
+                <a href="mailto:support@bonjourjiest.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
                   <Mail size={15} className="shrink-0 text-primary" />
-                  support@desharschool.ru
+                  support@bonjourjiest.ru
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground whitespace-nowrap">
@@ -129,10 +99,13 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-border">
         <div className="container mx-auto py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-          <p>© {new Date().getFullYear()} Deshar School. Все права защищены.</p>
+          <p className="inline-flex flex-wrap items-baseline justify-center gap-x-1 gap-y-0.5 sm:justify-start">
+            <span>© {new Date().getFullYear()}</span>
+            <BrandName size="xs" />
+            <span>. Все права защищены.</span>
+          </p>
           <Link to="/privacy" className="py-2 min-h-[44px] inline-flex items-center hover:text-foreground transition-colors touch-manipulation -my-2">
             Политика конфиденциальности
           </Link>

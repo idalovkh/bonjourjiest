@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { CheckCircle, ArrowRight, Gift, Clock, UserCheck } from "lucide-react";
+import { CheckCircle, ArrowRight, MessageCircle, Users, Sparkles } from "lucide-react";
 import { z } from "zod";
+import { LeadPreferencesModal } from "@/components/LeadPreferencesModal";
+import { EMPTY_LEAD_PREFERENCES, type LeadPreferences } from "@/lib/lead-preferences";
 
 const leadSchema = z.object({
   name: z.string().trim().min(1, "Введите имя").max(100),
@@ -15,16 +16,17 @@ const leadSchema = z.object({
 });
 
 const perks = [
-  { icon: Gift, text: "Первый урок бесплатный" },
-  { icon: Clock, text: "Занимает всего 25 минут" },
-  { icon: UserCheck, text: "Определим твой уровень" },
+  { icon: MessageCircle, text: "Ответим в Telegram в рабочее время" },
+  { icon: Users, text: "Подберём группу, индивидуально или для ребёнка" },
+  { icon: Sparkles, text: "Поможем с уровнем — можно пройти квиз выше" },
 ];
 
 export function ContactSection() {
-  const isMobile = useIsMobile();
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const mountedRef = useRef(true);
   const { toast } = useToast();
 
@@ -35,8 +37,7 @@ export function ContactSection() {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitLead = (preferences: LeadPreferences) => {
     const parsed = leadSchema.safeParse({ name, contact });
     if (!parsed.success) {
       toast({
@@ -47,9 +48,7 @@ export function ContactSection() {
       return;
     }
 
-    // Показываем успех сразу, запрос уходит в фоне
-    setSubmitted(true);
-    toast({ title: "Заявка отправлена!", description: "Мы свяжемся с вами в ближайшее время." });
+    setIsSubmitting(true);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -62,12 +61,25 @@ export function ContactSection() {
         name: parsed.data.name,
         contact: parsed.data.contact,
         source: "lead_request",
-        landing: "EN",
+        landing: "FR",
+        studyFrequency: preferences.studyFrequency,
+        preferredTime: preferences.preferredTime,
+        currentLevel: preferences.currentLevel,
       }),
       signal: controller.signal,
     })
       .then((res) => {
-        if (res.ok) return;
+        if (res.ok) {
+          if (mountedRef.current) {
+            setPreferencesOpen(false);
+            setSubmitted(true);
+            toast({
+              title: "Заявка отправлена!",
+              description: "Мы свяжемся с вами в ближайшее время.",
+            });
+          }
+          return;
+        }
         return res.text().then((text) => {
           let data: { error?: string; detail?: string } = {};
           try {
@@ -76,7 +88,6 @@ export function ContactSection() {
             // Ответ не JSON (502, HTML и т.п.)
           }
           if (mountedRef.current) {
-            setSubmitted(false);
             const description = data?.detail ?? data?.error ?? fallbackError;
             toast({
               title: "Ошибка отправки",
@@ -88,7 +99,6 @@ export function ContactSection() {
       })
       .catch(() => {
         if (mountedRef.current) {
-          setSubmitted(false);
           toast({
             title: "Ошибка отправки",
             description: "Не удалось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram.",
@@ -96,119 +106,139 @@ export function ContactSection() {
           });
         }
       })
-      .finally(() => clearTimeout(timeoutId));
+      .finally(() => {
+        clearTimeout(timeoutId);
+        if (mountedRef.current) {
+          setIsSubmitting(false);
+        }
+      });
+  };
+
+  const handleBasicContinue = (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsed = leadSchema.safeParse({ name, contact });
+    if (!parsed.success) {
+      toast({
+        title: "Ошибка",
+        description: parsed.error.errors[0].message,
+        variant: "destructive",
+      });
+      return;
+    }
+    setPreferencesOpen(true);
   };
 
   return (
-    <section id="contact" className="relative section-padding overflow-hidden">
-      {/* Background decorations — no blur on mobile (Safari perf), blur on desktop */}
-      <div className="absolute inset-0 -z-10">
-        <div className={`absolute top-0 left-1/4 w-[50%] h-[60%] rounded-full bg-primary/5 ${isMobile ? "contact-bg-no-blur" : "blur-[120px]"}`} />
-        <div className={`absolute bottom-0 right-1/4 w-[40%] h-[50%] rounded-full bg-secondary/5 ${isMobile ? "contact-bg-no-blur" : "blur-[100px]"}`} />
-      </div>
-
+    <section id="contact" className="relative section-padding bg-background overflow-hidden">
       <div className="container mx-auto">
         <div className="max-w-5xl mx-auto">
           <motion.div
-            className="relative rounded-3xl overflow-hidden"
+            className="relative rounded-3xl overflow-hidden border border-primary/15 tricolor-top shadow-md"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, amount: 0.1, margin: "-20px" }}
             transition={{ duration: 0.5 }}
           >
-            {/* Gradient background card */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-[hsl(0,0%,8%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--secondary)/0.18),transparent_50%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(var(--primary)/0.3),transparent_50%)]" />
-
-            <div className="relative grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 p-5 sm:p-8 lg:p-14 min-w-0">
-              {/* Left — text */}
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 p-6 sm:p-8 lg:p-12 min-w-0">
               <div className="flex flex-col justify-center min-w-0">
-                <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 sm:mb-4 tracking-tight">
-                  Запишись на
+                <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-3 sm:mb-4 tracking-tight">
+                  Начни учить
                   <br />
-                  пробный урок
+                  французский
                 </h2>
-                <p className="text-white/70 text-xl mb-10">
-                  Менеджер свяжется и запишет на бесплатное занятие
+                <p className="text-muted-foreground text-lg sm:text-xl mb-8 sm:mb-10 leading-relaxed">
+                  Расскажем про формат и подберём программу
                 </p>
 
                 <div className="space-y-4">
                   {perks.map((p) => (
-                    <div key={p.text} className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
-                        <p.icon size={20} className="text-secondary" />
+                    <div key={p.text} className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <p.icon size={20} className="text-primary" />
                       </div>
-                      <span className="text-base text-white/80">{p.text}</span>
+                      <span className="text-base text-foreground/85 pt-2">{p.text}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Right — form */}
               <div className="flex items-center min-w-0">
-                <div className="bg-card rounded-2xl p-6 sm:p-8 lg:p-10 shadow-2xl w-full min-w-0">
-                  {submitted ? (
-                    <div className="text-center py-8">
-                      <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle size={32} className="text-secondary" />
-                      </div>
-                      <h3 className="font-display text-xl font-bold text-foreground mb-2">Спасибо!</h3>
-                      <p className="text-muted-foreground text-sm">Мы свяжемся с вами в ближайшее время.</p>
+                {submitted ? (
+                  <div className="text-center py-8 w-full">
+                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle size={32} className="text-primary" />
                     </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="text-center mb-3">
-                        <p className="text-base font-semibold text-foreground">Оставь заявку</p>
-                        <p className="text-sm text-muted-foreground">и мы с тобой свяжемся</p>
-                      </div>
+                    <h3 className="font-display text-xl font-bold text-foreground mb-2">Спасибо!</h3>
+                    <p className="text-muted-foreground text-sm">Мы свяжемся с вами в ближайшее время.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleBasicContinue} className="space-y-6 w-full min-w-0">
+                    <div className="mb-1">
+                      <p className="text-base font-semibold text-foreground">Оставь заявку</p>
+                      <p className="text-sm text-muted-foreground">и мы с тобой свяжемся</p>
+                    </div>
 
-                      <div>
-                        <Label htmlFor="name" className="text-base font-medium">Как тебя зовут?</Label>
-                        <Input
-                          id="name"
-                          placeholder="Твое имя"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="mt-2 rounded-xl h-14 text-base border-border/60 focus:border-primary"
-                          maxLength={100}
-                        />
-                      </div>
+                    <div>
+                      <Label htmlFor="name" className="text-base font-medium">
+                        Как тебя зовут?
+                      </Label>
+                      <Input
+                        id="name"
+                        placeholder="Твое имя"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="mt-2 rounded-xl h-14 text-base border-primary/20 focus:border-primary"
+                        maxLength={100}
+                        disabled={isSubmitting}
+                      />
+                    </div>
 
-                      <div>
-                        <Label htmlFor="contact-field" className="text-base font-medium">Ник или номер в Telegram</Label>
-                        <Input
-                          id="contact-field"
-                          placeholder="@username или +7 999 999-99-99"
-                          value={contact}
-                          onChange={(e) => setContact(e.target.value)}
-                          className="mt-2 rounded-xl h-14 text-base border-border/60 focus:border-primary"
-                          maxLength={200}
-                        />
-                      </div>
+                    <div>
+                      <Label htmlFor="contact-field" className="text-base font-medium">
+                        Ник или номер в Telegram
+                      </Label>
+                      <Input
+                        id="contact-field"
+                        placeholder="@username или +7 999 999-99-99"
+                        value={contact}
+                        onChange={(e) => setContact(e.target.value)}
+                        className="mt-2 rounded-xl h-14 text-base border-primary/20 focus:border-primary"
+                        maxLength={200}
+                        disabled={isSubmitting}
+                      />
+                    </div>
 
-                      <Button
-                        type="submit"
-                        className="w-full rounded-full min-h-[48px] h-14 text-base font-semibold gradient-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 touch-manipulation"
-                        size="lg"
-                      >
-                        Записаться бесплатно
-                        <ArrowRight size={18} className="ml-2" />
-                      </Button>
-                      <p className="text-xs text-center text-muted-foreground">
-                        Нажимая кнопку, вы соглашаетесь с{" "}
-                        <Link to="/privacy" className="underline hover:text-foreground transition-colors">
-                          политикой конфиденциальности
-                        </Link>
-                      </p>
-                    </form>
-                  )}
-                </div>
+                    <Button
+                      type="submit"
+                      className="w-full rounded-full min-h-[48px] h-14 text-base font-semibold gradient-primary hover:opacity-90 transition-opacity touch-manipulation"
+                      size="lg"
+                      disabled={isSubmitting}
+                    >
+                      Отправить заявку
+                      <ArrowRight size={18} className="ml-2" />
+                    </Button>
+                    <p className="text-xs text-center text-muted-foreground">
+                      Нажимая кнопку, вы соглашаетесь с{" "}
+                      <Link to="/privacy" className="underline hover:text-foreground transition-colors">
+                        политикой конфиденциальности
+                      </Link>
+                    </p>
+                  </form>
+                )}
               </div>
             </div>
           </motion.div>
         </div>
       </div>
+
+      <LeadPreferencesModal
+        open={preferencesOpen}
+        onOpenChange={setPreferencesOpen}
+        showLevelQuestion
+        isSubmitting={isSubmitting}
+        onSkip={() => submitLead(EMPTY_LEAD_PREFERENCES)}
+        onSubmit={submitLead}
+      />
     </section>
   );
 }

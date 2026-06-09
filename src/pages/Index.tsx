@@ -1,7 +1,7 @@
 import { HeroSection } from "@/components/HeroSection";
 import { Navbar } from "@/components/Navbar";
+import { SectionDivider } from "@/components/brand/SectionDivider";
 import { lazy, Suspense, useEffect, type ComponentType } from "react";
-import { WaveDivider } from "@/components/Decorations";
 import { lazyRetry } from "@/utils/lazy-retry";
 
 const lazyLoad = (importFn: () => Promise<{ default: ComponentType<unknown> }>) =>
@@ -20,7 +20,7 @@ const TrustMarquee = lazyLoad(() => import("@/components/TrustMarquee").then((m)
 const SECTION_FALLBACK = <div className="section-padding min-h-[200px]" aria-hidden />;
 const MARQUEE_FALLBACK = <div className="py-8 sm:py-10 border-y border-border/40 bg-muted/30 min-h-[3rem]" aria-hidden />;
 
-const PAGE_TITLE = "Deshar School — Английский с нуля за 4 месяца";
+const PAGE_TITLE = "bonjour жи есть — Французский с нуля за 4 месяца";
 
 const Index = () => {
   useEffect(() => {
@@ -39,27 +39,27 @@ const Index = () => {
         <Suspense fallback={SECTION_FALLBACK}>
           <AboutSection />
         </Suspense>
-        <WaveDivider className="[&_path]:fill-muted/40" />
+        <SectionDivider />
 
         <Suspense fallback={SECTION_FALLBACK}>
           <TeachersSection />
         </Suspense>
-        <WaveDivider flip className="[&_path]:fill-muted/40" />
+        <SectionDivider />
 
         <Suspense fallback={SECTION_FALLBACK}>
           <PricingSection />
         </Suspense>
-        <WaveDivider />
+        <SectionDivider />
 
         <Suspense fallback={SECTION_FALLBACK}>
           <ReviewsSection />
         </Suspense>
-        <WaveDivider flip className="[&_path]:fill-muted/40" />
+        <SectionDivider />
 
         <Suspense fallback={SECTION_FALLBACK}>
           <FAQSection />
         </Suspense>
-        <WaveDivider />
+        <SectionDivider />
 
         <Suspense fallback={SECTION_FALLBACK}>
           <ContactSection />

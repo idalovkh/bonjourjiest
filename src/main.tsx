@@ -10,7 +10,7 @@ installRuntimeGuard();
 
 // Build version for cache/debug verification (only when ?debug=1)
 if (typeof __BUILD_TS__ !== "undefined" && new URLSearchParams(location.search).get("debug") === "1") {
-  console.log("[deshar] build:", __BUILD_TS__);
+  console.log("[bonjourjiest] build:", __BUILD_TS__);
 }
 
 const rootEl = document.getElementById("root");

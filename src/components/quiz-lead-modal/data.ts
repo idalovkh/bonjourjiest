@@ -2,27 +2,16 @@ import { z } from "zod";
 import type { Question } from "./model";
 
 export const QUESTIONS: Question[] = [
-  { id: 1, text: "She ___ to the gym every day.", topic: "Present Simple", options: [{ id: "a", text: "go" }, { id: "b", text: "goes" }, { id: "c", text: "going" }], correct: "b" },
-  { id: 2, text: "They ___ dinner right now.", topic: "Present Continuous", options: [{ id: "a", text: "have" }, { id: "b", text: "are having" }, { id: "c", text: "having" }], correct: "b" },
-  { id: 3, text: "I ___ my keys yesterday.", topic: "Past Simple", options: [{ id: "a", text: "lose" }, { id: "b", text: "lost" }, { id: "c", text: "have lost" }], correct: "b" },
-  { id: 4, text: "She ___ already finished her homework.", topic: "Present Perfect", options: [{ id: "a", text: "did" }, { id: "b", text: "has" }, { id: "c", text: "have" }], correct: "b" },
-  { id: 5, text: "We ___ in this city since 2010.", topic: "Present Perfect", options: [{ id: "a", text: "live" }, { id: "b", text: "lived" }, { id: "c", text: "have lived" }], correct: "c" },
-  { id: 6, text: "If I ___ rich, I would travel the world.", topic: "Second Conditional", options: [{ id: "a", text: "am" }, { id: "b", text: "was" }, { id: "c", text: "would be" }], correct: "c" },
-  { id: 7, text: "He ___ to London next week.", topic: "Future (plans)", options: [{ id: "a", text: "goes" }, { id: "b", text: "is going" }, { id: "c", text: "go" }], correct: "b" },
-  { id: 8, text: "There isn’t ___ milk in the fridge.", topic: "Quantifiers", options: [{ id: "a", text: "some" }, { id: "b", text: "any" }, { id: "c", text: "a" }], correct: "b" },
-  { id: 9, text: "I have ___ friends in this city.", topic: "Countable nouns", options: [{ id: "a", text: "much" }, { id: "b", text: "many" }, { id: "c", text: "little" }], correct: "b" },
-  { id: 10, text: "There is ___ water left.", topic: "Uncountable nouns", options: [{ id: "a", text: "few" }, { id: "b", text: "little" }, { id: "c", text: "many" }], correct: "b" },
-  { id: 11, text: "He ___ play the piano when he was a child.", topic: "Past ability", options: [{ id: "a", text: "can" }, { id: "b", text: "could" }, { id: "c", text: "must" }], correct: "b" },
-  { id: 12, text: "You ___ wear a seatbelt. It’s the law.", topic: "Obligation", options: [{ id: "a", text: "can" }, { id: "b", text: "must" }, { id: "c", text: "may" }], correct: "b" },
-  { id: 13, text: "She asked me where I ___.", topic: "Reported Speech", options: [{ id: "a", text: "live" }, { id: "b", text: "lived" }, { id: "c", text: "am living" }], correct: "b" },
-  { id: 14, text: "He ___ go to the party if he finishes work.", topic: "Possibility", options: [{ id: "a", text: "might" }, { id: "b", text: "must" }, { id: "c", text: "should" }], correct: "a" },
-  { id: 15, text: "If it rains, we ___.", topic: "First Conditional", options: [{ id: "a", text: "stay" }, { id: "b", text: "will stay" }, { id: "c", text: "stayed" }], correct: "b" },
-  { id: 16, text: "If I had more money, I ___ a car.", topic: "Second Conditional", options: [{ id: "a", text: "buy" }, { id: "b", text: "would buy" }, { id: "c", text: "will buy" }], correct: "b" },
-  { id: 17, text: "I saw ___ interesting film yesterday.", topic: "Articles", options: [{ id: "a", text: "a" }, { id: "b", text: "an" }, { id: "c", text: "the" }], correct: "b" },
-  { id: 18, text: "___ sun rises in the east.", topic: "Articles", options: [{ id: "a", text: "A" }, { id: "b", text: "The" }, { id: "c", text: "—" }], correct: "b" },
-  { id: 19, text: "He ___ me that he was tired.", topic: "Tell vs Say", options: [{ id: "a", text: "said" }, { id: "b", text: "told" }, { id: "c", text: "spoke" }], correct: "b" },
-  { id: 20, text: "Please ___ at the board.", topic: "Look vs See", options: [{ id: "a", text: "see" }, { id: "b", text: "watch" }, { id: "c", text: "look" }], correct: "c" },
-  { id: 21, text: "I’m not interested ___ politics.", topic: "Prepositions", options: [{ id: "a", text: "on" }, { id: "b", text: "in" }, { id: "c", text: "at" }], correct: "b" },
+  { id: 1, text: "Je ___ français tous les jours.", topic: "Présent", options: [{ id: "a", text: "parle" }, { id: "b", text: "parles" }, { id: "c", text: "parler" }], correct: "a" },
+  { id: 2, text: "Il ___ professeur.", topic: "être / avoir", options: [{ id: "a", text: "est" }, { id: "b", text: "es" }, { id: "c", text: "suis" }], correct: "a" },
+  { id: 3, text: "Nous ___ deux chats.", topic: "être / avoir", options: [{ id: "a", text: "avons" }, { id: "b", text: "avez" }, { id: "c", text: "as" }], correct: "a" },
+  { id: 4, text: "Hier, j'___ une pizza.", topic: "Passé composé", options: [{ id: "a", text: "ai mangé" }, { id: "b", text: "mange" }, { id: "c", text: "mangeais" }], correct: "a" },
+  { id: 5, text: "Quand j'étais petit, je ___ au foot.", topic: "Imparfait", options: [{ id: "a", text: "jouais" }, { id: "b", text: "joué" }, { id: "c", text: "jouer" }], correct: "a" },
+  { id: 6, text: "Demain, nous ___ à Paris.", topic: "Futur proche", options: [{ id: "a", text: "allons partir" }, { id: "b", text: "partons" }, { id: "c", text: "partirons" }], correct: "a" },
+  { id: 7, text: "Elle ___ déjà fini ses devoirs.", topic: "Passé composé", options: [{ id: "a", text: "a" }, { id: "b", text: "as" }, { id: "c", text: "est" }], correct: "a" },
+  { id: 8, text: "Il n'y a ___ lait dans le frigo.", topic: "Négation / partitif", options: [{ id: "a", text: "pas de" }, { id: "b", text: "de le" }, { id: "c", text: "du" }], correct: "a" },
+  { id: 9, text: "J'ai ___ amis dans cette ville.", topic: "Quantificateurs", options: [{ id: "a", text: "beaucoup d'" }, { id: "b", text: "peu de le" }, { id: "c", text: "des le" }], correct: "a" },
+  { id: 10, text: "Il reste ___ eau.", topic: "Partitif", options: [{ id: "a", text: "peu d'" }, { id: "b", text: "des" }, { id: "c", text: "les" }], correct: "a" },
 ];
 
 export const formSchema = z.object({
@@ -31,26 +20,26 @@ export const formSchema = z.object({
 });
 
 export function getLevel(score: number): string {
-  if (score <= 3) return "Pre-A1";
-  if (score <= 7) return "A1";
-  if (score <= 12) return "A2";
-  if (score <= 16) return "B1";
-  if (score <= 19) return "B2";
+  if (score <= 1) return "Pre-A1";
+  if (score <= 3) return "A1";
+  if (score <= 5) return "A2";
+  if (score <= 7) return "B1";
+  if (score <= 9) return "B2";
   return "B2+";
 }
 
 export function getTip(level: string): string {
   switch (level) {
     case "Pre-A1":
-      return "Начни с базы: to be, простые конструкции, короткие фразы и базовый словарный запас. Регулярная практика на коротких диалогах даст быстрый рост.";
+      return "Начни с базы: être/avoir, présent des verbes -er, короткие фразы и базовый словарный запас. Регулярная практика на коротких диалогах даст быстрый рост.";
     case "A1":
-      return "Ты уже можешь строить простые фразы. Дальше важно закрепить Present Simple/Continuous, формы глаголов и артикли, чтобы говорить увереннее и точнее.";
+      return "Ты уже можешь строить простые фразы. Дальше важно закрепить présent, согласование прилагательных и артикли (le/la/un/une), чтобы говорить увереннее.";
     case "A2":
-      return "Ты уже можешь объясниться в простых ситуациях. Но пока не хватает точности: чаще всего путаются Present Perfect, предлоги и much/many/few/little. Эти темы стоит прокачать в первую очередь.";
+      return "Ты уже можешь объясниться в простых ситуациях. Но пока не хватает точности: чаще всего путаются passé composé и imparfait, partitif и предлоги. Эти темы стоит прокачать в первую очередь.";
     case "B1":
-      return "Хороший рабочий уровень. Следующий шаг — прокачать conditionals, reported speech и точность лексики, чтобы звучать естественно и уверенно в реальном разговоре.";
+      return "Хороший рабочий уровень. Следующий шаг — прокачать conditionnel, discours indirect и точность лексики, чтобы звучать естественно в реальном разговоре.";
     case "B2":
-      return "Сильный уровень. Для перехода выше фокусируйся на естественности: устойчивые выражения, сочетаемость слов и гибкость речи в сложных контекстах.";
+      return "Сильный уровень. Для перехода выше фокусируйся на естественности: устойчивые выражения, subjonctif и гибкость речи в сложных контекстах.";
     default:
       return "Отличный результат. Дальше — движение к C1: сложные структуры, академическая и профессиональная лексика, живая разговорная практика с обратной связью.";
   }
@@ -60,37 +49,37 @@ export function getLevelDescription(level: string): { title: string; description
   switch (level) {
     case "Pre-A1":
       return {
-        title: "Pre-A1 (0-3)",
+        title: "Pre-A1 (0-1)",
         description:
-          "Ты только начинаешь путь в английском. Пока комфортнее всего с отдельными словами, базовыми конструкциями и очень простыми фразами.",
+          "Ты только начинаешь путь во французском. Пока комфортнее всего с отдельными словами, базовыми конструкциями и очень простыми фразами.",
       };
     case "A1":
       return {
-        title: "A1 (4-7)",
+        title: "A1 (2-3)",
         description:
           "Ты понимаешь и строишь простые фразы на знакомые темы: о себе, семье, работе и повседневных ситуациях. Для уверенности нужно расширять базовую грамматику и словарь.",
       };
     case "A2":
       return {
-        title: "A2 (8-12)",
+        title: "A2 (4-5)",
         description:
           "Ты уже можешь говорить о прошлом и настоящем, объясниться в простых ситуациях и поддержать базовый разговор. В целом тебя понимают, даже если пока есть ошибки.",
       };
     case "B1":
       return {
-        title: "B1 (13-16)",
+        title: "B1 (6-7)",
         description:
           "У тебя уже рабочий разговорный уровень. Ты способен обсуждать знакомые темы, описывать опыт и планы, а также понимать основную мысль живой речи и текстов.",
       };
     case "B2":
       return {
-        title: "B2 (17-19)",
+        title: "B2 (8-9)",
         description:
           "Ты уверенно общаешься на большинство бытовых и рабочих тем, понимаешь сложные тексты и можешь аргументировать свою точку зрения. Речь уже достаточно гибкая и естественная.",
       };
     default:
       return {
-        title: "B2+ (20-21)",
+        title: "B2+ (10)",
         description:
           "Очень сильный результат. Ты свободно используешь сложные конструкции, хорошо понимаешь контекст и можешь говорить почти без заметных ограничений в обычном общении.",
       };

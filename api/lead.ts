@@ -5,9 +5,79 @@ import { SocksProxyAgent } from "socks-proxy-agent";
 
 const NAME_MAX = 100;
 const CONTACT_MAX = 200;
+const OPTIONAL_FIELD_MAX = 50;
+
+const STUDY_FREQUENCY_LABELS: Record<string, string> = {
+  "1": "1 раз в неделю",
+  "2": "2 раза в неделю",
+  "3": "3 раза в неделю",
+  "4plus": "4+ раз в неделю",
+};
+
+const PREFERRED_TIME_LABELS: Record<string, string> = {
+  morning: "Утро",
+  day: "День",
+  evening: "Вечер",
+  weekend: "Выходные",
+};
+
+const CURRENT_LEVEL_LABELS: Record<string, string> = {
+  zero: "Нулевой",
+  beginner: "Начальный (A1–A2)",
+  intermediate: "Средний (B1–B2)",
+  advanced: "Продвинутый (C1+)",
+};
+
+interface LeadPreferences {
+  studyFrequency: string;
+  preferredTime: string;
+  currentLevel: string;
+}
 
 function trim(s: unknown): string {
   return typeof s === "string" ? s.trim() : "";
+}
+
+function normalizeOptionalSlug(value: unknown, labels: Record<string, string>): string {
+  const slug = trim(value);
+  if (!slug.length || slug.length > OPTIONAL_FIELD_MAX) return "";
+  return labels[slug] ? slug : "";
+}
+
+function parseLeadPreferences(body: Record<string, unknown>): LeadPreferences {
+  return {
+    studyFrequency: normalizeOptionalSlug(body.studyFrequency, STUDY_FREQUENCY_LABELS),
+    preferredTime: normalizeOptionalSlug(body.preferredTime, PREFERRED_TIME_LABELS),
+    currentLevel: normalizeOptionalSlug(body.currentLevel, CURRENT_LEVEL_LABELS),
+  };
+}
+
+function buildPreferenceLines(preferences: LeadPreferences): string[] {
+  const lines: string[] = [];
+  if (preferences.studyFrequency) {
+    lines.push(`Частота: ${escapeHtml(STUDY_FREQUENCY_LABELS[preferences.studyFrequency])}`);
+  }
+  if (preferences.preferredTime) {
+    lines.push(`Удобное время: ${escapeHtml(PREFERRED_TIME_LABELS[preferences.preferredTime])}`);
+  }
+  if (preferences.currentLevel) {
+    lines.push(`Уровень: ${escapeHtml(CURRENT_LEVEL_LABELS[preferences.currentLevel])}`);
+  }
+  return lines;
+}
+
+function buildPreferenceTextLines(preferences: LeadPreferences): string[] {
+  const lines: string[] = [];
+  if (preferences.studyFrequency) {
+    lines.push(`Частота: ${STUDY_FREQUENCY_LABELS[preferences.studyFrequency]}`);
+  }
+  if (preferences.preferredTime) {
+    lines.push(`Удобное время: ${PREFERRED_TIME_LABELS[preferences.preferredTime]}`);
+  }
+  if (preferences.currentLevel) {
+    lines.push(`Уровень: ${CURRENT_LEVEL_LABELS[preferences.currentLevel]}`);
+  }
+  return lines;
 }
 
 /** Only Telegram `fetch` uses this: `http(s)://user:pass@host:port` or `socks5://...` from `TELEGRAM_PROXY_URL`. */
@@ -155,7 +225,7 @@ function getLanguageLabel(landing: string): string {
   if (normalized === "FR" || normalized === "FRENCH") return "🇫🇷 Французский";
   if (normalized === "ES" || normalized === "SPANISH") return "🇪🇸 Испанский";
   if (normalized === "EN" || normalized === "EN-US" || normalized === "US") return "🇺🇸 Английский (US)";
-  return "🇺🇸 Английский (US)";
+  return "🇫🇷 Французский";
 }
 
 function buildTelegramLeadText(params: {
@@ -166,6 +236,7 @@ function buildTelegramLeadText(params: {
   scoreText: string | number;
   totalText: string | number;
   level: string;
+  preferences?: LeadPreferences;
 }): string {
   const hasQuizResult = params.isQuiz && params.scoreText !== "—" && params.totalText !== "—";
   const resultText = hasQuizResult ? `${params.scoreText}/${params.totalText}` : "—";
@@ -175,6 +246,9 @@ function buildTelegramLeadText(params: {
       `Уровень: ${escapeHtml(params.level || "—")}`,
     ]
     : [];
+  const preferenceLines = params.preferences
+    ? buildPreferenceLines(params.preferences)
+    : [];
 
   return [
     "🆕 Заявка с сайта",
@@ -182,6 +256,7 @@ function buildTelegramLeadText(params: {
     `Имя: ${escapeHtml(params.name)}`,
     `Контакт: ${escapeHtml(params.contact)}`,
     ...quizLines,
+    ...preferenceLines,
   ].join("\n");
 }
 
@@ -229,7 +304,7 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
 }
 
 /** Sends email if SMTP/MAIL env vars are set; no-op otherwise. */
-async function sendEmail(name: string, contact: string): Promise<void> {
+async function sendEmail(name: string, contact: string, preferences?: LeadPreferences): Promise<void> {
   const host = process.env.SMTP_HOST;
   const port = process.env.SMTP_PORT;
   const user = process.env.SMTP_USER;
@@ -250,8 +325,21 @@ async function sendEmail(name: string, contact: string): Promise<void> {
   });
 
   const subject = `Заявка с лендинга: ${name}`;
-  const text = `Новая заявка на пробный урок\n\nИмя: ${name}\nКонтакт: ${contact}`;
-  const html = `<p>Новая заявка на пробный урок</p><p><strong>Имя:</strong> ${escapeHtml(name)}</p><p><strong>Контакт:</strong> ${escapeHtml(contact)}</p>`;
+  const preferenceTextLines = preferences ? buildPreferenceTextLines(preferences) : [];
+  const text = [
+    "Новая заявка на пробный урок",
+    "",
+    `Имя: ${name}`,
+    `Контакт: ${contact}`,
+    ...preferenceTextLines,
+  ].join("\n");
+  const preferenceHtml = preferenceTextLines
+    .map((line) => {
+      const [label, ...rest] = line.split(": ");
+      return `<p><strong>${escapeHtml(label)}:</strong> ${escapeHtml(rest.join(": "))}</p>`;
+    })
+    .join("");
+  const html = `<p>Новая заявка на пробный урок</p><p><strong>Имя:</strong> ${escapeHtml(name)}</p><p><strong>Контакт:</strong> ${escapeHtml(contact)}</p>${preferenceHtml}`;
 
   await transporter.sendMail({ from, to, subject, text, html });
 }
@@ -281,6 +369,7 @@ export default async function handler(req: Request, res: Response) {
   const quizScore = toNumber(body.quizScore);
   const quizTotal = toNumber(body.quizTotal);
   const quizDetails = toQuizDetails(body.quizDetails);
+  const leadPreferences = parseLeadPreferences(body);
 
   if (source === "quiz_complete_no_lead") {
     console.info(
@@ -312,6 +401,7 @@ export default async function handler(req: Request, res: Response) {
       scoreText: quizScoreText,
       totalText: quizTotalText,
       level: quizLevelText,
+      preferences: leadPreferences,
     });
 
     if (source === "quiz_request") {
@@ -342,7 +432,7 @@ export default async function handler(req: Request, res: Response) {
       await sendTelegram(telegramText);
     }
     try {
-      await sendEmail(name, contact);
+      await sendEmail(name, contact, leadPreferences);
     } catch (e) {
       // Письмо опционально: не ломаем ответ, заявка уже в Telegram
       let msg = "(delivery failed)";

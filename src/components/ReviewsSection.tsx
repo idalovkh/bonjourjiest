@@ -1,25 +1,14 @@
 import { memo, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { sectionTransition } from "@/lib/transitions";
-import { Star, Quote } from "lucide-react";
+import { Star } from "lucide-react";
 
+/** Заполните name и text для каждого отзыва */
 const reviews = [
-  {
-    name: "Алексей",
-    text: "Отличная школа! Преподаватели действительно учат говорить, а не просто делать упражнения. За 4 месяца заговорил на английском!",
-  },
-  {
-    name: "Мария",
-    text: "Современная платформа и удобные методы заучивания слов. Рекомендую всем, кто хочет выучить английский!",
-  },
-  {
-    name: "Ирина",
-    text: "Аттестованные Cambridge учителя — это чувствуется в качестве обучения. Очень довольна результатами!",
-  },
-  {
-    name: "Дмитрий",
-    text: "Начинал с нуля, а сейчас свободно общаюсь с иностранными коллегами. Школа работает с 2016 года — опыт виден!",
-  },
+  { name: "", text: "" },
+  { name: "", text: "" },
+  { name: "", text: "" },
+  { name: "", text: "" },
 ];
 
 const ReviewCard = memo(function ReviewCard({
@@ -36,14 +25,19 @@ const ReviewCard = memo(function ReviewCard({
       data-suppress-hover-during-scroll
       className={`shrink-0 w-[280px] max-w-[calc(100vw-2rem)] sm:w-[380px] bg-card rounded-2xl border border-border/40 p-5 sm:p-8 relative can-hover:hover:border-primary/20 can-hover:hover:shadow-lg can-hover:hover:-translate-y-1 transition-[transform,box-shadow,border-color] duration-300 h-full ${className}`}
     >
-      <Quote size={28} className="text-primary/10 absolute top-6 right-6" />
       <div className="flex gap-1 mb-4">
         {[...Array(5)].map((_, j) => (
           <Star key={j} size={16} className="fill-primary/80 text-primary/80" />
         ))}
       </div>
-      <p className="text-base text-foreground/85 mb-5 leading-relaxed">"{text}"</p>
-      <p className="text-base font-semibold text-foreground">{name}</p>
+      <div className="min-h-[5.5rem] mb-5">
+        {text ? (
+          <p className="text-base text-foreground/85 leading-relaxed">&ldquo;{text}&rdquo;</p>
+        ) : null}
+      </div>
+      <div className="min-h-[1.5rem]">
+        {name ? <p className="text-base font-semibold text-foreground">{name}</p> : null}
+      </div>
     </div>
   );
 });
@@ -66,7 +60,7 @@ export function ReviewsSection() {
   }, []);
 
   return (
-    <section id="reviews" className="section-padding bg-muted/40 overflow-hidden">
+    <section id="reviews" className="section-padding bg-background overflow-hidden">
       <div className="container mx-auto">
         <motion.div
           className="text-center max-w-2xl mx-auto mb-14"
@@ -93,7 +87,7 @@ export function ReviewsSection() {
           <div className="overflow-hidden">
             <div ref={trackRef} className="flex gap-3 w-max animate-reviews-marquee motion-reduce:animate-none group-hover:[animation-play-state:paused]">
               {duplicatedReviews.map((r, i) => (
-                <ReviewCard key={`${r.name}-${i}`} name={r.name} text={r.text} />
+                <ReviewCard key={i} name={r.name} text={r.text} />
               ))}
             </div>
           </div>

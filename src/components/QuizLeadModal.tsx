@@ -8,12 +8,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import logo from "@/assets/logo.webp";
 import { formSchema, getLevel, QUESTIONS, shuffleArray } from "@/components/quiz-lead-modal/data";
 import { IntroScreen } from "@/components/quiz-lead-modal/IntroScreen";
 import type { OptionId } from "@/components/quiz-lead-modal/model";
 import { QuestionScreen } from "@/components/quiz-lead-modal/QuestionScreen";
 import { ResultsScreen } from "@/components/quiz-lead-modal/ResultsScreen";
+import { LeadPreferencesModal } from "@/components/LeadPreferencesModal";
+import { BrandName } from "@/components/brand/BrandName";
+import { EMPTY_LEAD_PREFERENCES, type LeadPreferences } from "@/lib/lead-preferences";
 
 const QUIZ_PROGRESS_STORAGE_KEY = "quiz-progress-v1";
 
@@ -50,6 +52,7 @@ export function QuizLeadModal() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [sending, setSending] = useState(false);
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
   const [progressHydrated, setProgressHydrated] = useState(false);
   const quizCompletionTrackedRef = useRef(false);
   const quizLeadSubmittedRef = useRef(false);
@@ -155,6 +158,7 @@ export function QuizLeadModal() {
     setName("");
     setContact("");
     setSending(false);
+    setPreferencesOpen(false);
     setAttemptSeed((prev) => prev + 1);
     setStarted(false);
     quizCompletionTrackedRef.current = false;
@@ -179,7 +183,7 @@ export function QuizLeadModal() {
 
     const payload = JSON.stringify({
       source: "quiz_complete_no_lead",
-      landing: "EN",
+      landing: "FR",
       quizScore: result.score,
       quizTotal: total,
     });
@@ -200,8 +204,21 @@ export function QuizLeadModal() {
     });
   };
 
-  const handleSendResult = async (e: React.FormEvent) => {
+  const handleSendResult = (e: React.FormEvent) => {
     e.preventDefault();
+    const parsed = formSchema.safeParse({ name, contact });
+    if (!parsed.success) {
+      toast({
+        title: "Ошибка",
+        description: parsed.error.errors[0].message,
+        variant: "destructive",
+      });
+      return;
+    }
+    setPreferencesOpen(true);
+  };
+
+  const submitQuizLead = async (preferences: LeadPreferences) => {
     const parsed = formSchema.safeParse({ name, contact });
     if (!parsed.success) {
       toast({
@@ -222,11 +239,14 @@ export function QuizLeadModal() {
           name: parsed.data.name,
           contact: parsed.data.contact,
           source: "quiz_request",
-          landing: "EN",
+          landing: "FR",
           quizScore: result.score,
           quizLevel: result.level,
           quizTotal: total,
           weakTopics: result.wrongTopics,
+          studyFrequency: preferences.studyFrequency,
+          preferredTime: preferences.preferredTime,
+          currentLevel: preferences.currentLevel,
           quizDetails: randomizedQuestions.map((q) => {
             const selectedId = answers[q.id];
             const selectedOption = q.options.find((option) => option.id === selectedId);
@@ -255,9 +275,11 @@ export function QuizLeadModal() {
       if (globalThis.window !== undefined) {
         globalThis.localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
       }
+      setPreferencesOpen(false);
       setOpen(false);
       handleRestart();
     } catch (error) {
+      quizLeadSubmittedRef.current = false;
       toast({
         title: "Ошибка отправки",
         description: error instanceof Error ? error.message : "Попробуйте еще раз",
@@ -271,14 +293,15 @@ export function QuizLeadModal() {
   const progressPercent = Math.round(((step + 1) / total) * 100);
   const accuracy = Math.round((result.score / total) * 100);
   const nextLevelTarget =
-    result.score <= 3 ? { level: "A1", score: 4 }
-      : result.score <= 7 ? { level: "A2", score: 8 }
-      : result.score <= 12 ? { level: "B1", score: 13 }
-      : result.score <= 16 ? { level: "B2", score: 17 }
-      : result.score <= 19 ? { level: "B2+", score: 20 }
+    result.score <= 1 ? { level: "A1", score: 2 }
+      : result.score <= 3 ? { level: "A2", score: 4 }
+      : result.score <= 5 ? { level: "B1", score: 6 }
+      : result.score <= 7 ? { level: "B2", score: 8 }
+      : result.score <= 9 ? { level: "B2+", score: 10 }
       : null;
 
   return (
+    <>
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
@@ -293,37 +316,29 @@ export function QuizLeadModal() {
     >
       <DialogTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="lg"
-          className="rounded-full text-base sm:text-lg px-8 sm:px-10 min-h-[48px] h-14 border border-primary/40 bg-background/80 text-foreground hover:bg-primary/10 hover:border-primary/60 touch-manipulation"
+          className="rounded-full text-base sm:text-lg px-8 sm:px-10 min-h-[48px] h-14 border-border bg-white text-foreground hover:bg-muted/60 touch-manipulation"
         >
-          УЗНАТЬ СВОЙ УРОВЕНЬ
+          Узнай свой уровень
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="gap-0 flex max-h-[calc(100dvh-2.5rem)] w-[calc(100%-1.5rem)] max-w-2xl flex-col min-h-0 overflow-hidden rounded-xl border-primary/20 bg-gradient-to-br from-background via-background to-secondary/10 p-0 left-4 right-4 top-6 translate-x-0 translate-y-0 sm:left-[50%] sm:right-auto sm:top-[50%] sm:w-full sm:translate-x-[-50%] sm:translate-y-[-50%] sm:max-h-[90dvh] sm:rounded-lg">
+      <DialogContent className="gap-0 flex max-h-[calc(100dvh-2.5rem)] w-[calc(100%-1.5rem)] max-w-2xl flex-col min-h-0 overflow-hidden rounded-xl border-border/60 bg-background p-0 left-4 right-4 top-6 translate-x-0 translate-y-0 sm:left-[50%] sm:right-auto sm:top-[50%] sm:w-full sm:translate-x-[-50%] sm:translate-y-[-50%] sm:max-h-[90dvh] sm:rounded-lg">
         <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg">
-            <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
-            <div className="absolute -bottom-20 -left-16 h-52 w-52 rounded-full bg-secondary/20 blur-3xl" />
-          </div>
-
           <div className="relative z-[1] flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-6 sm:p-7 sm:min-h-[380px]">
             <DialogHeader className="relative">
               <div className="flex justify-center">
-                <div className="shrink-0 flex items-center gap-2.5">
-                  <img src={logo} alt="Deshar School" className="h-7 w-auto rounded-xl ny-owl-tint" width={140} height={36} decoding="async" />
-                  <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">Deshar School</span>
-                </div>
+                <BrandName size="sm" layout="stacked" />
               </div>
               {!started && (
                 <div className="mt-3 space-y-2 text-center">
                   <p className="mx-auto inline-flex items-center rounded-md border border-border/60 bg-transparent px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                     Экспресс-диагностика уровня
                   </p>
-                  <DialogTitle className="text-2xl sm:text-3xl">Определи свой уровень английского за 3 минуты</DialogTitle>
+                  <DialogTitle className="text-2xl sm:text-3xl">Определи свой уровень французского за 3 минуты</DialogTitle>
                   <p className="text-base sm:text-lg text-muted-foreground">
-                    21 вопрос, моментальный результат и персональные рекомендации по обучению.
+                    10 вопросов, моментальный результат и персональные рекомендации по обучению.
                   </p>
                 </div>
               )}
@@ -369,5 +384,15 @@ export function QuizLeadModal() {
         </div>
       </DialogContent>
     </Dialog>
+
+      <LeadPreferencesModal
+        open={preferencesOpen}
+        onOpenChange={setPreferencesOpen}
+        showLevelQuestion={false}
+        isSubmitting={sending}
+        onSkip={() => submitQuizLead(EMPTY_LEAD_PREFERENCES)}
+        onSubmit={submitQuizLead}
+      />
+    </>
   );
 }

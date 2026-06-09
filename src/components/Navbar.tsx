@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useScrollY, useBodyScrollLock } from "@/hooks/use-scroll";
 import { useIsMobile } from "@/hooks/use-mobile";
-import logo from "@/assets/logo.webp";
+import { BrandName } from "@/components/brand/BrandName";
 
 const navLinks = [
   { href: "#about", label: "О школе" },
@@ -40,11 +40,8 @@ export function Navbar() {
               : "bg-card/80 backdrop-blur-lg shadow-sm border border-border/30"
         }`}
       >
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={logo} alt="Deshar School" className="h-7 w-auto rounded-xl ny-owl-tint" width={140} height={36} decoding="async" fetchPriority="high" />
-          <span className="text-sm font-bold text-foreground tracking-tight hidden sm:inline">
-            Deshar School
-          </span>
+        <Link to="/" className="inline-flex shrink-0">
+          <BrandName size="xs" layout="stacked" />
         </Link>
 
         <div className="hidden md:flex items-center gap-7">
@@ -63,7 +60,7 @@ export function Navbar() {
           <Button
             asChild
             size="sm"
-            className="rounded-full px-5 h-9 gradient-primary text-xs font-semibold shadow-sm hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-200"
+            className="rounded-full px-5 h-9 gradient-primary text-xs font-semibold hover:opacity-90 transition-opacity"
           >
             <a href="#contact">Записаться</a>
           </Button>

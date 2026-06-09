@@ -31,7 +31,7 @@ export function FloatingContact() {
                 <Button
                   asChild
                   size="lg"
-                  className="min-w-[260px] max-w-[calc(100vw-2rem)] sm:min-w-[280px] gradient-primary rounded-full h-14 text-base font-semibold shadow-2xl shadow-primary/30 hover:shadow-xl hover:shadow-primary/35"
+                  className="min-w-[260px] max-w-[calc(100vw-2rem)] sm:min-w-[280px] gradient-primary rounded-full h-14 text-base font-semibold hover:opacity-90 transition-opacity"
                 >
                   <a href="#contact" onClick={() => setOpen(false)}>
                     Бесплатный пробный урок
@@ -44,7 +44,7 @@ export function FloatingContact() {
 
           <button
             onClick={() => setOpen((v) => !v)}
-            className="w-14 h-14 min-w-[48px] min-h-[48px] rounded-full gradient-primary shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 touch-manipulation active:scale-95"
+            className="w-14 h-14 min-w-[48px] min-h-[48px] rounded-full gradient-primary hover:opacity-90 flex items-center justify-center transition-all duration-200 touch-manipulation active:scale-95"
             aria-label={open ? "Закрыть" : "Записаться на пробный урок"}
           >
             <AnimatePresence mode="wait" initial={false}>
