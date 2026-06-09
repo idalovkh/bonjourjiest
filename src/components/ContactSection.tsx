@@ -5,19 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, ArrowRight, MessageCircle, Users, Sparkles } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
+import { BrandMark } from "@/components/brand/BrandMark";
 import { z } from "zod";
 
 const leadSchema = z.object({
   name: z.string().trim().min(1, "Введите имя").max(100),
   contact: z.string().trim().min(1, "Введите контакт").max(200),
 });
-
-const perks = [
-  { icon: MessageCircle, text: "Ответим в Telegram в рабочее время" },
-  { icon: Users, text: "Подберём группу, индивидуально или для ребёнка" },
-  { icon: Sparkles, text: "Поможем с уровнем — можно пройти квиз выше" },
-];
 
 export function ContactSection() {
   const [name, setName] = useState("");
@@ -50,7 +45,7 @@ export function ContactSection() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-    const fallbackError = "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram.";
+    const fallbackError = "Заявка не дошла. Попробуйте ещё раз или напишите нам в Telegram или WhatsApp.";
     fetch("/api/lead/request", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -94,7 +89,7 @@ export function ContactSection() {
         if (mountedRef.current) {
           toast({
             title: "Ошибка отправки",
-            description: "Не удалось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram.",
+            description: "Не удалось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram или WhatsApp.",
             variant: "destructive",
           });
         }
@@ -124,26 +119,17 @@ export function ContactSection() {
             transition={{ duration: 0.5 }}
           >
             <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 p-6 sm:p-8 lg:p-12 min-w-0">
-              <div className="flex flex-col justify-center min-w-0">
+              <div className="flex flex-col justify-center items-center text-center min-w-0">
                 <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-3 sm:mb-4 tracking-tight">
                   Начни учить
                   <br />
                   французский
                 </h2>
-                <p className="text-muted-foreground text-lg sm:text-xl mb-8 sm:mb-10 leading-relaxed">
+                <p className="text-muted-foreground text-lg sm:text-xl mb-8 sm:mb-10 leading-relaxed max-w-md">
                   Расскажем про формат и подберём программу
                 </p>
 
-                <div className="space-y-4">
-                  {perks.map((p) => (
-                    <div key={p.text} className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <p.icon size={20} className="text-primary" />
-                      </div>
-                      <span className="text-base text-foreground/85 pt-2">{p.text}</span>
-                    </div>
-                  ))}
-                </div>
+                <BrandMark size="lg" markClassName="h-24 w-auto sm:h-28" className="justify-center" />
               </div>
 
               <div className="flex items-center min-w-0">
@@ -158,17 +144,17 @@ export function ContactSection() {
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6 w-full min-w-0">
                     <div className="mb-1">
-                      <p className="text-base font-semibold text-foreground">Оставь заявку</p>
-                      <p className="text-sm text-muted-foreground">и мы с тобой свяжемся</p>
+                      <p className="text-base font-semibold text-foreground">Думаешь, сделать или не сделать?</p>
+                      <p className="text-sm text-muted-foreground">Просто взял и сделал.</p>
                     </div>
 
                     <div>
                       <Label htmlFor="name" className="text-base font-medium">
-                        Как тебя зовут?
+                        Кто ты, воин?
                       </Label>
                       <Input
                         id="name"
-                        placeholder="Твое имя"
+                        placeholder="Имя"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="mt-2 rounded-xl h-14 text-base bg-white border-primary/20 focus:border-primary"
@@ -179,7 +165,7 @@ export function ContactSection() {
 
                     <div>
                       <Label htmlFor="contact-field" className="text-base font-medium">
-                        Ник или номер в Telegram
+                        Telegram или WhatsApp
                       </Label>
                       <Input
                         id="contact-field"
@@ -190,6 +176,7 @@ export function ContactSection() {
                         maxLength={200}
                         disabled={isSubmitting}
                       />
+                      <p className="mt-1.5 text-sm text-muted-foreground">@username или номер телефона</p>
                     </div>
 
                     <Button
@@ -198,7 +185,7 @@ export function ContactSection() {
                       size="lg"
                       disabled={isSubmitting}
                     >
-                      Отправить заявку
+                      Полный газ
                       <ArrowRight size={18} className="ml-2" />
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">

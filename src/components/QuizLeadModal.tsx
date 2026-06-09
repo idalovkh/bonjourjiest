@@ -308,7 +308,7 @@ export function QuizLeadModal() {
           <div className="relative z-[1] flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-6 sm:p-7 sm:min-h-[380px]">
             <DialogHeader className="relative">
               <div className="flex justify-center">
-                <BrandMark size="sm" layout="stacked" className="justify-center" />
+                <BrandMark size="lg" layout="stacked" className="justify-center" />
               </div>
               {!started && (
                 <div className="mt-3 space-y-2 text-center">

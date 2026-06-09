@@ -23,21 +23,29 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={transition ?? fadeIn}
           >
-            <BrandMark size="lg" layout="stacked" />
+            <BrandMark size="2xl" layout="stacked" />
           </motion.div>
 
           <motion.h1
-            className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-foreground leading-[1.1] mb-6 sm:mb-8 tracking-tight"
+            className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-foreground leading-[1.1] mb-4 sm:mb-5 tracking-tight"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={transition ?? fadeIn}
           >
-            Научим тебя говорить
+            Хочешь двигаться
             <br />
-            по-французски
-            <br />
-            <span className="gradient-text">с нуля</span>
+            по-французски?
           </motion.h1>
+
+          <motion.p
+            className="text-xl sm:text-2xl text-muted-foreground mb-6 sm:mb-8 leading-snug"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={transition ?? { ...fadeIn, delay: 0.08 }}
+          >
+            А когда{" "}
+            <span className="font-semibold text-primary">не делали?</span>
+          </motion.p>
 
           <motion.div
             className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-4"

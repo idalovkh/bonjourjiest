@@ -30,9 +30,9 @@ export function AboutSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
         >
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-foreground mb-4 tracking-tight">
-            <span className="font-normal">Почему</span>{" "}
-            <BrandName size="inherit" layout="inline" className="font-semibold" />
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-foreground mb-4 tracking-tight flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
+            <span className="font-normal">Почему</span>
+            <BrandName size="inherit" layout="inline" className="text-3xl sm:text-4xl lg:text-5xl" />
           </h2>
         </motion.div>
 

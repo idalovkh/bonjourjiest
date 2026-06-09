@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 type BrandNameProps = {
   className?: string;
-  size?: "xs" | "sm" | "md" | "lg" | "xl" | "inherit";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "inherit";
   layout?: "inline" | "stacked";
 };
 
@@ -14,6 +14,7 @@ const sizeClasses = {
   md: "text-base sm:text-lg",
   lg: "text-lg sm:text-xl",
   xl: "text-xl sm:text-2xl",
+  "2xl": "text-2xl sm:text-3xl",
   inherit: "",
 };
 
@@ -22,7 +23,7 @@ export function BrandName({ className, size = "sm", layout = "inline" }: BrandNa
     return (
       <span
         className={cn(
-          "inline-flex flex-col items-start font-brand font-semibold leading-none tracking-tight",
+          "inline-flex flex-col items-start font-brand font-bold leading-none tracking-tight",
           size !== "inherit" && sizeClasses[size],
           className,
         )}
@@ -34,7 +35,7 @@ export function BrandName({ className, size = "sm", layout = "inline" }: BrandNa
   }
 
   return (
-    <span className={cn("font-brand font-semibold leading-none tracking-tight", size !== "inherit" && sizeClasses[size], className)}>
+    <span className={cn("font-brand font-bold leading-none tracking-tight", size !== "inherit" && sizeClasses[size], className)}>
       <span className="text-secondary">Bonjour</span>
       <span className="text-primary"> жи есть</span>
     </span>

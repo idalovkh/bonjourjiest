@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { drawBrandMarkOnCanvas, loadBrandFont } from "@/lib/brand";
+import logoMarkUrl from "@/assets/brand/logo-mark.png";
 import type { QuizResult } from "./model";
 
 interface AchievementActionProps {
@@ -55,8 +55,6 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
     if (line.trim().length) ctx.fillText(line.trim(), x, cursorY);
   };
 
-  await loadBrandFont(52, 500);
-
   ctx.fillStyle = "#f5f0e8";
   ctx.fillRect(0, 0, width, height);
 
@@ -75,7 +73,15 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  drawBrandMarkOnCanvas(ctx, centerX, 165, 52);
+  const brandMark = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Не удалось загрузить логотип"));
+    image.src = logoMarkUrl;
+  });
+  const markHeight = 210;
+  const markWidth = markHeight * (brandMark.width / brandMark.height);
+  ctx.drawImage(brandMark, centerX - markWidth / 2, 78, markWidth, markHeight);
 
   ctx.beginPath();
   ctx.arc(centerX, 520, 165, 0, Math.PI * 2);

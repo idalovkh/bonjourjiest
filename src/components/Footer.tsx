@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Clock } from "lucide-react";
 import { BrandMark } from "@/components/brand/BrandMark";
-import { BrandName } from "@/components/brand/BrandName";
 import { cn } from "@/lib/utils";
 
 const navColumns = [
@@ -17,7 +16,7 @@ const navColumns = [
   {
     title: "Обучение",
     links: [
-      { label: "Групповые занятия", href: "#pricing" },
+      { label: "Занятия в паре", href: "#pricing" },
       { label: "Для детей", href: "#pricing" },
     ],
   },
@@ -30,7 +29,7 @@ export function Footer({ className }: { className?: string }) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16">
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block mb-5">
-              <BrandMark size="md" layout="stacked" />
+              <BrandMark size="lg" layout="stacked" />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Онлайн-школа французского языка. Аттестован DELF/DALF.
@@ -81,7 +80,12 @@ export function Footer({ className }: { className?: string }) {
         <div className="container mx-auto py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p className="inline-flex flex-wrap items-baseline justify-center gap-x-1 gap-y-0.5 sm:justify-start">
             <span>© {new Date().getFullYear()}</span>
-            <BrandName size="xs" />
+            <a
+              href="https://bonjourjiest.com"
+              className="font-medium text-foreground/80 hover:text-foreground transition-colors"
+            >
+              bonjourjiest.com
+            </a>
             <span>. Все права защищены.</span>
           </p>
           <Link to="/privacy" className="py-2 min-h-[44px] inline-flex items-center hover:text-foreground transition-colors touch-manipulation -my-2">

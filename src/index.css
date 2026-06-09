@@ -173,17 +173,17 @@
   }
 
   .hero-illustration-bg {
-    background-image: url(/hero-background.png);
+    background-image: url(/hero-background.png?v=6);
     background-repeat: no-repeat;
-    background-color: hsl(var(--background));
+    background-color: #ffffff;
     background-size: cover;
     background-position: center right;
   }
 
   .hero-illustration-bg-mobile {
-    background-image: url(/hero-background-mobile.png?v=2);
+    background-image: url(/hero-background-mobile.png?v=6);
     background-repeat: no-repeat;
-    background-color: hsl(var(--background));
+    background-color: #ffffff;
     background-size: cover;
     background-position: right top;
   }
