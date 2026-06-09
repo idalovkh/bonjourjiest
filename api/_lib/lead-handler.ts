@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const NAME_MAX = 100;
 const CONTACT_MAX = 200;

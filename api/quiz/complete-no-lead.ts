@@ -1,1 +1,3 @@
-export { default } from "../_lib/lead-handler";
+import handler from "../_lib/lead-handler";
+
+export default handler;
