@@ -41,7 +41,7 @@ export function Navbar() {
         }`}
       >
         <Link to="/" className="inline-flex shrink-0">
-          <BrandMark size="xs" layout="stacked" />
+          <BrandMark size="sm" layout="stacked" />
         </Link>
 
         <div className="hidden md:flex items-center gap-7">

@@ -1,4 +1,4 @@
-export const BRAND_FONT_FAMILY = '"Cormorant Garamond", Georgia, "Times New Roman", serif';
+export const BRAND_FONT_FAMILY = '"Plus Jakarta Sans", "DM Sans", system-ui, sans-serif';
 
 export const BRAND_NAME = "Bonjour жи есть";
 

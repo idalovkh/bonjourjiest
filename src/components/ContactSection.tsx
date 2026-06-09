@@ -7,8 +7,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, ArrowRight, MessageCircle, Users, Sparkles } from "lucide-react";
 import { z } from "zod";
-import { LeadPreferencesModal } from "@/components/LeadPreferencesModal";
-import { EMPTY_LEAD_PREFERENCES, type LeadPreferences } from "@/lib/lead-preferences";
 
 const leadSchema = z.object({
   name: z.string().trim().min(1, "Введите имя").max(100),
@@ -24,7 +22,6 @@ const perks = [
 export function ContactSection() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
-  const [preferencesOpen, setPreferencesOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const mountedRef = useRef(true);
@@ -37,7 +34,7 @@ export function ContactSection() {
     };
   }, []);
 
-  const submitLead = (preferences: LeadPreferences) => {
+  const submitLead = () => {
     const parsed = leadSchema.safeParse({ name, contact });
     if (!parsed.success) {
       toast({
@@ -62,16 +59,12 @@ export function ContactSection() {
         contact: parsed.data.contact,
         source: "lead_request",
         landing: "FR",
-        studyFrequency: preferences.studyFrequency,
-        preferredTime: preferences.preferredTime,
-        currentLevel: preferences.currentLevel,
       }),
       signal: controller.signal,
     })
       .then((res) => {
         if (res.ok) {
           if (mountedRef.current) {
-            setPreferencesOpen(false);
             setSubmitted(true);
             toast({
               title: "Заявка отправлена!",
@@ -114,18 +107,9 @@ export function ContactSection() {
       });
   };
 
-  const handleBasicContinue = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const parsed = leadSchema.safeParse({ name, contact });
-    if (!parsed.success) {
-      toast({
-        title: "Ошибка",
-        description: parsed.error.errors[0].message,
-        variant: "destructive",
-      });
-      return;
-    }
-    setPreferencesOpen(true);
+    submitLead();
   };
 
   return (
@@ -172,7 +156,7 @@ export function ContactSection() {
                     <p className="text-muted-foreground text-sm">Мы свяжемся с вами в ближайшее время.</p>
                   </div>
                 ) : (
-                  <form onSubmit={handleBasicContinue} className="space-y-6 w-full min-w-0">
+                  <form onSubmit={handleSubmit} className="space-y-6 w-full min-w-0">
                     <div className="mb-1">
                       <p className="text-base font-semibold text-foreground">Оставь заявку</p>
                       <p className="text-sm text-muted-foreground">и мы с тобой свяжемся</p>
@@ -231,14 +215,6 @@ export function ContactSection() {
         </div>
       </div>
 
-      <LeadPreferencesModal
-        open={preferencesOpen}
-        onOpenChange={setPreferencesOpen}
-        showLevelQuestion
-        isSubmitting={isSubmitting}
-        onSkip={() => submitLead(EMPTY_LEAD_PREFERENCES)}
-        onSubmit={submitLead}
-      />
     </section>
   );
 }

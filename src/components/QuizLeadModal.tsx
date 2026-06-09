@@ -13,9 +13,7 @@ import { IntroScreen } from "@/components/quiz-lead-modal/IntroScreen";
 import type { OptionId } from "@/components/quiz-lead-modal/model";
 import { QuestionScreen } from "@/components/quiz-lead-modal/QuestionScreen";
 import { ResultsScreen } from "@/components/quiz-lead-modal/ResultsScreen";
-import { LeadPreferencesModal } from "@/components/LeadPreferencesModal";
 import { BrandMark } from "@/components/brand/BrandMark";
-import { EMPTY_LEAD_PREFERENCES, type LeadPreferences } from "@/lib/lead-preferences";
 
 const QUIZ_PROGRESS_STORAGE_KEY = "quiz-progress-v1";
 
@@ -52,7 +50,6 @@ export function QuizLeadModal() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [sending, setSending] = useState(false);
-  const [preferencesOpen, setPreferencesOpen] = useState(false);
   const [progressHydrated, setProgressHydrated] = useState(false);
   const quizCompletionTrackedRef = useRef(false);
   const quizLeadSubmittedRef = useRef(false);
@@ -204,21 +201,8 @@ export function QuizLeadModal() {
     });
   };
 
-  const handleSendResult = (e: React.FormEvent) => {
+  const handleSendResult = async (e: React.FormEvent) => {
     e.preventDefault();
-    const parsed = formSchema.safeParse({ name, contact });
-    if (!parsed.success) {
-      toast({
-        title: "Ошибка",
-        description: parsed.error.errors[0].message,
-        variant: "destructive",
-      });
-      return;
-    }
-    setPreferencesOpen(true);
-  };
-
-  const submitQuizLead = async (preferences: LeadPreferences) => {
     const parsed = formSchema.safeParse({ name, contact });
     if (!parsed.success) {
       toast({
@@ -244,9 +228,6 @@ export function QuizLeadModal() {
           quizLevel: result.level,
           quizTotal: total,
           weakTopics: result.wrongTopics,
-          studyFrequency: preferences.studyFrequency,
-          preferredTime: preferences.preferredTime,
-          currentLevel: preferences.currentLevel,
           quizDetails: randomizedQuestions.map((q) => {
             const selectedId = answers[q.id];
             const selectedOption = q.options.find((option) => option.id === selectedId);
@@ -275,7 +256,6 @@ export function QuizLeadModal() {
       if (globalThis.window !== undefined) {
         globalThis.localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
       }
-      setPreferencesOpen(false);
       setOpen(false);
       handleRestart();
     } catch (error) {
@@ -301,7 +281,6 @@ export function QuizLeadModal() {
       : null;
 
   return (
-    <>
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
@@ -384,15 +363,5 @@ export function QuizLeadModal() {
         </div>
       </DialogContent>
     </Dialog>
-
-      <LeadPreferencesModal
-        open={preferencesOpen}
-        onOpenChange={setPreferencesOpen}
-        showLevelQuestion={false}
-        isSubmitting={sending}
-        onSkip={() => submitQuizLead(EMPTY_LEAD_PREFERENCES)}
-        onSubmit={submitQuizLead}
-      />
-    </>
   );
 }

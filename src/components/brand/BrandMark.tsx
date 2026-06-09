@@ -4,11 +4,13 @@ import { BrandName, type BrandNameProps } from "./BrandName";
 
 type BrandMarkProps = BrandNameProps & {
   dashClassName?: string;
+  brandClassName?: string;
 };
 
 export function BrandMark({
   className,
   dashClassName,
+  brandClassName,
   size = "sm",
   layout = "stacked",
   ...brandProps
@@ -22,7 +24,7 @@ export function BrandMark({
       <span className={cn("text-muted-foreground/45 select-none leading-none", dashClassName)} aria-hidden>
         —
       </span>
-      <BrandName size={size} layout={layout} {...brandProps} />
+      <BrandName size={size} layout={layout} className={brandClassName} {...brandProps} />
       <span className={cn("text-muted-foreground/45 select-none leading-none", dashClassName)} aria-hidden>
         —
       </span>

@@ -22,7 +22,7 @@ export function BrandName({ className, size = "sm", layout = "inline" }: BrandNa
     return (
       <span
         className={cn(
-          "inline-flex flex-col items-start font-brand font-medium leading-none tracking-normal",
+          "inline-flex flex-col items-start font-brand font-semibold leading-none tracking-tight",
           size !== "inherit" && sizeClasses[size],
           className,
         )}
@@ -34,7 +34,7 @@ export function BrandName({ className, size = "sm", layout = "inline" }: BrandNa
   }
 
   return (
-    <span className={cn("font-brand font-medium leading-none tracking-normal", size !== "inherit" && sizeClasses[size], className)}>
+    <span className={cn("font-brand font-semibold leading-none tracking-tight", size !== "inherit" && sizeClasses[size], className)}>
       <span className="text-secondary">Bonjour</span>
       <span className="text-primary"> жи есть</span>
     </span>
