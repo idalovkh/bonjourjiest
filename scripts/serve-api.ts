@@ -7,7 +7,7 @@ import "dotenv/config";
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 import express from "express";
-import handler from "../api/_lib/lead-handler.ts";
+import handler from "../lib/lead-handler.ts";
 
 const app = express();
 app.use(express.json());

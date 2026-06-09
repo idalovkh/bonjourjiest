@@ -1,3 +1,1 @@
-import handler from "../_lib/lead-handler";
-
-export default handler;
+export { default } from "../../lib/lead-handler.js";

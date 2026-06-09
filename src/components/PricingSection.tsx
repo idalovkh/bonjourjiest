@@ -75,7 +75,7 @@ export function PricingSection() {
 
         <div className="relative max-w-5xl mx-auto">
           <Carousel opts={carouselOpts} className="w-full">
-            <CarouselContent className="-ml-4 items-stretch py-2">
+            <CarouselContent className="-ml-4 items-stretch pt-5 pb-2">
               {plans.map((p) => (
                 <CarouselItem key={p.name} className={`${carouselItemClassName} flex`}>
                   <div
@@ -87,7 +87,7 @@ export function PricingSection() {
                     }`}
                   >
                     {p.popular && (
-                      <span className="mb-4 inline-flex w-fit items-center gap-1.5 self-center rounded-full bg-secondary/90 px-4 py-1 text-xs font-semibold text-secondary-foreground">
+                      <span className="absolute -top-3 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-secondary px-4 py-1 text-xs font-semibold text-secondary-foreground shadow-sm">
                         <Sparkles size={11} />
                         Популярный
                       </span>

@@ -5,7 +5,10 @@
   "outputDirectory": "dist",
   "installCommand": "npm ci",
   "functions": {
-    "api/**/*.ts": {
+    "api/lead/*.ts": {
+      "maxDuration": 30
+    },
+    "api/quiz/*.ts": {
       "maxDuration": 30
     }
   },

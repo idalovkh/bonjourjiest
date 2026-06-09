@@ -1,4 +1,17 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+type LeadRequest = {
+  method?: string;
+  body?: unknown;
+  path?: string;
+  url?: string;
+  headers?: Record<string, string | string[] | undefined>;
+};
+
+type LeadResponse = {
+  headersSent?: boolean;
+  setHeader(name: string, value: string | number | readonly string[]): void;
+  status(code: number): LeadResponse;
+  json(body: unknown): void;
+};
 
 const NAME_MAX = 100;
 const CONTACT_MAX = 200;
@@ -280,7 +293,7 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
 
   const form = new FormData();
   form.set("chat_id", chatId);
-  form.set("caption", caption);
+  form.set("caption", toPlainTelegramText(caption));
   const fileBlob = new Blob([content], { type: mimeType });
   form.append("document", fileBlob, filename);
 
@@ -303,43 +316,69 @@ function escapeHtml(s: string): string {
     .replaceAll("\"", "&quot;");
 }
 
-export default async function handler(req: Request, res: Response) {
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).json({ error: "Method Not Allowed" });
+function parseRequestBody(req: LeadRequest): Record<string, unknown> {
+  const raw = req.body;
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    return raw as Record<string, unknown>;
   }
-
-  const body = (req.body ?? {}) as Record<string, unknown>;
-  const name = trim(body.name);
-  const contact = trim(body.contact);
-  const source = detectLeadSource(req, body.source);
-  const landing = trim(body.landing);
-  const quizLevel = trim(body.quizLevel);
-  const quizScore = toNumber(body.quizScore);
-  const quizTotal = toNumber(body.quizTotal);
-  const quizDetails = toQuizDetails(body.quizDetails);
-  const leadPreferences = parseLeadPreferences(body);
-
-  if (source === "quiz_complete_no_lead") {
-    console.info(
-      "[lead] quiz_complete_no_lead:",
-      JSON.stringify({
-        landing,
-        score: quizScore,
-        total: quizTotal,
-      })
-    );
-    return res.status(200).json({ success: true });
+  if (typeof raw === "string" && raw.trim().length) {
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        return parsed as Record<string, unknown>;
+      }
+    } catch {
+      return {};
+    }
   }
+  return {};
+}
 
-  const validation = validate(name, contact);
-  if (validation.ok === false) {
-    return res.status(validation.status).json({ error: validation.message });
-  }
+function toPlainTelegramText(text: string): string {
+  return text
+    .replaceAll("<br>", "\n")
+    .replaceAll("<br/>", "\n")
+    .replaceAll("<br />", "\n")
+    .replace(/<\/?[^>]+(>|$)/g, "");
+}
 
+export default async function handler(req: LeadRequest, res: LeadResponse) {
   try {
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+
+    if (req.method !== "POST") {
+      res.setHeader("Allow", "POST");
+      return res.status(405).json({ error: "Method Not Allowed" });
+    }
+
+    const body = parseRequestBody(req);
+    const name = trim(body.name);
+    const contact = trim(body.contact);
+    const source = detectLeadSource(req, body.source);
+    const landing = trim(body.landing);
+    const quizLevel = trim(body.quizLevel);
+    const quizScore = toNumber(body.quizScore);
+    const quizTotal = toNumber(body.quizTotal);
+    const quizDetails = toQuizDetails(body.quizDetails);
+    const leadPreferences = parseLeadPreferences(body);
+
+    if (source === "quiz_complete_no_lead") {
+      console.info(
+        "[lead] quiz_complete_no_lead:",
+        JSON.stringify({
+          landing,
+          score: quizScore,
+          total: quizTotal,
+        })
+      );
+      return res.status(200).json({ success: true });
+    }
+
+    const validation = validate(name, contact);
+    if (validation.ok === false) {
+      return res.status(validation.status).json({ error: validation.message });
+    }
+
     const isQuiz = source === "quiz_request";
     const quizScoreText: string | number = isQuiz ? (quizScore ?? "—") : "—";
     const quizTotalText: string | number = isQuiz ? (quizTotal ?? "—") : "—";
@@ -373,7 +412,6 @@ export default async function handler(req: Request, res: Response) {
           "text/csv; charset=utf-8"
         );
       } catch (docError) {
-        // Не роняем заявку, если вложение не прикрепилось: отправляем текст как fallback.
         const reason = docError instanceof Error ? docError.message : String(docError);
         const shortReason = reason.slice(0, 280);
         console.error("[lead] Telegram document error:", reason);
@@ -385,11 +423,13 @@ export default async function handler(req: Request, res: Response) {
     return res.status(200).json({ success: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
+    console.error("[lead] handler error:", message);
     const payload: { error: string; detail?: string } = { error: "Не удалось отправить заявку. Попробуйте позже." };
-    // detail только в dev, на проде не раскрываем внутренние ошибки
     if (process.env.DEBUG_LEAD && process.env.NODE_ENV !== "production") {
       payload.detail = message;
     }
-    return res.status(500).json(payload);
+    if (!res.headersSent) {
+      return res.status(500).json(payload);
+    }
   }
 }
