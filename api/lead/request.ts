@@ -1,1 +1,1 @@
-export { default } from "../lead";
+export { default } from "../_lib/lead-handler";
