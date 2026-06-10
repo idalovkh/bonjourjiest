@@ -20,6 +20,7 @@
 
 - `TELEGRAM_BOT_TOKEN`
 - `TELEGRAM_CHAT_ID`
+- `TELEGRAM_PROXY_URL` (тот же прокси, что у desharschool, если Telegram API недоступен напрямую)
 - `DEBUG_LEAD` (опционально)
 
 ## Nginx (пример)

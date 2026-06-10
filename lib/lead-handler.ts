@@ -1,3 +1,6 @@
+import { fetch as undiciFetch, ProxyAgent, FormData, type Dispatcher } from "undici";
+import { SocksProxyAgent } from "socks-proxy-agent";
+
 type LeadRequest = {
   method?: string;
   body?: unknown;
@@ -42,6 +45,18 @@ function readEnv(name: string): string | undefined {
   const raw = process.env[name];
   if (!raw) return undefined;
   return raw.trim().replace(/^["']|["']$/g, "");
+}
+
+/** Только Telegram fetch: `http(s)://user:pass@host:port` или `socks5://...` из `TELEGRAM_PROXY_URL`. */
+function getTelegramDispatcher(): Dispatcher | undefined {
+  const raw = readEnv("TELEGRAM_PROXY_URL");
+  if (!raw) return undefined;
+
+  const lower = raw.toLowerCase();
+  if (lower.startsWith("socks5://") || lower.startsWith("socks4://") || lower.startsWith("socks://")) {
+    return new SocksProxyAgent(raw) as unknown as Dispatcher;
+  }
+  return new ProxyAgent(raw);
 }
 
 interface LeadPreferences {
@@ -298,9 +313,11 @@ function leadLog(level: "info" | "warn" | "error", event: string, data: Record<s
 function telegramConfigStatus() {
   const token = readEnv("TELEGRAM_BOT_TOKEN");
   const chatId = readEnv("TELEGRAM_CHAT_ID");
+  const proxyUrl = readEnv("TELEGRAM_PROXY_URL");
   return {
     hasToken: Boolean(token),
     hasChatId: Boolean(chatId),
+    hasProxy: Boolean(proxyUrl),
     chatIdSuffix: chatId ? chatId.slice(-4) : null,
   };
 }
@@ -319,10 +336,12 @@ async function sendTelegram(text: string): Promise<void> {
     textLength: text.length,
   });
 
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const dispatcher = getTelegramDispatcher();
+  const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text }),
+    ...(dispatcher ? { dispatcher } : {}),
   });
   if (!res.ok) {
     const err = await res.text();
@@ -353,9 +372,11 @@ async function sendTelegramDocument(caption: string, filename: string, content: 
   const fileBlob = new Blob([content], { type: mimeType });
   form.append("document", fileBlob, filename);
 
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendDocument`, {
+  const dispatcher = getTelegramDispatcher();
+  const res = await undiciFetch(`https://api.telegram.org/bot${token}/sendDocument`, {
     method: "POST",
     body: form,
+    ...(dispatcher ? { dispatcher } : {}),
   });
 
   if (!res.ok) {

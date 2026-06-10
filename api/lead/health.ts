@@ -21,6 +21,7 @@ export default function handler(req: HealthRequest, res: HealthResponse) {
 
   const token = readEnv("TELEGRAM_BOT_TOKEN");
   const chatId = readEnv("TELEGRAM_CHAT_ID");
+  const proxyUrl = readEnv("TELEGRAM_PROXY_URL");
   const debug = readEnv("DEBUG_LEAD");
 
   return res.status(200).json({
@@ -28,6 +29,7 @@ export default function handler(req: HealthRequest, res: HealthResponse) {
     env: {
       hasTelegramToken: Boolean(token),
       hasTelegramChatId: Boolean(chatId),
+      hasTelegramProxy: Boolean(proxyUrl),
       chatIdSuffix: chatId ? chatId.slice(-4) : null,
       debugLead: debug === "1" || debug === "true",
     },

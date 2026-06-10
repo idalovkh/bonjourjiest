@@ -108,6 +108,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_PROXY_URL: ${{ secrets.TELEGRAM_PROXY_URL }}
           DEBUG_LEAD: ${{ secrets.DEBUG_LEAD }}
         run: |
           ssh "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
@@ -116,6 +117,7 @@ jobs:
             printf \"%s\n\" \
               \"TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}\" \
               \"TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}\" \
+              \"TELEGRAM_PROXY_URL=${TELEGRAM_PROXY_URL}\" \
               \"DEBUG_LEAD=${DEBUG_LEAD}\" \
               > /var/www/bonjourjiest/.env
             chmod 600 /var/www/bonjourjiest/.env
@@ -129,7 +131,7 @@ jobs:
             rm -rf node_modules
             npm cache clean --force
             npm ci
-            pm2 restart bonjour-api || pm2 start ecosystem.config.cjs
+            pm2 startOrReload ecosystem.config.cjs --update-env
             pm2 save
           '"
 
