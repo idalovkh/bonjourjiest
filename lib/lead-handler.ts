@@ -1,5 +1,5 @@
-import { fetch as undiciFetch, ProxyAgent, FormData, type Dispatcher } from "undici";
-import { SocksProxyAgent } from "socks-proxy-agent";
+import { fetch as undiciFetch, FormData } from "undici";
+import { createTelegramDispatcher } from "./telegram-proxy.ts";
 
 type LeadRequest = {
   method?: string;
@@ -47,16 +47,16 @@ function readEnv(name: string): string | undefined {
   return raw.trim().replace(/^["']|["']$/g, "");
 }
 
-/** Только Telegram fetch: `http(s)://user:pass@host:port` или `socks5://...` из `TELEGRAM_PROXY_URL`. */
-function getTelegramDispatcher(): Dispatcher | undefined {
+function getTelegramDispatcher() {
   const raw = readEnv("TELEGRAM_PROXY_URL");
   if (!raw) return undefined;
-
-  const lower = raw.toLowerCase();
-  if (lower.startsWith("socks5://") || lower.startsWith("socks4://") || lower.startsWith("socks://")) {
-    return new SocksProxyAgent(raw) as unknown as Dispatcher;
+  try {
+    return createTelegramDispatcher(raw);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    leadLog("error", "telegram_proxy_url_invalid", { message });
+    throw err;
   }
-  return new ProxyAgent(raw);
 }
 
 interface LeadPreferences {

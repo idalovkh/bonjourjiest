@@ -5,6 +5,8 @@ type HealthResponse = {
   json(body: unknown): void;
 };
 
+import { tryCreateTelegramDispatcher } from "../../lib/telegram-proxy.ts";
+
 function readEnv(name: string): string | undefined {
   const raw = process.env[name];
   if (!raw) return undefined;
@@ -22,6 +24,7 @@ export default function handler(req: HealthRequest, res: HealthResponse) {
   const token = readEnv("TELEGRAM_BOT_TOKEN");
   const chatId = readEnv("TELEGRAM_CHAT_ID");
   const proxyUrl = readEnv("TELEGRAM_PROXY_URL");
+  const proxyCheck = tryCreateTelegramDispatcher(proxyUrl);
   const debug = readEnv("DEBUG_LEAD");
 
   return res.status(200).json({
@@ -30,6 +33,8 @@ export default function handler(req: HealthRequest, res: HealthResponse) {
       hasTelegramToken: Boolean(token),
       hasTelegramChatId: Boolean(chatId),
       hasTelegramProxy: Boolean(proxyUrl),
+      telegramProxyValid: proxyCheck.ok,
+      telegramProxyError: proxyCheck.ok ? null : proxyCheck.error,
       chatIdSuffix: chatId ? chatId.slice(-4) : null,
       debugLead: debug === "1" || debug === "true",
     },
