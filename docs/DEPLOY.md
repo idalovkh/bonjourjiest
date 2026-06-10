@@ -1,0 +1,43 @@
+# Деплой bonjourjiest на VPS
+
+Деплой аналогичен desharschool: GitHub Actions → SSH/rsync → PM2.
+
+## Что нужно на сервере
+
+1. Nginx vhost для `bonjourjiest.com` и `www.bonjourjiest.com`
+2. (Опционально) vhost для `staging.bonjourjiest.com`
+3. PM2 процессы `bonjour-api` (:3002) и `bonjour-api-staging` (:3003)
+4. Отдельные Telegram-секреты в GitHub Environments
+
+## GitHub Secrets
+
+Общие (можно те же, что у desharschool):
+
+- `PROD_SSH_PRIVATE_KEY`
+- `PROD_SERVER_HOST`
+- `PROD_SERVER_USER`
+
+В environment **production**:
+
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_ID`
+- `DEBUG_LEAD` (опционально)
+
+В environment **staging** — отдельные `TELEGRAM_*`, чтобы тестовые лиды не попадали в прод-чат.
+
+## Nginx (пример)
+
+См. `docs/nginx/bonjourjiest.conf.example`.
+
+Ключевое: `/api/` проксируется на `127.0.0.1:3002`, а не на `3001` (desharschool).
+
+## Локальная разработка
+
+```bash
+npm run dev:full   # API на :3002 + Vite
+npm run dev        # только фронт, /api → bonjourjiest.com
+```
+
+## Vercel
+
+Репозиторий больше не рассчитан на Vercel как основной прод. Чтобы два бэкенда не мешали друг другу, отключите автодеплой Vercel или удалите проект после миграции на VPS.

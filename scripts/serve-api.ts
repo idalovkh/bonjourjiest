@@ -1,13 +1,14 @@
 /**
  * Локальный сервер API для тестирования лидов/квиза без Vercel.
  * Запуск: npm run dev:api или npm run dev:full.
- * Порт: API_PORT или первый свободный из 3001..3010.
+ * Порт: API_PORT (по умолчанию 3002) или первый свободный из диапазона в dev.
  */
 import "dotenv/config";
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 import express from "express";
 import handler from "../lib/lead-handler.ts";
+import healthHandler from "../api/lead/health.ts";
 
 const app = express();
 app.use(express.json());
@@ -19,14 +20,19 @@ const leadApiRoutes = [
   "/api/quiz/complete-no-lead",
 ] as const;
 
+app.get("/api/lead/health", (req, res) => {
+  void healthHandler(req as never, res as never);
+});
+
 for (const route of leadApiRoutes) {
   app.all(route, (req, res) => {
     void handler(req as never, res as never);
   });
 }
 
-const portMin = Number(process.env.API_PORT) || 3001;
-const portMax = portMin + 9;
+const isProduction = process.env.NODE_ENV === "production";
+const portMin = Number(process.env.API_PORT) || 3002;
+const portMax = isProduction ? portMin : portMin + 9;
 let port = portMin;
 
 function onListen() {
@@ -40,8 +46,8 @@ function onListen() {
   for (const route of leadApiRoutes) {
     console.log(`[api]   ${route}`);
   }
-  if (port !== 3001) {
-    console.log(`[api] Порт ${port}. Для dev:full либо задай в .env: VITE_API_ORIGIN=http://localhost:${port}, либо освободи 3001: npx kill-port 3001`);
+  if (port !== portMin) {
+    console.log(`[api] Порт ${port}. Для dev:full задай в .env: VITE_API_ORIGIN=http://localhost:${port}`);
   }
 }
 
@@ -52,7 +58,7 @@ server.on("error", (err: NodeJS.ErrnoException) => {
     port += 1;
     server.listen(port, onListen);
   } else if (err.code === "EADDRINUSE") {
-    console.error(`[api] Порты ${portMin}–${portMax} заняты. Освободи: npx kill-port 3001`);
+    console.error(`[api] Порты ${portMin}–${portMax} заняты. Освободи: npx kill-port ${portMin}`);
     process.exit(1);
   } else {
     throw err;

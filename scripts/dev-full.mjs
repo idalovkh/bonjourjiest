@@ -11,7 +11,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const portFile = resolve(root, ".dev-api-port");
 
 // Освобождаем порты от зависших API (ошибки игнорируем)
-const ports = [3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010];
+const ports = [3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010, 3011];
 spawnSync("npx", ["kill-port", ...ports.map(String)], { cwd: root, stdio: "ignore" });
 
 const api = spawn("npx", ["tsx", "scripts/serve-api.ts"], {

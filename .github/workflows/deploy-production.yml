@@ -1,0 +1,166 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Landing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        env:
+          VITE_APP_ENV: production
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: landing-dist
+          path: dist
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Production Server
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://bonjourjiest.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: landing-dist
+          path: ./dist
+
+      - name: Setup SSH
+        run: |
+          set -e
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.PROD_SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Ensure deploy directory exists
+        run: |
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            sudo mkdir -p /var/www/bonjourjiest
+            sudo chown -R ${{ secrets.PROD_SERVER_USER }}:${{ secrets.PROD_SERVER_USER }} /var/www/bonjourjiest
+          '"
+
+      - name: Deploy static + API with rsync
+        run: |
+          rsync -avz --delete --progress \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            --exclude node_modules \
+            --exclude .git \
+            --exclude .dev-api-port \
+            --exclude dist \
+            --exclude .env \
+            --filter 'P .env' \
+            ./ \
+            "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/bonjourjiest/"
+          rsync -avz --progress \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            ./dist/ \
+            "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/bonjourjiest/"
+
+      - name: Ensure Node.js, npm and pm2 on server
+        run: |
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            set -euo pipefail
+            NODE_MAJOR=0
+            if command -v node >/dev/null 2>&1; then
+              NODE_MAJOR=\$(node -v | sed \"s/^v//\" | cut -d. -f1)
+            fi
+            if [ \"\${NODE_MAJOR}\" -lt 22 ]; then
+              curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+              sudo apt-get update -y
+              sudo apt-get install -y nodejs
+            fi
+            if ! command -v pm2 >/dev/null 2>&1; then
+              sudo npm install -g pm2
+            fi
+            node -v && npm -v && pm2 -v
+          '"
+
+      - name: Write runtime .env from GitHub Secrets
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DEBUG_LEAD: ${{ secrets.DEBUG_LEAD }}
+        run: |
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            set -euo pipefail
+            umask 077
+            printf \"%s\n\" \
+              \"TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}\" \
+              \"TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}\" \
+              \"DEBUG_LEAD=${DEBUG_LEAD}\" \
+              > /var/www/bonjourjiest/.env
+            chmod 600 /var/www/bonjourjiest/.env
+          '"
+
+      - name: Install deps and restart API
+        run: |
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            set -euo pipefail
+            cd /var/www/bonjourjiest
+            rm -rf node_modules
+            npm cache clean --force
+            npm ci
+            pm2 restart bonjour-api || pm2 start ecosystem.config.cjs
+            pm2 save
+          '"
+
+      - name: Verify deployment
+        run: |
+          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+            test -f /var/www/bonjourjiest/index.html
+            curl -fsS http://127.0.0.1:3002/api/lead/health
+            echo \"Production deployed successfully\"
+          '"
+
+      - name: Cleanup SSH
+        if: always()
+        run: rm -f ~/.ssh/id_rsa
+
+  notify:
+    name: Send Notification
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Send success notification
+        if: needs.deploy.result == 'success'
+        run: |
+          echo "Production deployment successful"
+          echo "Commit: ${{ github.sha }}"
+          echo "URL: https://bonjourjiest.com"
+
+      - name: Send failure notification
+        if: needs.deploy.result == 'failure'
+        run: |
+          echo "Production deployment failed"
+          echo "Commit: ${{ github.sha }}"
