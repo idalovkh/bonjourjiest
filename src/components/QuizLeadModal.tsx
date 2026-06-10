@@ -302,9 +302,9 @@ export function QuizLeadModal() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="gap-0 flex max-h-[calc(100dvh-2.5rem)] w-[calc(100%-1.5rem)] max-w-2xl flex-col min-h-0 overflow-hidden rounded-xl border-border/60 bg-background p-0 left-4 right-4 top-6 translate-x-0 translate-y-0 sm:left-[50%] sm:right-auto sm:top-[50%] sm:w-full sm:translate-x-[-50%] sm:translate-y-[-50%] sm:max-h-[90dvh] sm:rounded-lg">
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg">
-          <div className="relative z-[1] flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-6 sm:p-7 sm:min-h-[380px]">
+      <DialogContent className="gap-0 flex max-h-[calc(100dvh-2.5rem)] w-[calc(100%-1.5rem)] max-w-2xl flex-col min-h-0 overflow-hidden rounded-xl border-border/60 bg-white p-0 left-4 right-4 top-6 translate-x-0 translate-y-0 sm:left-[50%] sm:right-auto sm:top-[50%] sm:w-full sm:translate-x-[-50%] sm:translate-y-[-50%] sm:max-h-[90dvh] sm:rounded-lg">
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg bg-white">
+          <div className="relative z-[1] flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-white p-6 sm:p-7 sm:min-h-[380px]">
             <DialogHeader className="relative">
               <div className="flex justify-center">
                 <BrandMark size="lg" layout="stacked" className="justify-center" />

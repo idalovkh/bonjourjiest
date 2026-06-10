@@ -29,7 +29,7 @@ export function QuestionScreen({
   onNext,
 }: QuestionScreenProps) {
   return (
-    <div className="space-y-5 rounded-2xl border border-border/60 bg-background/90 p-4 sm:p-5">
+    <div className="space-y-5 rounded-2xl border border-border/60 bg-white p-4 sm:p-5">
       <div className="space-y-2">
         <div className="flex items-center text-sm text-muted-foreground">
           <span>Вопрос {step + 1} из {total}</span>
@@ -55,7 +55,7 @@ export function QuestionScreen({
             className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
               selected === option.id
                 ? "border-primary bg-primary/10 text-foreground"
-                : "border-border/70 bg-card/70 hover:bg-muted/70"
+                : "border-border/70 bg-white hover:bg-muted/50"
             }`}
           >
             <span className="mr-2 font-medium">{option.id})</span>

@@ -38,7 +38,7 @@ export function ResultsScreen({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-primary/20 bg-card/80 p-4 sm:p-5 shadow-sm text-center">
+      <div className="rounded-2xl border border-primary/20 bg-white p-4 sm:p-5 shadow-sm text-center">
         <div className="mb-4 flex items-start">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={18} className="text-primary" />
@@ -47,17 +47,17 @@ export function ResultsScreen({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center flex h-full flex-col items-center justify-center">
+          <div className="rounded-xl border border-border/60 bg-white p-3 text-center flex h-full flex-col items-center justify-center">
             <p className="text-xs text-muted-foreground uppercase tracking-wide">Правильные ответы</p>
             <p className="text-2xl font-bold text-foreground">{result.score}/{total}</p>
           </div>
-          <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center flex h-full flex-col items-center justify-center">
+          <div className="rounded-xl border border-border/60 bg-white p-3 text-center flex h-full flex-col items-center justify-center">
             <p className="text-xs text-muted-foreground uppercase tracking-wide">Точность</p>
             <p className="text-2xl font-bold text-foreground">{accuracy}%</p>
           </div>
         </div>
 
-        <div className="mt-3 rounded-xl border border-border/60 bg-background/70 p-4 text-left">
+        <div className="mt-3 rounded-xl border border-border/60 bg-white p-4 text-left">
           <p className="text-xs text-muted-foreground uppercase tracking-wide">Текущий уровень</p>
           <p className="mt-1 text-3xl font-bold text-foreground">{result.level}</p>
           {nextLevelTarget && (
@@ -68,12 +68,12 @@ export function ResultsScreen({
           <AchievementAction result={result} total={total} accuracy={accuracy} />
         </div>
 
-        <div className="mt-4 rounded-xl border border-border/60 bg-background/70 p-4 text-left">
+        <div className="mt-4 rounded-xl border border-border/60 bg-white p-4 text-left">
           <p className="text-xl font-semibold text-foreground">{levelDescription.title}</p>
           <p className="mt-2 text-base sm:text-lg leading-relaxed">{levelDescription.description}</p>
         </div>
 
-        <div className="mt-4 rounded-xl border border-border/60 bg-background/70 p-4 text-left">
+        <div className="mt-4 rounded-xl border border-border/60 bg-white p-4 text-left">
           <p className="text-xs text-muted-foreground uppercase tracking-wide">Персональные рекомендации по ошибкам</p>
           <ul className="mt-2 space-y-2 pl-5 text-base sm:text-lg leading-relaxed list-disc">
             {recommendations.map((item) => (
@@ -99,7 +99,7 @@ export function ResultsScreen({
         )}
       </div>
 
-      <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-border/60 bg-background/90 p-4 sm:p-5">
+      <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-border/60 bg-white p-4 sm:p-5">
         <p className="text-base sm:text-lg font-medium leading-relaxed">
           Если ты хочешь повысить свой уровень и научиться говорить по-французски, я могу в этом помочь.
           Оставь заявку, и мы свяжемся. Первый урок бесплатный.

@@ -10,15 +10,15 @@ export function IntroScreen({ onStart, onClose }: IntroScreenProps) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-        <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
+        <div className="rounded-xl border border-border/60 bg-white p-3 text-center">
           <p className="text-xs text-muted-foreground">Длительность</p>
           <p className="text-base sm:text-lg font-semibold text-foreground">~3 минуты</p>
         </div>
-        <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
+        <div className="rounded-xl border border-border/60 bg-white p-3 text-center">
           <p className="text-xs text-muted-foreground">Вопросов</p>
           <p className="text-base sm:text-lg font-semibold text-foreground">10</p>
         </div>
-        <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
+        <div className="rounded-xl border border-border/60 bg-white p-3 text-center">
           <p className="text-xs text-muted-foreground">Результат</p>
           <p className="text-base sm:text-lg font-semibold text-foreground">Сразу после теста</p>
         </div>
