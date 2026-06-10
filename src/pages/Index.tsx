@@ -15,7 +15,6 @@ const FloatingContact = lazyLoad(() => import("@/components/FloatingContact").th
 const Footer = lazyLoad(() => import("@/components/Footer").then((m) => ({ default: m.Footer })));
 const PricingSection = lazyLoad(() => import("@/components/PricingSection").then((m) => ({ default: m.PricingSection })));
 const ReviewsSection = lazyLoad(() => import("@/components/ReviewsSection").then((m) => ({ default: m.ReviewsSection })));
-const TeachersSection = lazyLoad(() => import("@/components/TeachersSection").then((m) => ({ default: m.TeachersSection })));
 const TrustMarquee = lazyLoad(() => import("@/components/TrustMarquee").then((m) => ({ default: m.TrustMarquee })));
 
 const SECTION_FALLBACK = <div className="section-padding min-h-[200px]" aria-hidden />;
@@ -37,11 +36,6 @@ const Index = () => {
 
         <Suspense fallback={SECTION_FALLBACK}>
           <AboutSection />
-        </Suspense>
-        <SectionDivider />
-
-        <Suspense fallback={SECTION_FALLBACK}>
-          <TeachersSection />
         </Suspense>
         <SectionDivider />
 

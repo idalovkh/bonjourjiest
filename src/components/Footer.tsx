@@ -8,7 +8,6 @@ const navColumns = [
     title: "Школа",
     links: [
       { label: "О нас", href: "#about" },
-      { label: "Преподаватели", href: "#teachers" },
       { label: "Отзывы", href: "#reviews" },
       { label: "FAQ", href: "#faq" },
     ],
@@ -62,9 +61,9 @@ export function Footer({ className }: { className?: string }) {
             </h4>
             <ul className="space-y-3.5">
               <li>
-                <a href="mailto:support@bonjourjiest.ru" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
+                <a href="mailto:support@bonjourjiest.com" className="flex items-center gap-2.5 py-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation -my-2 whitespace-nowrap">
                   <Mail size={15} className="shrink-0 text-primary" />
-                  support@bonjourjiest.ru
+                  support@bonjourjiest.com
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground whitespace-nowrap">

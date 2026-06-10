@@ -143,7 +143,7 @@ async function buildAchievementBlob(result: QuizResult, total: number, accuracy:
   ctx.fillStyle = "#313d57";
   ctx.font = "500 32px Inter, system-ui, -apple-system, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("bonjourjiest.ru", centerX, 1050);
+  ctx.fillText("bonjourjiest.com", centerX, 1050);
   ctx.font = "500 28px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = "#475569";
   drawWrappedText("Сможешь лучше? Проверь свой уровень за 3 минуты.", centerX, 1110, 760, 36, 2);

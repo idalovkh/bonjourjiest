@@ -9,7 +9,6 @@ import { BrandMark } from "@/components/brand/BrandMark";
 
 const navLinks = [
   { href: "#about", label: "О школе" },
-  { href: "#teachers", label: "Преподаватели" },
   { href: "#pricing", label: "Цены" },
   { href: "#reviews", label: "Отзывы" },
 ];
