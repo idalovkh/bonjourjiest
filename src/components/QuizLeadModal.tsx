@@ -155,7 +155,6 @@ export function QuizLeadModal() {
     setName("");
     setContact("");
     setSending(false);
-    setPreferencesOpen(false);
     setAttemptSeed((prev) => prev + 1);
     setStarted(false);
     quizCompletionTrackedRef.current = false;
