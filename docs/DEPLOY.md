@@ -5,9 +5,8 @@
 ## Что нужно на сервере
 
 1. Nginx vhost для `bonjourjiest.com` и `www.bonjourjiest.com`
-2. (Опционально) vhost для `staging.bonjourjiest.com`
-3. PM2 процессы `bonjour-api` (:3002) и `bonjour-api-staging` (:3003)
-4. Отдельные Telegram-секреты в GitHub Environments
+2. PM2 процесс `bonjour-api` (:3002)
+3. Telegram-секреты в GitHub Environment `production`
 
 ## GitHub Secrets
 
@@ -22,8 +21,6 @@
 - `TELEGRAM_BOT_TOKEN`
 - `TELEGRAM_CHAT_ID`
 - `DEBUG_LEAD` (опционально)
-
-В environment **staging** — отдельные `TELEGRAM_*`, чтобы тестовые лиды не попадали в прод-чат.
 
 ## Nginx (пример)
 
@@ -40,4 +37,4 @@ npm run dev        # только фронт, /api → bonjourjiest.com
 
 ## Vercel
 
-Репозиторий больше не рассчитан на Vercel как основной прод. Чтобы два бэкенда не мешали друг другу, отключите автодеплой Vercel или удалите проект после миграции на VPS.
+Репозиторий не рассчитан на Vercel как основной прод. Отключите автодеплой Vercel, чтобы два бэкенда не мешали друг другу.

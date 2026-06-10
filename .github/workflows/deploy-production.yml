@@ -53,17 +53,17 @@ jobs:
           name: landing-dist
           path: ./dist
 
-      - name: Setup SSH
-        run: |
-          set -e
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "${{ secrets.PROD_SERVER_HOST }}" >> ~/.ssh/known_hosts
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: ssh-keyscan -H "${{ secrets.PROD_SERVER_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Ensure deploy directory exists
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+          ssh "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
             sudo mkdir -p /var/www/bonjourjiest
             sudo chown -R ${{ secrets.PROD_SERVER_USER }}:${{ secrets.PROD_SERVER_USER }} /var/www/bonjourjiest
           '"
@@ -71,7 +71,7 @@ jobs:
       - name: Deploy static + API with rsync
         run: |
           rsync -avz --delete --progress \
-            -e "ssh -i ~/.ssh/id_rsa" \
+            -e "ssh" \
             --exclude node_modules \
             --exclude .git \
             --exclude .dev-api-port \
@@ -81,13 +81,13 @@ jobs:
             ./ \
             "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/bonjourjiest/"
           rsync -avz --progress \
-            -e "ssh -i ~/.ssh/id_rsa" \
+            -e "ssh" \
             ./dist/ \
             "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:/var/www/bonjourjiest/"
 
       - name: Ensure Node.js, npm and pm2 on server
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+          ssh "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
             set -euo pipefail
             NODE_MAJOR=0
             if command -v node >/dev/null 2>&1; then
@@ -110,7 +110,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DEBUG_LEAD: ${{ secrets.DEBUG_LEAD }}
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+          ssh "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
             set -euo pipefail
             umask 077
             printf \"%s\n\" \
@@ -123,7 +123,7 @@ jobs:
 
       - name: Install deps and restart API
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+          ssh "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
             set -euo pipefail
             cd /var/www/bonjourjiest
             rm -rf node_modules
@@ -135,15 +135,11 @@ jobs:
 
       - name: Verify deployment
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
+          ssh "${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}" "bash -lc '
             test -f /var/www/bonjourjiest/index.html
             curl -fsS http://127.0.0.1:3002/api/lead/health
             echo \"Production deployed successfully\"
           '"
-
-      - name: Cleanup SSH
-        if: always()
-        run: rm -f ~/.ssh/id_rsa
 
   notify:
     name: Send Notification

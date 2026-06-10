@@ -1,5 +1,5 @@
-import { execFileSync } from "node:child_process";
-import { copyFileSync, mkdirSync, rmSync } from "node:fs";
+import sharp from "sharp";
+import { copyFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -8,56 +8,43 @@ const scriptsDir = join(root, "scripts");
 const publicDir = join(root, "public");
 const logoMark = join(root, "src/assets/brand/logo-mark.png");
 
+/** Плотный кроп графики без текста */
+const TAB_EMBLEM_CROP = { left: 6, top: 6, width: 1073, height: 464 };
+
 mkdirSync(publicDir, { recursive: true });
 
-function resizeSquare(input, output, size) {
-  execFileSync("sips", ["-z", String(size), String(size), input, "--out", output], {
-    stdio: "inherit",
-  });
+async function tabFavicon(size, output) {
+  await sharp(logoMark)
+    .extract(TAB_EMBLEM_CROP)
+    .flatten({ background: "#ffffff" })
+    .resize(size, size, {
+      fit: "cover",
+      position: "east",
+      kernel: sharp.kernel.lanczos3,
+    })
+    .png()
+    .toFile(output);
 }
 
-function fitSquare(input, output, size, padColor = "FFFFFF") {
-  const temp = join(publicDir, `.favicon-temp-${size}.png`);
-  execFileSync("sips", ["-Z", String(size), input, "--out", temp], { stdio: "inherit" });
-  execFileSync(
-    "sips",
-    [
-      "--padToHeightWidth",
-      String(size),
-      String(size),
-      "--padColor",
-      padColor,
-      temp,
-      "--out",
-      output,
-    ],
-    { stdio: "inherit" }
-  );
-  rmSync(temp, { force: true });
+async function fullMarkFavicon(size, output) {
+  await sharp(logoMark)
+    .flatten({ background: "#ffffff" })
+    .resize(size, size, {
+      fit: "contain",
+      background: "#ffffff",
+      kernel: sharp.kernel.lanczos3,
+    })
+    .png()
+    .toFile(output);
 }
 
-function cropEmblem(input, output) {
-  execFileSync(
-    "sips",
-    ["--cropToHeightWidth", "480", "1092", "--cropOffset", "0", "0", input, "--out", output],
-    { stdio: "inherit" }
-  );
-}
+await tabFavicon(16, join(publicDir, "favicon-16.png"));
+await tabFavicon(32, join(publicDir, "favicon-32.png"));
+await tabFavicon(512, join(publicDir, "favicon-tab-512.png"));
 
-const emblem = join(publicDir, ".emblem-crop.png");
-cropEmblem(logoMark, emblem);
-
-// Вкладка браузера — только графическая эмблема (горы, солнце, башня)
-resizeSquare(emblem, join(publicDir, "favicon-16.png"), 16);
-resizeSquare(emblem, join(publicDir, "favicon-32.png"), 32);
-resizeSquare(emblem, join(publicDir, "favicon-tab-512.png"), 512);
-
-// Apple / PWA — полная эмблема с названием
-fitSquare(logoMark, join(publicDir, "apple-touch-icon.png"), 180);
-fitSquare(logoMark, join(publicDir, "favicon-192.png"), 192);
-fitSquare(logoMark, join(publicDir, "favicon-512.png"), 512);
-
-rmSync(emblem, { force: true });
+await fullMarkFavicon(180, join(publicDir, "apple-touch-icon.png"));
+await fullMarkFavicon(192, join(publicDir, "favicon-192.png"));
+await fullMarkFavicon(512, join(publicDir, "favicon-512.png"));
 
 copyFileSync(join(scriptsDir, "favicon-source.html"), join(publicDir, "favicon-source.html"));
 copyFileSync(join(scriptsDir, "favicon-tab-source.html"), join(publicDir, "favicon-tab-source.html"));
